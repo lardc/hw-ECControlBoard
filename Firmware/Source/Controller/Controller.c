@@ -10,7 +10,6 @@
 #include "LowLevel.h"
 #include "SysConfig.h"
 #include "DebugActions.h"
-#include "Commutation.h"
 
 // Types
 //
@@ -99,121 +98,6 @@ static Boolean CONTROL_DispatchAction(Int16U ActionID, pInt16U pUserError)
 				*pUserError = ERR_OPERATION_BLOCKED;
 			break;
 			
-		case ACT_DBG_LED_RED_IMPULSE:
-			{
-				if(DataTable[REG_DBG_STATE])
-				{
-					DBGACT_GenerateImpulseLedRed();
-				}
-				else
-				{
-					*pUserError = ERR_CONFIGURATION_LOCKED;
-				}
-			}
-			break;
-			
-		case ACT_DBG_LED_GREEN_IMPULSE:
-			{
-				if(DataTable[REG_DBG_STATE])
-				{
-					DBGACT_GenerateImpulseLedGreen();
-				}
-				else
-				{
-					*pUserError = ERR_CONFIGURATION_LOCKED;
-				}
-			}
-			break;
-			
-		case ACT_DBG_SYNC_1_IMPULSE:
-			{
-				if(DataTable[REG_DBG_STATE])
-				{
-					DBGACT_GenerateImpulseLineSync1();
-				}
-				else
-				{
-					*pUserError = ERR_CONFIGURATION_LOCKED;
-				}
-			}
-			break;
-			
-		case ACT_DBG_SYNC_2_IMPULSE:
-			{
-				if(DataTable[REG_DBG_STATE])
-				{
-					DBGACT_GenerateImpulseLineSync2();
-				}
-				else
-				{
-					*pUserError = ERR_CONFIGURATION_LOCKED;
-				}
-			}
-			break;
-			
-		case ACT_DBG_LOCK_1_IMPULSE:
-			{
-				if(DataTable[REG_DBG_STATE])
-				{
-					DBGACT_GenerateImpulseLineLock1();
-				}
-				else
-				{
-					*pUserError = ERR_CONFIGURATION_LOCKED;
-				}
-			}
-			break;
-			
-		case ACT_DBG_LOCK_2_IMPULSE:
-			{
-				if(DataTable[REG_DBG_STATE])
-				{
-					DBGACT_GenerateImpulseLineLock2();
-				}
-				else
-				{
-					*pUserError = ERR_CONFIGURATION_LOCKED;
-				}
-			}
-			break;
-			
-		case ACT_SET_RELAY_GROUP:
-			{
-				// Заготовка
-			}
-			break;
-
-		case ACT_SET_RELAY_NONE:
-			{
-				COMM_DisconnectSimpleRelays();
-				COMM_DisconnectBistableRelays();
-			}
-			break;
-			
-		case ACT_DBG_SIMPLE_RELAY_ON:
-			{
-				COMM_SwitchSimpleRelay(DataTable[REG_DBG_RELAY_INDEX], true);
-			}
-			break;
-
-		case ACT_DBG_SIMPLE_RELAY_OFF:
-			{
-				COMM_SwitchSimpleRelay(DataTable[REG_DBG_RELAY_INDEX], false);
-			}
-			break;
-
-		case ACT_DBG_BISTABLE_RELAY_ON:
-			{
-				COMM_SwitchBistableRelay(DataTable[REG_DBG_RELAY_INDEX], true);
-			}
-			break;
-
-		case ACT_DBG_BISTABLE_RELAY_OFF:
-			{
-				COMM_SwitchBistableRelay(DataTable[REG_DBG_RELAY_INDEX], false);
-			}
-			break;
-
 		default:
 			return false;
 			

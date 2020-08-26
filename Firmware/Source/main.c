@@ -14,12 +14,6 @@ int main()
 	// Настройка портов
 	INITCFG_ConfigIO();
 	
-	// Настройка SPI
-	INITCFG_ConfigSPI();
-
-	// Настройка внешних прерываний
-	INITCFG_ConfigInterrupt();
-	
 	// Настройка CAN
 	INITCFG_ConfigCAN();
 	

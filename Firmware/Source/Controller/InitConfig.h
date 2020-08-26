@@ -6,9 +6,7 @@
 //Functions
 //
 Boolean INITCFG_ConfigSystemClock();
-void INITCFG_ConfigInterrupt();
 void INITCFG_ConfigIO();
-void INITCFG_ConfigSPI();
 void INITCFG_ConfigCAN();
 void INITCFG_ConfigUART();
 void INITCFG_ConfigTimer7();

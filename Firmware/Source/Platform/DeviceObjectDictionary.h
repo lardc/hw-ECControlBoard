@@ -7,20 +7,6 @@
 #define ACT_FAULT_CLEAR					3	// Очистка fault
 #define ACT_WARNING_CLEAR				4	// Очистка warning
 
-#define ACT_SET_RELAY_GROUP				20 	// Подключить группу реле
-#define ACT_SET_RELAY_NONE				21 	// Отключить все релле
-
-#define ACT_DBG_LED_RED_IMPULSE			50	// Одиночный импусль цепи красного индикатора
-#define ACT_DBG_LED_GREEN_IMPULSE		51	// Одиночный импусль цепи зелёного индикатора
-#define ACT_DBG_SYNC_1_IMPULSE			52	// Одиночный импусль цепи SYNC_1
-#define ACT_DBG_SYNC_2_IMPULSE			53	// Одиночный импусль цепи SYNC_2
-#define ACT_DBG_LOCK_1_IMPULSE			54	// Одиночный импусль цепи LOCK1
-#define ACT_DBG_LOCK_2_IMPULSE			55	// Одиночный импусль цепи LOCK2
-#define ACT_DBG_SIMPLE_RELAY_ON 		10	// Включить одно обычное реле
-#define ACT_DBG_SIMPLE_RELAY_OFF 		11	// Отключить одно обычноее реле
-#define ACT_DBG_BISTABLE_RELAY_ON 		12	// Включить одно бистабильное реле
-#define ACT_DBG_BISTABLE_RELAY_OFF		13	// Отключить одно бистабильное реле
-
 #define ACT_SAVE_TO_ROM					200	// Сохранение пользовательских данных во FLASH процессора
 #define ACT_RESTORE_FROM_ROM			201	// Восстановление данных из FLASH
 #define ACT_RESET_TO_DEFAULT			202	// Сброс DataTable в состояние по умолчанию
@@ -32,10 +18,6 @@
 // Сохраняемые регистры
 
 // Несохраняемы регистры чтения-записи
-#define REG_GROUP_RELAY					128	// Регистр установки предопределенной группы
-
-#define REG_DBG_STATE					150	// Регистр режима Отладки
-#define REG_DBG_RELAY_INDEX				151	// Регистр номера реле из CommutateTable
 
 // Регистры только чтение
 #define REG_DEV_STATE					192	// Регистр состояния
