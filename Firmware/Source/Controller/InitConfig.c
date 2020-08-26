@@ -17,13 +17,23 @@ void INITCFG_ConfigIO()
 	RCC_GPIO_Clk_EN(PORTB);
 	
 	// Выходы
-	GPIO_InitPushPullOutput(GPIO_LED);
-	
+	GPIO_InitPushPullOutput(GPIO_INT_LED);
+	GPIO_InitPushPullOutput(GPIO_EXT_LED);
+	GPIO_InitPushPullOutput(GPIO_INT_SYNC1_OUT);
+	GPIO_InitPushPullOutput(GPIO_INT_SYNC2_OUT);
+	GPIO_InitPushPullOutput(GPIO_EXT_SYNC1_OUT);
+	GPIO_InitPushPullOutput(GPIO_EXT_SYNC2_OUT);
+	GPIO_InitPushPullOutput(GPIO_FAN);
+
+
 	// Альтернативные функции
 	GPIO_InitAltFunction(GPIO_ALT_CAN_RX, AltFn_9);
 	GPIO_InitAltFunction(GPIO_ALT_CAN_TX, AltFn_9);
-	GPIO_InitAltFunction(GPIO_ALT_UART_RX, AltFn_7);
-	GPIO_InitAltFunction(GPIO_ALT_UART_TX, AltFn_7);
+	GPIO_InitAltFunction(GPIO_ALT_UART1_RX, AltFn_7);
+	GPIO_InitAltFunction(GPIO_ALT_UART1_TX, AltFn_7);
+	GPIO_InitAltFunction(GPIO_ALT_UART2_RX, AltFn_7);
+	GPIO_InitAltFunction(GPIO_ALT_UART2_TX, AltFn_7);
+
 }
 
 //------------------------------------------------
