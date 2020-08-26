@@ -25,7 +25,6 @@ void INITCFG_ConfigIO()
 	GPIO_InitPushPullOutput(GPIO_EXT_SYNC2_OUT);
 	GPIO_InitPushPullOutput(GPIO_FAN);
 
-
 	// Альтернативные функции
 	GPIO_InitAltFunction(GPIO_ALT_CAN_RX, AltFn_9);
 	GPIO_InitAltFunction(GPIO_ALT_CAN_TX, AltFn_9);
