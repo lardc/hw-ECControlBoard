@@ -1,1 +1,1 @@
-# hw-EC-ontrolBoard
+# hw-ECControlBoard
