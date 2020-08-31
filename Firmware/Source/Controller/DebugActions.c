@@ -21,44 +21,44 @@ void DBGACT_BlinkExtLed()
 
 void DBGACT_GenerateImpulseToExtLineSync1()
 {
-	LL_SetStateExtLineSynce1(TRUE);
+	LL_SetStateExtLineSync1(TRUE);
 	CONTROL_DelayMs(100);
-	LL_SetStateExtLineSynce1(FALSE);
+	LL_SetStateExtLineSync1(FALSE);
 }
 //-----------------------------
 
 void DBGACT_GenerateImpulseToExtLineSync2()
 {
-	LL_SetStateExtLineSynce2(TRUE);
+	LL_SetStateExtLineSync2(TRUE);
 	CONTROL_DelayMs(100);
-	LL_SetStateExtLineSynce2(FALSE);
+	LL_SetStateExtLineSync2(FALSE);
 }
 //-----------------------------
 
 void DBGACT_GenerateImpulseToIntLineSync1()
 {
-	LL_SetStateIntLineSynce1(TRUE);
+	LL_SetStateIntLineSync1(TRUE);
 	CONTROL_DelayMs(100);
-	LL_SetStateIntLineSynce1(FALSE);
+	LL_SetStateIntLineSync1(FALSE);
 }
 //-----------------------------
 
 void DBGACT_GenerateImpulseToIntLineSync2()
 {
-	LL_SetStateIntLineSynce2(TRUE);
+	LL_SetStateIntLineSync2(TRUE);
 	CONTROL_DelayMs(100);
-	LL_SetStateIntLineSynce2(FALSE);
+	LL_SetStateIntLineSync2(FALSE);
 }
 //-----------------------------
 
 bool DBGACT_ReadStateIntLineSync1()
 {
-	return LL_GetStateIntLineSynce1();
+	return LL_GetStateIntLineSync1();
 }
 //-----------------------------
 
 bool DBGACT_ReadStateIntLineSync2()
 {
-	return LL_GetStateIntLineSynce2();
+	return LL_GetStateIntLineSync2();
 }
 //-----------------------------
