@@ -10,6 +10,7 @@
 #include "LowLevel.h"
 #include "SysConfig.h"
 #include "DebugActions.h"
+#include "Diagnostic.h"
 
 // Types
 //
@@ -97,114 +98,9 @@ static Boolean CONTROL_DispatchAction(Int16U ActionID, pInt16U pUserError)
 			else
 				*pUserError = ERR_OPERATION_BLOCKED;
 			break;
-			
-		case ACT_DBG_PULSE_EXT_SYNC1:
-			{
-				if(DataTable[REG_DBG_STATE])
-				{
-					DBGACT_GenerateImpulseToExtLineSync1();
-				}
-				else
-				{
-					*pUserError = ERR_CONFIGURATION_LOCKED;
-				}
-			}
-			break;
-
-		case ACT_DBG_PULSE_EXT_SYNC2:
-			{
-				if(DataTable[REG_DBG_STATE])
-				{
-					DBGACT_GenerateImpulseToExtLineSync2();
-				}
-				else
-				{
-					*pUserError = ERR_CONFIGURATION_LOCKED;
-				}
-			}
-			break;
-
-		case ACT_DBG_PULSE_INT_SYNC1:
-			{
-				if(DataTable[REG_DBG_STATE])
-				{
-					DBGACT_GenerateImpulseToIntLineSync1();
-				}
-				else
-				{
-					*pUserError = ERR_CONFIGURATION_LOCKED;
-				}
-			}
-			break;
-
-		case ACT_DBG_PULSE_INT_SYNC2:
-			{
-				if(DataTable[REG_DBG_STATE])
-				{
-					DBGACT_GenerateImpulseToIntLineSync2();
-				}
-				else
-				{
-					*pUserError = ERR_CONFIGURATION_LOCKED;
-				}
-			}
-			break;
-
-		case ACT_DBG_IS_STATE_INT_SYNC_1:
-			{
-				if(DataTable[REG_DBG_STATE])
-				{
-					DataTable[REG_DBG_INT_SYNC1] = DBGACT_ReadStateIntLineSync1();
-				}
-				else
-				{
-					*pUserError = ERR_CONFIGURATION_LOCKED;
-				}
-			}
-			break;
-
-		case ACT_DBG_IS_STATE_INT_SYNC_2:
-			{
-				if(DataTable[REG_DBG_STATE])
-				{
-					DataTable[REG_DBG_INT_SYNC2] = DBGACT_ReadStateIntLineSync2();
-				}
-				else
-				{
-					*pUserError = ERR_CONFIGURATION_LOCKED;
-				}
-			}
-			break;
-
-		case ACT_DBG_PULSE_EXT_LED:
-			{
-				if(DataTable[REG_DBG_STATE])
-				{
-					DBGACT_BlinkExtLed();
-				}
-				else
-				{
-					*pUserError = ERR_CONFIGURATION_LOCKED;
-				}
-			}
-			break;
-
-		case ACT_FAN_ON:
-			{
-				LL_SetStateFan(true);
-				DataTable[REG_FAN_STATE] = true;
-			}
-			break;
-
-		case ACT_FAN_OFF:
-			{
-				LL_SetStateFan(false);
-				DataTable[REG_FAN_STATE] = false;
-			}
-			break;
 
 		default:
-			return false;
+			return DIAG_HandleDiagnosticAction(ActionID, pUserError);
 			
 	}
 	return true;
