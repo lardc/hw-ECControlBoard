@@ -14,48 +14,42 @@ void LL_ToggleBoardLED()
 
 void LL_SetStateExtLed(bool State)
 {
-	GPIO_SetState(GPIO_EXT_LED, State);
 }
 //-----------------------------
 
 void LL_SetStateFan(bool State)
 {
-	GPIO_SetState(GPIO_FAN, State);
 }
 //-----------------------------
 
 void LL_SetStateExtLineSync1(bool State)
 {
-	GPIO_SetState(GPIO_EXT_SYNC1_OUT, State);
 }
 //-----------------------------
 
 void LL_SetStateExtLineSync2(bool State)
 {
-	GPIO_SetState(GPIO_EXT_SYNC2_OUT, State);
 }
 //-----------------------------
 
 void LL_SetStateIntLineSync1(bool State)
 {
-	GPIO_SetState(GPIO_INT_SYNC1_OUT, State);
 }
 //-----------------------------
 
 void LL_SetStateIntLineSync2(bool State)
 {
-	GPIO_SetState(GPIO_INT_SYNC2_OUT, State);
 }
 //-----------------------------
 
 bool LL_GetStateIntLineSync1()
 {
-	return GPIO_GetState(GPIO_INT_SYNC1_IN);
+	return false;
 }
 //-----------------------------
 
 bool LL_GetStateIntLineSync2()
 {
-	return GPIO_GetState(GPIO_INT_SYNC2_IN);
+	return false;
 }
 //-----------------------------
