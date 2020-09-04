@@ -14,6 +14,8 @@ int main()
 	// Настройка портов
 	INITCFG_ConfigIO();
 	
+	INITCFG_ConfigSPI();
+
 	// Настройка CAN
 	INITCFG_ConfigCAN();
 	
