@@ -19,6 +19,10 @@ void INITCFG_ConfigIO()
 	
 	// Выходы
 	GPIO_InitPushPullOutput(GPIO_INT_LED);
+	GPIO_InitPushPullOutput(GPIO_DAC_CS);
+	GPIO_InitPushPullOutput(GPIO_DAC_LDAC);
+	GPIO_SetState(GPIO_DAC_CS, false);
+	GPIO_SetState(GPIO_DAC_LDAC, true);
 
 	// Альтернативные функции
 	GPIO_InitAltFunction(GPIO_ALT_CAN_RX, AltFn_9);

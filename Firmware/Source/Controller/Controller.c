@@ -31,6 +31,7 @@ void CONTROL_SwitchToFault(Int16U Reason);
 void CONTROL_DelayMs(uint32_t Delay);
 void CONTROL_UpdateWatchDog();
 void CONTROL_ResetToDefaultState();
+void CONTROL_WriteDAC(uint16_t Data);
 
 // Functions
 //
@@ -77,26 +78,12 @@ static Boolean CONTROL_DispatchAction(Int16U ActionID, pInt16U pUserError)
 	
 	switch (ActionID)
 	{
-		case ACT_ENABLE_POWER:
-			{
-				if(CONTROL_State == DS_None)
-				{
-					CONTROL_SetDeviceState(DS_Enabled);
-				}
-				else if(CONTROL_State != DS_Enabled)
-				{
-					*pUserError = ERR_DEVICE_NOT_READY;
-				}
-				break;
-			}
-			
-		case ACT_DISABLE_POWER:
-			if(CONTROL_State == DS_Enabled)
-			{
-				CONTROL_SetDeviceState(DS_None);
-			}
-			else
-				*pUserError = ERR_OPERATION_BLOCKED;
+		case 10:
+			CONTROL_WriteDAC(DataTable[REG_DBG_STATE] & ~BIT15);
+			break;
+
+		case 11:
+			CONTROL_WriteDAC(DataTable[REG_DBG_STATE] | BIT15);
 			break;
 
 		default:
@@ -136,3 +123,16 @@ void CONTROL_UpdateWatchDog()
 }
 //------------------------------------------
 
+void CONTROL_WriteDAC(uint16_t Data)
+{
+	GPIO_SetState(GPIO_DAC_CS, false);
+	SPI_WriteByte(SPI1, Data);
+	GPIO_SetState(GPIO_DAC_CS, true);
+	DELAY_US(1);
+
+	GPIO_SetState(GPIO_DAC_LDAC, false);
+	DELAY_US(5);
+	GPIO_SetState(GPIO_DAC_LDAC, true);
+	DELAY_US(1);
+}
+//------------------------------------------
