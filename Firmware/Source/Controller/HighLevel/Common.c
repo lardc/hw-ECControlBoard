@@ -62,8 +62,8 @@ bool COMM_SlavesReadState()
 		{
 			result = false;
 
-			if(BHL_ReadRegister(NodeArray[i].NodeID, REG_COMM_DEV_STATE, &State))
-				if(BHL_ReadRegister(NodeArray[i].NodeID, REG_COMM_OP_RESULT, &OpResult))
+			if(BHL_ReadRegister(NodeArray[i].NodeID, COMM_REG_DEV_STATE, &State))
+				if(BHL_ReadRegister(NodeArray[i].NodeID, COMM_REG_OP_RESULT, &OpResult))
 				{
 					NodeArray[i].State = State;
 					NodeArray[i].OpResult = OpResult;
@@ -80,25 +80,25 @@ bool COMM_SlavesReadState()
 
 bool COMM_SlavesEnablePower()
 {
-	return COMM_SlavesExecute(ACT_COMM_ENABLE_POWER);
+	return COMM_SlavesExecute(COMM_ACT_ENABLE_POWER);
 }
 //-----------------------------
 
 bool COMM_SlavesDisablePower()
 {
-	return COMM_SlavesExecute(ACT_COMM_DISABLE_POWER);
+	return COMM_SlavesExecute(COMM_ACT_DISABLE_POWER);
 }
 //-----------------------------
 
 bool COMM_SlavesClearFault()
 {
-	return COMM_SlavesExecute(ACT_COMM_FAULT_CLEAR);
+	return COMM_SlavesExecute(COMM_ACT_FAULT_CLEAR);
 }
 //-----------------------------
 
 bool COMM_SlavesClearWarning()
 {
-	return COMM_SlavesExecute(ACT_COMM_WARNING_CLEAR);
+	return COMM_SlavesExecute(COMM_ACT_WARNING_CLEAR);
 }
 //-----------------------------
 

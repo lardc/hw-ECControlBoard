@@ -2,21 +2,14 @@
 #include "Multiplexer.h"
 
 // Includes
-#include "DeviceObjectDictionary.h"
 #include "MultiplexerDictionary.h"
 #include "BCCIMHighLevel.h"
-
-
-// Variables
-//
-
-
-// Forward functions
-//
-
+#include "Common.h"
 
 // Functions
 //
-
-
+bool MUX_ExecuteCommutation()
+{
+	return true;
+}
 //-----------------------------
