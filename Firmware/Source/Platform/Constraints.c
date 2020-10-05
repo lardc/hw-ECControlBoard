@@ -8,24 +8,24 @@
 // Constants
 //
 const TableItemConstraint NVConstraint[DATA_TABLE_NV_SIZE] = {
-		{0, 0, 0},																	// 0
-		{0, 0, 0},																	// 1
-		{0, 0, 0},																	// 2
-		{0, 0, 0},																	// 3
-		{0, 0, 0},																	// 4
-		{0, 0, 0},																	// 5
-		{0, 0, 0},																	// 6
-		{0, 0, 0},																	// 7
+		{NODE_ID_MIN, NODE_ID_MAX, NODE_ID_MIN},									// 0
+		{NODE_ID_MIN, NODE_ID_MAX, NODE_ID_MIN},									// 1
+		{NODE_ID_MIN, NODE_ID_MAX, NODE_ID_MIN},									// 2
+		{NODE_ID_MIN, NODE_ID_MAX, NODE_ID_MIN},									// 3
+		{NODE_ID_MIN, NODE_ID_MAX, NODE_ID_MIN},									// 4
+		{NODE_ID_MIN, NODE_ID_MAX, NODE_ID_MIN},									// 5
+		{NODE_ID_MIN, NODE_ID_MAX, NODE_ID_MIN},									// 6
+		{NODE_ID_MIN, NODE_ID_MAX, NODE_ID_MIN},									// 7
 		{0, 0, 0},																	// 8
 		{0, 0, 0},																	// 9
-		{0, 0, 0},																	// 10
-		{0, 0, 0},																	// 11
-		{0, 0, 0},																	// 12
-		{0, 0, 0},																	// 13
-		{0, 0, 0},																	// 14
-		{0, 0, 0},																	// 15
-		{0, 0, 0},																	// 16
-		{0, 0, 0},																	// 17
+		{NO, YES, NO},																// 10
+		{NO, YES, NO},																// 11
+		{NO, YES, NO},																// 12
+		{NO, YES, NO},																// 13
+		{NO, YES, NO},																// 14
+		{NO, YES, NO},																// 15
+		{NO, YES, NO},																// 16
+		{NO, YES, NO},																// 17
 		{0, 0, 0},																	// 18
 		{0, 0, 0},																	// 19
 		{0, 0, 0},																	// 20

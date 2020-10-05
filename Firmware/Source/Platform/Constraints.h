@@ -6,9 +6,12 @@
 #include "DataTable.h"
 #include "Global.h"
 
-//Definitions
+// Definitions
 #define NO		0
 #define YES		1
+
+#define NODE_ID_MIN			1
+#define NODE_ID_MAX			255
 
 // Types
 typedef struct __TableItemConstraint

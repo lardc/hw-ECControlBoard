@@ -27,6 +27,23 @@
 
 // Регистры
 // Сохраняемые регистры
+#define REG_SLAVE_NID_MULTIPLEXER		0	// Can NodeID для ECDCMultiplexerBoard
+#define REG_SLAVE_NID_DC_CURRENT		1	// Can NodeID для ECDCCurrentBoard
+#define REG_SLAVE_NID_DC_HV				2	// Can NodeID для ECDCHighVoltageBoard
+#define REG_SLAVE_NID_DC_VOLTAGE1		3	// Can NodeID для ECDCVoltageBoard №1
+#define REG_SLAVE_NID_DC_VOLTAGE2		4	// Can NodeID для ECDCVoltageBoard №2
+#define REG_SLAVE_NID_DC_VOLTAGE3		5	// Can NodeID для ECDCVoltageBoard №3
+#define REG_SLAVE_NID_AC_VOLTAGE1		6	// Can NodeID для ECACVoltageBoard №1
+#define REG_SLAVE_NID_AC_VOLTAGE2		7	// Can NodeID для ECACVoltageBoard №2
+// 8 - 9
+#define REG_EMULATE_MULTIPLEXER			10	// Режим эмуляции для ECDCMultiplexerBoard
+#define REG_EMULATE_DC_CURRENT			11	// Режим эмуляции для ECDCCurrentBoard
+#define REG_EMULATE_DC_HV				12	// Режим эмуляции для ECDCHighVoltageBoard
+#define REG_EMULATE_DC_VOLTAGE1			13	// Режим эмуляции для ECDCVoltageBoard №1
+#define REG_EMULATE_DC_VOLTAGE2			14	// Режим эмуляции для ECDCVoltageBoard №2
+#define REG_EMULATE_DC_VOLTAGE3			15	// Режим эмуляции для ECDCVoltageBoard №3
+#define REG_EMULATE_AC_VOLTAGE1			16	// Режим эмуляции для ECACVoltageBoard №1
+#define REG_EMULATE_AC_VOLTAGE2			17	// Режим эмуляции для ECACVoltageBoard №2
 
 // Несохраняемы регистры чтения-записи
 #define REG_DBG_STATE					150	// Регистр режима Отладки
