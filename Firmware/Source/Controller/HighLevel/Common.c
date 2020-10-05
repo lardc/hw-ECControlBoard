@@ -6,31 +6,6 @@
 #include "DataTable.h"
 #include "CommonDictionary.h"
 
-// Types
-//
-typedef enum __NodeName
-{
-	NAME_Multiplexer = 0,
-	NAME_DCCurrent = 1,
-	NAME_DCHighVoltage = 2,
-	NAME_DCVoltage1 = 3,
-	NAME_DCVoltage2 = 4,
-	NAME_DCVoltage3 = 5,
-	NAME_ACVoltage1 = 6,
-	NAME_ACVoltage2 = 7
-
-} NodeName;
-
-typedef struct __SlaveNode
-{
-	bool Initialized;
-	bool Emulation;
-	uint16_t NodeID;
-	uint16_t State;
-	uint16_t OpResult;
-
-} SlaveNode, *pSlaveNode;
-
 // Variables
 //
 static SlaveNode NodeArray[MAX_SLAVE_NODES] = {0};
@@ -124,5 +99,11 @@ bool COMM_SlavesClearFault()
 bool COMM_SlavesClearWarning()
 {
 	return COMM_SlavesExecute(ACT_COMM_WARNING_CLEAR);
+}
+//-----------------------------
+
+pSlaveNode COMM_GetSlaveDevicePointer(NodeName Name)
+{
+	return &(NodeArray[Name]);
 }
 //-----------------------------
