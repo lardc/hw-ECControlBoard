@@ -2,8 +2,9 @@
 #include "Common.h"
 
 // Includes
+#include "BCCIMHighLevel.h"
 #include "DataTable.h"
-#include "DeviceObjectDictionary.h"
+#include "CommonDictionary.h"
 
 // Types
 //
@@ -25,16 +26,19 @@ typedef struct __SlaveNode
 	bool Initialized;
 	bool Emulation;
 	uint16_t NodeID;
+	uint16_t State;
+	uint16_t OpResult;
 
 } SlaveNode, *pSlaveNode;
 
 // Variables
 //
-static SlaveNode Nodes[MAX_SLAVE_NODES] = {0};
+static SlaveNode NodeArray[MAX_SLAVE_NODES] = {0};
 
 // Forward functions
 //
 void COMM_InitNode(NodeName Name, uint16_t RegNodeID, bool RegEmulation);
+bool COMM_SlavesExecute(uint16_t Command);
 
 // Functions
 //
@@ -53,8 +57,72 @@ void COMM_InitSlaveArray()
 
 void COMM_InitNode(NodeName Name, uint16_t RegNodeID, bool RegEmulation)
 {
-	Nodes[Name].Initialized = true;
-	Nodes[Name].Emulation = DataTable[RegEmulation];
-	Nodes[Name].NodeID = DataTable[RegNodeID];
+	NodeArray[Name].Initialized = true;
+	NodeArray[Name].Emulation = DataTable[RegEmulation];
+	NodeArray[Name].NodeID = DataTable[RegNodeID];
+}
+//-----------------------------
+
+bool COMM_SlavesExecute(uint16_t Command)
+{
+	for(uint8_t i = 0; i < MAX_SLAVE_NODES; ++i)
+	{
+		if(NodeArray[i].Initialized && !NodeArray[i].Emulation)
+			if(!BHL_Call(NodeArray[i].NodeID, Command))
+				return false;
+	}
+
+	return true;
+}
+//-----------------------------
+
+bool COMM_SlavesReadState()
+{
+	uint16_t State, OpResult;
+	bool result;
+
+	for(uint8_t i = 0; i < MAX_SLAVE_NODES; ++i)
+	{
+		if(NodeArray[i].Initialized && !NodeArray[i].Emulation)
+		{
+			result = false;
+
+			if(BHL_ReadRegister(NodeArray[i].NodeID, REG_COMM_DEV_STATE, &State))
+				if(BHL_ReadRegister(NodeArray[i].NodeID, REG_COMM_OP_RESULT, &OpResult))
+				{
+					NodeArray[i].State = State;
+					NodeArray[i].OpResult = OpResult;
+					result = true;
+				}
+
+			if(!result)
+				return false;
+		}
+	}
+
+	return true;
+}
+
+bool COMM_SlavesEnablePower()
+{
+	return COMM_SlavesExecute(ACT_COMM_ENABLE_POWER);
+}
+//-----------------------------
+
+bool COMM_SlavesDisablePower()
+{
+	return COMM_SlavesExecute(ACT_COMM_DISABLE_POWER);
+}
+//-----------------------------
+
+bool COMM_SlavesClearFault()
+{
+	return COMM_SlavesExecute(ACT_COMM_FAULT_CLEAR);
+}
+//-----------------------------
+
+bool COMM_SlavesClearWarning()
+{
+	return COMM_SlavesExecute(ACT_COMM_WARNING_CLEAR);
 }
 //-----------------------------
