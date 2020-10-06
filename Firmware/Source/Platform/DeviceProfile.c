@@ -13,6 +13,7 @@
 #include "Constraints.h"
 #include "ZwNCAN.h"
 #include "ZwSCI.h"
+#include "BCCIMHighLevel.h"
 
 // Types
 //
