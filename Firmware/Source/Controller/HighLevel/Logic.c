@@ -64,3 +64,15 @@ void LOGIC_HandlePowerOn()
 	}
 }
 //-----------------------------
+
+void LOGIC_HandlePowerOff()
+{
+	if(CONTROL_State == DS_None && CONTROL_SubState == DSS_PowerOff)
+	{
+		if(COMM_SlavesDisablePower())
+			CONTROL_SetDeviceState(DS_None, DSS_None);
+		else
+			CONTROL_SwitchToFault(DF_INTERFACE);
+	}
+}
+//-----------------------------

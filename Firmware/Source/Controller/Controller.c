@@ -72,6 +72,7 @@ void CONTROL_Idle()
 
 	LOGIC_HandleStateUpdate();
 	LOGIC_HandlePowerOn();
+	LOGIC_HandlePowerOff();
 }
 //------------------------------------------
 
@@ -101,6 +102,21 @@ static Boolean CONTROL_DispatchAction(Int16U ActionID, pInt16U pUserError)
 				else if(CONTROL_State != DS_None)
 					*pUserError = ERR_OPERATION_BLOCKED;
 			}
+			break;
+
+		case ACT_FAULT_CLEAR:
+			{
+				if(CONTROL_State == DS_Fault)
+				{
+					CONTROL_SetDeviceState(DS_None, DSS_None);
+					if(!COMM_SlavesClearFault())
+						CONTROL_SwitchToFault(DF_INTERFACE);
+				}
+			}
+			break;
+
+		case ACT_WARNING_CLEAR:
+			DataTable[REG_WARNING] = WARNING_NONE;
 			break;
 
 		default:
