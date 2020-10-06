@@ -5,7 +5,16 @@
 #include "DataTable.h"
 #include "LowLevel.h"
 #include "Controller.h"
-#include "DebugActions.h"
+#include "Delay.h"
+
+// Forward functions
+void DBGACT_BlinkExtLed();
+void DBGACT_GenerateImpulseToExtLineSync1();
+void DBGACT_GenerateImpulseToExtLineSync2();
+void DBGACT_GenerateImpulseToIntLineSync1();
+void DBGACT_GenerateImpulseToIntLineSync2();
+bool DBGACT_ReadStateIntLineSync1();
+bool DBGACT_ReadStateIntLineSync2();
 
 // Functions
 bool DIAG_HandleDiagnosticAction(uint16_t ActionID, uint16_t *pUserError)
@@ -74,3 +83,56 @@ bool DIAG_HandleDiagnosticAction(uint16_t ActionID, uint16_t *pUserError)
 
 	return true;
 }
+// ----------------------------------------
+
+void DBGACT_BlinkExtLed()
+{
+	LL_SetStateExtLed(true);
+	DELAY_MS(1000);
+	LL_SetStateExtLed(false);
+}
+//-----------------------------
+
+void DBGACT_GenerateImpulseToExtLineSync1()
+{
+	LL_SetStateExtLineSync1(true);
+	DELAY_MS(100);
+	LL_SetStateExtLineSync1(false);
+}
+//-----------------------------
+
+void DBGACT_GenerateImpulseToExtLineSync2()
+{
+	LL_SetStateExtLineSync2(true);
+	DELAY_MS(100);
+	LL_SetStateExtLineSync2(false);
+}
+//-----------------------------
+
+void DBGACT_GenerateImpulseToIntLineSync1()
+{
+	LL_SetStateIntLineSync1(true);
+	DELAY_MS(100);
+	LL_SetStateIntLineSync1(false);
+}
+//-----------------------------
+
+void DBGACT_GenerateImpulseToIntLineSync2()
+{
+	LL_SetStateIntLineSync2(true);
+	DELAY_MS(100);
+	LL_SetStateIntLineSync2(false);
+}
+//-----------------------------
+
+bool DBGACT_ReadStateIntLineSync1()
+{
+	return LL_GetStateIntLineSync1();
+}
+//-----------------------------
+
+bool DBGACT_ReadStateIntLineSync2()
+{
+	return LL_GetStateIntLineSync2();
+}
+//-----------------------------

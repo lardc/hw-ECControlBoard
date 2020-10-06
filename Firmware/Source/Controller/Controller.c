@@ -9,7 +9,6 @@
 #include "Global.h"
 #include "LowLevel.h"
 #include "SysConfig.h"
-#include "DebugActions.h"
 #include "Diagnostic.h"
 
 // Types
@@ -118,14 +117,6 @@ void CONTROL_SetDeviceState(DeviceState NewState)
 {
 	CONTROL_State = NewState;
 	DataTable[REG_DEV_STATE] = NewState;
-}
-//------------------------------------------
-
-void CONTROL_DelayMs(uint32_t Delay)
-{
-	uint64_t Counter = (uint64_t)CONTROL_TimeCounter + Delay;
-	while(Counter > CONTROL_TimeCounter)
-		CONTROL_UpdateWatchDog();
 }
 //------------------------------------------
 
