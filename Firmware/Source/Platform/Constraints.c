@@ -146,14 +146,14 @@ const TableItemConstraint VConstraint[DATA_TABLE_WP_START - DATA_TABLE_WR_START]
 		{0, 0, 0},																	// 132
 		{0, 0, 0},																	// 133
 		{0, 0, 0},																	// 134
-		{0, 0, 0},																	// 135
-		{0, 0, 0},																	// 136
-		{0, 0, 0},																	// 137
-		{0, 0, 0},																	// 138
-		{0, 0, 0},																	// 139
-		{0, 0, 0},																	// 140
-		{0, 0, 0},																	// 141
-		{0, 0, 0},																	// 142
+		{0, INT16U_MAX, 0},															// 135
+		{0, INT16U_MAX, 0},															// 136
+		{0, INT16U_MAX, 0},															// 137
+		{0, INT16U_MAX, 0},															// 138
+		{0, INT16U_MAX, 0},															// 139
+		{0, INT16U_MAX, 0},															// 140
+		{0, INT16U_MAX, 0},															// 141
+		{0, INT16U_MAX, 0},															// 142
 		{0, 0, 0},																	// 143
 		{0, 0, 0},																	// 144
 		{0, 0, 0},																	// 145
@@ -161,7 +161,7 @@ const TableItemConstraint VConstraint[DATA_TABLE_WP_START - DATA_TABLE_WR_START]
 		{0, 0, 0},																	// 147
 		{0, 0, 0},																	// 148
 		{0, 0, 0},																	// 149
-		{NO, YES, NO},																// 150
+		{0, 0, 0},																	// 150
 		{0, 0, 0},																	// 151
 		{0, 0, 0},																	// 152
 		{0, 0, 0},																	// 153
@@ -201,6 +201,6 @@ const TableItemConstraint VConstraint[DATA_TABLE_WP_START - DATA_TABLE_WR_START]
 		{0, 0, 0},																	// 187
 		{0, 0, 0},																	// 188
 		{0, 0, 0},																	// 189
-		{0, 0, 0},																	// 190
+		{0, INT16U_MAX, 0},															// 190
 		{0, 0, 0}																	// 191
 };

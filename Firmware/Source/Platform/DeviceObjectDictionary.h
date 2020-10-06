@@ -46,7 +46,28 @@
 #define REG_EMULATE_AC_VOLTAGE2			17	// Режим эмуляции для ECACVoltageBoard №2
 
 // Несохраняемы регистры чтения-записи
-#define REG_DBG_STATE					150	// Регистр режима Отладки
+#define REG_MEASUREMENT_TYPE			128	// Тип выполняемого измерения
+#define REG_DUT_CASE_TYPE				129	// Тип корпуса испытуемого прибора
+#define REG_DUT_POSITION_NUMBER			130	// Номер позиции на приборе
+#define REG_INPUT_CONTROL_TYPE			131	// Тип входного сигнала управления
+#define REG_I_LEAK_VOLTAGE_TYPE			132	// Тип выходного напряжения измерения тока утечки
+
+#define REG32S_INPUT_VOLTAGE			135	// Напряжение входа управления
+#define REG32S_INPUT_VOLTAGE_32			136
+#define REG32S_INPUT_CURRENT			137	// Ток входа управления
+#define REG32S_INPUT_CURRENT_32			138
+
+#define REG32S_OUTPUT_VOLTAGE			139	// Напряжение входа управления
+#define REG32S_OUTPUT_VOLTAGE_32		140
+#define REG32S_OUTPUT_CURRENT			141	// Ток входа управления
+#define REG32S_OUTPUT_CURRENT_32		142
+
+#define REG_AUX_PS1_VOLTAGE				143	// Напряжение вспомогательного источника питания 1
+#define REG_AUX_PS1_CURRENT				144	// Ток вспомогательного источника питания 1
+#define REG_AUX_PS2_VOLTAGE				145	// Напряжение вспомогательного источника питания 2
+#define REG_AUX_PS2_CURRENT				146	// Ток вспомогательного источника питания 2
+
+#define REG_DBG_STATE					190	// Регистр режима Отладки
 
 // Регистры только чтение
 #define REG_DEV_STATE					192	// Регистр состояния

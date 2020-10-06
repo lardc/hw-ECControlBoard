@@ -321,4 +321,15 @@ Boolean DEVPROFILE_CallbackWriteX(Int16U Endpoint, pInt16U Buffer, Boolean Strea
 }
 // ----------------------------------------
 
-// No more
+Int32U DEVPROFILE_ReadValue32(pInt16U pTable, Int16U Index)
+{
+	return pTable[Index] | (((Int32U)(pTable[Index + 1])) << 16);
+}
+// ----------------------------------------
+
+void DEVPROFILE_WriteValue32(pInt16U pTable, Int16U Index, Int32U Data)
+{
+	pTable[Index] = Data & 0x0000FFFF;
+	pTable[Index + 1] = Data >> 16;
+}
+// ----------------------------------------
