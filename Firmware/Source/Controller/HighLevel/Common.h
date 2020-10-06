@@ -32,7 +32,10 @@ typedef struct __SlaveNode
 // Functions
 //
 void COMM_InitSlaveArray();
+
 bool COMM_SlavesReadState();
+bool COMM_AreSlavesInStateX(uint16_t State);
+bool COMM_IsSlaveInFaultOrDisabled();
 
 bool COMM_SlavesEnablePower();
 bool COMM_SlavesDisablePower();

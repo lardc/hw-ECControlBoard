@@ -33,16 +33,15 @@ void INITCFG_ConfigIO()
 	GPIO_InitAltFunction(GPIO_ALT_UART1_TX, AltFn_7);
 	GPIO_InitAltFunction(GPIO_ALT_UART2_RX, AltFn_7);
 	GPIO_InitAltFunction(GPIO_ALT_UART2_TX, AltFn_7);
-
 }
-
 //------------------------------------------------
+
 void INITCFG_ConfigCAN()
 {
 	RCC_CAN_Clk_EN(CAN_1_ClkEN);
-	NCAN_Init(SYSCLK, CAN_BAUDRATE, FALSE);
-	NCAN_FIFOInterrupt(TRUE);
-	NCAN_FilterInit(0, CAN_SLAVE_FILTER_ID, CAN_MASTER_FILTER_ID); // Фильтр 0 пропускает все сообщения
+	NCAN_Init(SYSCLK, CAN_BAUDRATE, false);
+	NCAN_FIFOInterrupt(true);
+	NCAN_FilterInit(0, CAN_SLAVE_FILTER_ID, CAN_MASTER_FILTER_ID);
 }
 //------------------------------------------------
 
@@ -65,6 +64,6 @@ void INITCFG_ConfigTimer7()
 void INITCFG_ConfigWatchDog()
 {
 	IWDG_Config();
-	IWDG_ConfigureFastUpdate();
+	IWDG_ConfigureSlowUpdate();
 }
 //------------------------------------------------

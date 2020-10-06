@@ -44,6 +44,8 @@
 #define REG_EMULATE_DC_VOLTAGE3			15	// Режим эмуляции для ECDCVoltageBoard №3
 #define REG_EMULATE_AC_VOLTAGE1			16	// Режим эмуляции для ECACVoltageBoard №1
 #define REG_EMULATE_AC_VOLTAGE2			17	// Режим эмуляции для ECACVoltageBoard №2
+// 18 - 19
+#define REG_POWER_ENABLE_TIMEOUT		20	// Таймаут ожидания включения питания (в сек.)
 
 // Несохраняемы регистры чтения-записи
 #define REG_MEASUREMENT_TYPE			128	// Тип выполняемого измерения
@@ -76,6 +78,12 @@
 #define REG_WARNING						195	// Регистр Warning
 #define REG_PROBLEM						196	// Регистр Problem
 #define REG_OP_RESULT					197	// Регистр результата операции
+#define REG_DEV_SUB_STATE				198	// Регистр вспомогательного состояния
+
+#define REG_BHL_ERROR_CODE				210	// Ошибка интерфейса ВУ: код ошибки
+#define REG_BHL_DEVICE					211	// Ошибка интерфейса ВУ: NID устройства
+#define REG_BHL_FUNCTION				212	// Ошибка интерфейса ВУ: код функции
+#define REG_BHL_EXT_DATA				213	// Ошибка интерфейса ВУ: расширенная информация
 
 #define REG_DBG_INT_SYNC1				251	// Регистр состояния внутреннейи линии SYNC1
 #define REG_DBG_INT_SYNC2				252	// Регистр состояния внутреннейи линии SYNC2
@@ -89,6 +97,9 @@
 
 //  Fault and disable codes
 #define DF_NONE							0
+#define DF_INTERFACE					1	// Ошибка мастер-интерфейса
+#define DF_LOGIC_WRONG_STATE			2	// Ведомый узел находится в некорректном состоянии
+#define DF_LOGIC_STATE_TIMEOUT			3	// Таймаут смены состояния ведомым узлом
 
 // Problem
 #define PROBLEM_NONE					0

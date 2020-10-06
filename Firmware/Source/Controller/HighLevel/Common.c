@@ -77,6 +77,35 @@ bool COMM_SlavesReadState()
 
 	return true;
 }
+//-----------------------------
+
+bool COMM_AreSlavesInStateX(uint16_t State)
+{
+	bool result = true;
+
+	for(uint16_t i = 0; i < MAX_SLAVE_NODES; ++i)
+		if(NodeArray[i].Initialized && !NodeArray[i].Emulation)
+		{
+			if(NodeArray[i].State != State)
+				result = false;
+		}
+
+	return result;
+}
+//-----------------------------
+
+bool COMM_IsSlaveInFaultOrDisabled()
+{
+	for(uint8_t i = 0; i < MAX_SLAVE_NODES; ++i)
+		if(NodeArray[i].Initialized && !NodeArray[i].Emulation)
+		{
+			if(NodeArray[i].State == CDS_Fault || NodeArray[i].State == CDS_Disabled)
+				return true;
+		}
+
+	return false;
+}
+//-----------------------------
 
 bool COMM_SlavesEnablePower()
 {

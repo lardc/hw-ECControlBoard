@@ -15,4 +15,14 @@
 #define COMM_REG_PROBLEM					196	// Регистр Problem
 #define COMM_REG_OP_RESULT					197	// Регистр результата операции
 
+// States
+typedef enum __CommonDeviceState
+{
+	CDS_None = 0,
+	CDS_Fault = 1,
+	CDS_Disabled = 2,
+	CDS_Ready = 3,
+	CDS_InProcess = 4
+} CommonDeviceState;
+
 #endif // __COMMON_DICTIONARY_H

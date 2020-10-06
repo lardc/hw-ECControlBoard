@@ -10,8 +10,12 @@
 #define NO		0
 #define YES		1
 
-#define NODE_ID_MIN			1
-#define NODE_ID_MAX			255
+#define NODE_ID_MIN					1
+#define NODE_ID_MAX					255
+
+#define TIMEOUT_POWER_EN_MIN		5
+#define TIMEOUT_POWER_EN_MAX		60
+#define TIMEOUT_POWER_EN_DEF		10
 
 // Types
 typedef struct __TableItemConstraint

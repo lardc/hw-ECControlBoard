@@ -1,4 +1,4 @@
-// -----------------------------------------
+// ----------------------------------------
 // Global definitions
 // ----------------------------------------
 
@@ -28,7 +28,7 @@ const TableItemConstraint NVConstraint[DATA_TABLE_NV_SIZE] = {
 		{NO, YES, NO},																// 17
 		{0, 0, 0},																	// 18
 		{0, 0, 0},																	// 19
-		{0, 0, 0},																	// 20
+		{TIMEOUT_POWER_EN_MIN, TIMEOUT_POWER_EN_MAX, TIMEOUT_POWER_EN_DEF},			// 20
 		{0, 0, 0},																	// 21
 		{0, 0, 0},																	// 22
 		{0, 0, 0},																	// 23

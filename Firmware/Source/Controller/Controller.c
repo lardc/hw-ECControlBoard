@@ -10,6 +10,8 @@
 #include "LowLevel.h"
 #include "SysConfig.h"
 #include "Diagnostic.h"
+#include "Common.h"
+#include "Logic.h"
 
 // Types
 //
@@ -17,7 +19,8 @@ typedef void (*FUNC_AsyncDelegate)();
 
 // Variables
 //
-volatile DeviceState CONTROL_State = DS_None;
+DeviceState CONTROL_State = DS_None;
+DeviceSubState CONTROL_SubState = DSS_None;
 static Boolean CycleActive = false;
 
 volatile Int64U CONTROL_TimeCounter = 0;
@@ -25,9 +28,6 @@ volatile Int64U CONTROL_TimeCounter = 0;
 /// Forward functions
 //
 static Boolean CONTROL_DispatchAction(Int16U ActionID, pInt16U pUserError);
-void CONTROL_SetDeviceState(DeviceState NewState);
-void CONTROL_SwitchToFault(Int16U Reason);
-void CONTROL_DelayMs(uint32_t Delay);
 void CONTROL_UpdateWatchDog();
 void CONTROL_ResetToDefaultState();
 
@@ -44,6 +44,9 @@ void CONTROL_Init()
 	// Сброс значений
 	DEVPROFILE_ResetControlSection();
 	CONTROL_ResetToDefaultState();
+
+	// Инициализация таблицы slave-узлов
+	COMM_InitSlaveArray();
 }
 //------------------------------------------
 
@@ -58,15 +61,17 @@ void CONTROL_ResetToDefaultState()
 	DEVPROFILE_ResetScopes(0);
 	DEVPROFILE_ResetEPReadState();
 	
-	CONTROL_SetDeviceState(DS_None);
+	CONTROL_SetDeviceState(DS_None, DSS_None);
 }
-
 //------------------------------------------
 
 void CONTROL_Idle()
 {
 	DEVPROFILE_ProcessRequests();
 	CONTROL_UpdateWatchDog();
+
+	LOGIC_HandleStateUpdate();
+	LOGIC_HandlePowerOn();
 }
 //------------------------------------------
 
@@ -80,43 +85,55 @@ static Boolean CONTROL_DispatchAction(Int16U ActionID, pInt16U pUserError)
 			{
 				if(CONTROL_State == DS_None)
 				{
-					CONTROL_SetDeviceState(DS_Enabled);
+					CONTROL_SetDeviceState(DS_Ready, DSS_PowerEnable);
 				}
-				else if(CONTROL_State != DS_Enabled)
-				{
+				else if(CONTROL_State != DS_Ready)
 					*pUserError = ERR_DEVICE_NOT_READY;
-				}
-				break;
 			}
+			break;
 			
 		case ACT_DISABLE_POWER:
-			if(CONTROL_State == DS_Enabled)
 			{
-				CONTROL_SetDeviceState(DS_None);
+				if(CONTROL_State == DS_Ready)
+				{
+					CONTROL_SetDeviceState(DS_None, DSS_None);
+				}
+				else if(CONTROL_State != DS_None)
+					*pUserError = ERR_OPERATION_BLOCKED;
 			}
-			else
-				*pUserError = ERR_OPERATION_BLOCKED;
 			break;
 
 		default:
 			return DIAG_HandleDiagnosticAction(ActionID, pUserError);
-			
 	}
+
 	return true;
 }
 //-----------------------------------------------
 
 void CONTROL_SwitchToFault(Int16U Reason)
 {
-	CONTROL_SetDeviceState(DS_Fault);
+	if(Reason == DF_INTERFACE)
+	{
+		BHLError Error = BHL_GetError();
+		DataTable[REG_BHL_ERROR_CODE] = Error.ErrorCode;
+		DataTable[REG_BHL_DEVICE] = Error.Device;
+		DataTable[REG_BHL_FUNCTION] = Error.Func;
+		DataTable[REG_BHL_EXT_DATA] = Error.ExtData;
+	}
+
+	CONTROL_SetDeviceState(DS_Fault, DSS_None);
 	DataTable[REG_FAULT_REASON] = Reason;
 }
 //------------------------------------------
 
-void CONTROL_SetDeviceState(DeviceState NewState)
+void CONTROL_SetDeviceState(DeviceState NewState, DeviceSubState NewSubState)
 {
 	CONTROL_State = NewState;
 	DataTable[REG_DEV_STATE] = NewState;
+
+	CONTROL_SubState = NewSubState;
+	DataTable[REG_DEV_SUB_STATE] = NewSubState;
 }
 //------------------------------------------
 
@@ -126,4 +143,3 @@ void CONTROL_UpdateWatchDog()
 		IWDG_Refresh();
 }
 //------------------------------------------
-
