@@ -40,6 +40,13 @@ typedef struct __SlaveNode
 
 } SlaveNode, *pSlaveNode;
 
+typedef struct __VIPair
+{
+	float Voltage;
+	float Current;
+
+} VIPair, *pVIPair;
+
 // Functions
 //
 void COMM_InitSlaveArray();
