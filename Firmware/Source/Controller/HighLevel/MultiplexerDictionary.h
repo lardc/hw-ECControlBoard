@@ -11,11 +11,11 @@
 #define MUX_REG_TYPE_CASE					131	// Тип корпуса
 #define MUX_REG_POSITION_OF_CASE			132	// Позиция
 #define MUX_REG_TYPE_SIGNAL_CTRL			133	// Тип управления
-#define MUX_REG_TYPE_SIGNAL_AT_MUX_LEAKAGEAGE		134	// Тип сигнала при утечке
+#define MUX_REG_TYPE_LEAKAGE				134	// Тип сигнала при утечке
 #define MUX_REG_TYPE_POLARITY				135	// Полярность подключения
 
 // Типы измерений
-#define MUX_MEASURE_MUX_LEAKAGEAGE_CURRENT			1	// Ток утечки в закрытом состоянии
+#define MUX_MEASURE_LEAKAGE_CURRENT			1	// Ток утечки в закрытом состоянии
 #define MUX_MEASURE_ON_VOLTAGE				2	// Остаточное напряжение в открытом состоянии
 #define MUX_MEASURE_INPUT_VOLTAGE			3	// Входное напряжение
 #define MUX_MEASURE_INHIBIT_VOLTAGE			4	// Напряжение запрета

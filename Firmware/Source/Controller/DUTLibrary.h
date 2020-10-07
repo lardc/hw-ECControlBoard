@@ -6,21 +6,21 @@
 // Types
 typedef enum __DL_Case
 {
-	A1 = 0,
-	I1 = 1,
-	I6 = 2,
-	B1 = 3,
-	B2 = 4,
-	B5 = 5,
-	V1 = 6,
-	V2 = 7,
-	V104 = 8,
-	V108 = 9,
-	L1 = 10,
-	L2 = 11,
-	D1 = 12,
-	D2 = 13,
-	D192 = 14
+	A1 = 1,
+	I1 = 2,
+	I6 = 3,
+	B1 = 4,
+	B2 = 5,
+	B5 = 6,
+	V1 = 7,
+	V2 = 8,
+	V104 = 9,
+	V108 = 10,
+	L1 = 11,
+	L2 = 12,
+	D1 = 13,
+	D2 = 14,
+	D192 = 15
 
 } DL_Case;
 
@@ -49,9 +49,9 @@ typedef enum __DL_AuxPowerSupply
 
 typedef enum __DL_InputType
 {
-	VDC = 0,
-	VAC = 1,
-	IDC = 2
+	VDC = 1,
+	IDC = 2,
+	VAC = 3
 
 } DL_InputType;
 

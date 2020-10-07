@@ -4,7 +4,6 @@
 // Includes
 #include "BCCIMHighLevel.h"
 #include "DataTable.h"
-#include "CommonDictionary.h"
 
 // Variables
 //
