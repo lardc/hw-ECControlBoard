@@ -4,7 +4,11 @@
 // Includes
 #include "MultiplexerDictionary.h"
 #include "BCCIMHighLevel.h"
-#include "Common.h"
+
+// Forward functions
+//
+bool MUX_Connect(uint16_t NodeID, MeasurementType MeasureType, DL_Case Case, uint16_t Position,
+		DL_InputType InputType, uint16_t LeakageType, uint16_t Polarity);
 
 // Functions
 //
@@ -34,7 +38,7 @@ bool MUX_Disconnect(uint16_t NodeID)
 
 bool MUX_ConnectObject(MuxObject Settings)
 {
-	return MUX_Commutate(Settings.NodeID, Settings.MeasureType, Settings.Case,
+	return MUX_Connect(Settings.NodeID, Settings.MeasureType, Settings.Case,
 			Settings.Position, Settings.InputType, Settings.LeakageType, Settings.Polarity);
 }
 //-----------------------------

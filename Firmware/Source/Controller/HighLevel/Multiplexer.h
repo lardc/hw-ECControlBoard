@@ -3,6 +3,7 @@
 
 // Include
 #include "stdinc.h"
+#include "Common.h"
 
 // Types
 typedef struct __MuxObject
