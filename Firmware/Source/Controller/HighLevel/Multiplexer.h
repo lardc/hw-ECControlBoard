@@ -19,6 +19,7 @@ typedef struct __MuxObject
 
 // Functions
 //
-bool MUX_CommutateObject(MuxObject Settings);
+bool MUX_ConnectObject(MuxObject Settings);
+bool MUX_Disconnect(uint16_t NodeID);
 
 #endif // __MULTIPLEXER_H
