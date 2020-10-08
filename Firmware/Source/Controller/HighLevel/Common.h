@@ -42,8 +42,8 @@ typedef struct __SlaveNode
 
 typedef struct __VIPair
 {
-	float Voltage;
-	float Current;
+	uint32_t Voltage;
+	uint32_t Current;
 
 } VIPair, *pVIPair;
 
