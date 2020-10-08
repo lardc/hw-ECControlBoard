@@ -11,7 +11,6 @@ typedef struct __CurrentBoardObject
 	uint16_t NodeID;
 	VIPair Setpoint;
 	VIPair Result;
-
 } CurrentBoardObject, *pCurrentBoardObject;
 
 // Functions

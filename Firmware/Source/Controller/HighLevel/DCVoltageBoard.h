@@ -16,7 +16,6 @@ typedef struct __DCVoltageBoardObject
 	uint16_t PulseLength;
 	VIPair Setpoint;
 	VIPair Result;
-
 } DCVoltageBoardObject, *pDCVoltageBoardObject;
 
 // Functions

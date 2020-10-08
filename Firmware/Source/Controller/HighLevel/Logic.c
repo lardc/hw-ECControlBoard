@@ -76,3 +76,9 @@ void LOGIC_HandlePowerOff()
 	}
 }
 //-----------------------------
+
+void LOGIC_PrepareMeasurement()
+{
+
+}
+//-----------------------------

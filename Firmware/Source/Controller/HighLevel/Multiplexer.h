@@ -16,7 +16,6 @@ typedef struct __MuxObject
 	MUX_Position Position;
 	MUX_LeakageType LeakageType;
 	MUX_Polarity Polarity;
-
 } MuxObject, *pMuxObject;
 
 // Functions

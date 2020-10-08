@@ -27,7 +27,6 @@ typedef enum __DCV_OutputLine
 	CTRL = 2,
 	PS1 = 3,
 	PS2 = 4
-
 } DCV_OutputLine;
 
 typedef enum __DCV_OutputType

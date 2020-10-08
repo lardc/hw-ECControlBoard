@@ -18,16 +18,14 @@ typedef enum __NodeName
 	NAME_DCVoltage3 = 5,
 	NAME_ACVoltage1 = 6,
 	NAME_ACVoltage2 = 7
-
 } NodeName;
 
 typedef enum __MeasurementType
 {
-	MT_LeakageCurrent = 1,
-	MT_OnVoltage = 2,
-	MT_InputVoltageCurrent = 3,
-	MT_InhibitVoltage = 4
-
+	MT_LeakageCurrent = 0x1,
+	MT_OnVoltage = 0x2,
+	MT_InputVoltageCurrent = 0x4,
+	MT_InhibitVoltage = 0x8
 } MeasurementType;
 
 typedef struct __SlaveNode
@@ -37,14 +35,12 @@ typedef struct __SlaveNode
 	uint16_t NodeID;
 	uint16_t State;
 	uint16_t OpResult;
-
 } SlaveNode, *pSlaveNode;
 
 typedef struct __VIPair
 {
 	uint32_t Voltage;
 	uint32_t Current;
-
 } VIPair, *pVIPair;
 
 // Functions
