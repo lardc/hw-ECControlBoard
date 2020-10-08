@@ -20,7 +20,7 @@ typedef struct __MuxObject
 
 // Functions
 //
-bool MUX_ConnectObject(MuxObject Settings);
-bool MUX_Disconnect(MuxObject Settings);
+bool MUX_ConnectObject(pMuxObject Settings);
+bool MUX_Disconnect(pMuxObject Settings);
 
 #endif // __MULTIPLEXER_H
