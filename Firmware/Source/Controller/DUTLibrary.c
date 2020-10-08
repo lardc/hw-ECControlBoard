@@ -1,7 +1,7 @@
 // Header
 #include "DUTLibrary.h"
 
-static const DL_DUTConfiguration DUTConfigArray[] = {
+static const DL_DUTConfiguration DUTConfigStorage[] = {
 		{A1, OneInput, OneOutput, NoSupply, VDC, Triac},
 		{A1, OneInput, OneOutput, NoSupply, IDC, Triac},
 		{A1, OneInput, OneOutput, NoSupply, VDC, DualMOSFET},
@@ -38,3 +38,11 @@ static const DL_DUTConfiguration DUTConfigArray[] = {
 		{V2, OneInput, OneOutput, NoSupply, IDC, SingleMOSFET_IGBT},
 };
 //------------------------------------------------
+
+uint16_t DUTLIB_GetStorageSize()
+{
+	return sizeof(DUTConfigStorage) / sizeof(DUTConfigStorage[0]);
+}
+//------------------------------------------------
+
+
