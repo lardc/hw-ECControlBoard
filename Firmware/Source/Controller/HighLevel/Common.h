@@ -25,7 +25,7 @@ typedef enum __MeasurementType
 {
 	MT_LeakageCurrent = 1,
 	MT_OnVoltage = 2,
-	MT_InputVoltage = 3,
+	MT_InputVoltageCurrent = 3,
 	MT_InhibitVoltage = 4
 
 } MeasurementType;

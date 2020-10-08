@@ -86,7 +86,7 @@ static Boolean CONTROL_DispatchAction(Int16U ActionID, pInt16U pUserError)
 			{
 				if(CONTROL_State == DS_None)
 				{
-					CONTROL_SetDeviceState(DS_Ready, DSS_PowerEnable);
+					CONTROL_SetDeviceState(DS_InProcess, DSS_PowerEnable);
 				}
 				else if(CONTROL_State != DS_Ready)
 					*pUserError = ERR_DEVICE_NOT_READY;
@@ -97,9 +97,20 @@ static Boolean CONTROL_DispatchAction(Int16U ActionID, pInt16U pUserError)
 			{
 				if(CONTROL_State == DS_Ready)
 				{
-					CONTROL_SetDeviceState(DS_None, DSS_None);
+					CONTROL_SetDeviceState(DS_None, DSS_PowerOff);
 				}
 				else if(CONTROL_State != DS_None)
+					*pUserError = ERR_OPERATION_BLOCKED;
+			}
+			break;
+
+		case ACT_START_TEST:
+			{
+				if(CONTROL_State == DS_Ready)
+				{
+					
+				}
+				else
 					*pUserError = ERR_OPERATION_BLOCKED;
 			}
 			break;

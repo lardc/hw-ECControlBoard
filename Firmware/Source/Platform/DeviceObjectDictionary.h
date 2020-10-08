@@ -18,6 +18,9 @@
 #define ACT_DBG_IS_STATE_INT_SYNC_2		55	// Состояние внутренней цепи SYNC_2
 #define ACT_DBG_PULSE_EXT_LED			56	// Одиночный импусль внешнего светодиода
 
+#define ACT_START_TEST					100	// Запуск измерения
+#define ACT_STOP_TEST					101	// Запуск измерения
+
 #define ACT_SAVE_TO_ROM					200	// Сохранение пользовательских данных во FLASH процессора
 #define ACT_RESTORE_FROM_ROM			201	// Восстановление данных из FLASH
 #define ACT_RESET_TO_DEFAULT			202	// Сброс DataTable в состояние по умолчанию
