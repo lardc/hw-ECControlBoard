@@ -7,13 +7,13 @@
 
 // Forward functions
 //
-bool MUX_Connect(uint16_t NodeID, MeasurementType MeasureType, DL_Case Case, uint16_t Position,
-		DL_InputType InputType, uint16_t LeakageType, uint16_t Polarity);
+bool MUX_Connect(uint16_t NodeID, MeasurementType MeasureType, DL_Case Case, MUX_Position Position,
+		DL_InputType InputType, MUX_LeakageType LeakageType, MUX_Polarity Polarity);
 
 // Functions
 //
-bool MUX_Connect(uint16_t NodeID, MeasurementType MeasureType, DL_Case Case, uint16_t Position,
-		DL_InputType InputType, uint16_t LeakageType, uint16_t Polarity)
+bool MUX_Connect(uint16_t NodeID, MeasurementType MeasureType, DL_Case Case, MUX_Position Position,
+		DL_InputType InputType, MUX_LeakageType LeakageType, MUX_Polarity Polarity)
 {
 	bool result = false;
 

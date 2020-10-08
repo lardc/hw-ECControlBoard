@@ -12,9 +12,9 @@ typedef struct __MuxObject
 	MeasurementType MeasureType;
 	DL_Case Case;
 	DL_InputType InputType;
-	uint16_t Position;
-	uint16_t LeakageType;
-	uint16_t Polarity;
+	MUX_Position Position;
+	MUX_LeakageType LeakageType;
+	MUX_Polarity Polarity;
 
 } MuxObject, *pMuxObject;
 
