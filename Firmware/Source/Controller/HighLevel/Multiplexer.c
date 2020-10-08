@@ -2,7 +2,6 @@
 #include "Multiplexer.h"
 
 // Includes
-#include "MultiplexerDictionary.h"
 #include "BCCIMHighLevel.h"
 
 // Forward functions

@@ -4,6 +4,7 @@
 // Include
 #include "stdinc.h"
 #include "Common.h"
+#include "MultiplexerDictionary.h"
 
 // Types
 typedef struct __MuxObject
