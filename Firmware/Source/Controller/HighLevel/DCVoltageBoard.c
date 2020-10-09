@@ -2,7 +2,6 @@
 #include "DCVoltageBoard.h"
 
 // Includes
-#include "DCVoltageBoardDictionary.h"
 #include "BCCIMHighLevel.h"
 
 // Functions
@@ -69,8 +68,8 @@ ExecutionResult DCV_ReadResult(NodeName Name)
 		}
 		else
 		{
-			Settings->Result.Current = CurrentLow;
-			Settings->Result.Voltage = VoltageLow;
+			Settings->Result.Current = DCV_EMULATION_RES_CURRENT;
+			Settings->Result.Voltage = DCV_EMULATION_RES_VOLTAGE;
 
 			return ER_NoError;
 		}

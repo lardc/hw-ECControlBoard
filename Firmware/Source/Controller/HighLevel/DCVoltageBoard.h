@@ -4,6 +4,7 @@
 // Include
 #include "stdinc.h"
 #include "Common.h"
+#include "DCVoltageBoardDictionary.h"
 
 // Definitions
 #define DCV_EMULATION_RES_VOLTAGE			567
