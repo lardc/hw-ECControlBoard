@@ -31,9 +31,9 @@ void COMM_InitSlaveArray()
 
 void COMM_InitNode(NodeName Name, uint16_t RegNodeID, bool RegEmulation)
 {
-	NodeArray[Name].Initialized = true;
 	NodeArray[Name].Emulation = DataTable[RegEmulation];
 	NodeArray[Name].NodeID = DataTable[RegNodeID];
+	NodeArray[Name].Settings = NULL;
 }
 //-----------------------------
 
@@ -41,7 +41,7 @@ bool COMM_SlavesExecute(uint16_t Command)
 {
 	for(uint8_t i = 0; i < MAX_SLAVE_NODES; ++i)
 	{
-		if(NodeArray[i].Initialized && !NodeArray[i].Emulation)
+		if(!NodeArray[i].Emulation)
 			if(!BHL_Call(NodeArray[i].NodeID, Command))
 				return false;
 	}
@@ -57,7 +57,7 @@ bool COMM_SlavesReadState()
 
 	for(uint8_t i = 0; i < MAX_SLAVE_NODES; ++i)
 	{
-		if(NodeArray[i].Initialized && !NodeArray[i].Emulation)
+		if(!NodeArray[i].Emulation)
 		{
 			result = false;
 
@@ -83,7 +83,7 @@ bool COMM_AreSlavesInStateX(uint16_t State)
 	bool result = true;
 
 	for(uint16_t i = 0; i < MAX_SLAVE_NODES; ++i)
-		if(NodeArray[i].Initialized && !NodeArray[i].Emulation)
+		if(!NodeArray[i].Emulation)
 		{
 			if(NodeArray[i].State != State)
 				result = false;
@@ -96,7 +96,7 @@ bool COMM_AreSlavesInStateX(uint16_t State)
 bool COMM_IsSlaveInFaultOrDisabled()
 {
 	for(uint8_t i = 0; i < MAX_SLAVE_NODES; ++i)
-		if(NodeArray[i].Initialized && !NodeArray[i].Emulation)
+		if(!NodeArray[i].Emulation)
 		{
 			if(NodeArray[i].State == CDS_Fault || NodeArray[i].State == CDS_Disabled)
 				return true;

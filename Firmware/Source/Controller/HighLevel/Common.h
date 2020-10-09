@@ -43,11 +43,11 @@ typedef enum __InputType
 
 typedef struct __SlaveNode
 {
-	bool Initialized;
 	bool Emulation;
 	uint16_t NodeID;
 	uint16_t State;
 	uint16_t OpResult;
+	void *Settings;
 } SlaveNode, *pSlaveNode;
 
 typedef struct __VIPair
