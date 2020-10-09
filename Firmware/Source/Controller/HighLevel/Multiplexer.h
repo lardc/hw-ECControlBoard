@@ -9,7 +9,6 @@
 // Types
 typedef struct __MuxObject
 {
-	pSlaveNode SlaveNode;
 	MeasurementType MeasureType;
 	DL_Case Case;
 	MUX_Position Position;
@@ -20,7 +19,7 @@ typedef struct __MuxObject
 
 // Functions
 //
-bool MUX_ConnectObject(pMuxObject Settings);
-bool MUX_Disconnect(pMuxObject Settings);
+ExecutionResult MUX_Connect();
+ExecutionResult MUX_Disconnect();
 
 #endif // __MULTIPLEXER_H

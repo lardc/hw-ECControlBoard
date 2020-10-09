@@ -6,26 +6,55 @@
 
 // Forward functions
 //
-bool MUX_ConnectObject(pMuxObject Settings)
+ExecutionResult MUX_Connect()
 {
-	bool result = false;
-	uint16_t NodeID = Settings->SlaveNode->NodeID;
+	pSlaveNode NodeData = COMM_GetSlaveDevicePointer(NAME_Multiplexer);
+	pMuxObject Settings = (pMuxObject)NodeData->Settings;
 
-	if(BHL_WriteRegister(NodeID, MUX_REG_TYPE_MEASURE, Settings->MeasureType))
-		if(BHL_WriteRegister(NodeID, MUX_REG_TYPE_CASE, Settings->Case))
-			if(BHL_WriteRegister(NodeID, MUX_REG_POSITION_OF_CASE, Settings->Position))
-				if(BHL_WriteRegister(NodeID, MUX_REG_TYPE_SIGNAL_CTRL, Settings->InputType))
-					if(BHL_WriteRegister(NodeID, MUX_REG_TYPE_LEAKAGE, Settings->LeakageType))
-						if(BHL_WriteRegister(NodeID, MUX_REG_TYPE_POLARITY, Settings->Polarity))
-							if(BHL_Call(NodeID, MUX_ACT_SET_RELAY_GROUP))
-								result = true;
+	if(Settings != NULL)
+	{
+		if(!NodeData->Emulation)
+		{
+			uint16_t NodeID = NodeData->NodeID;
 
-	return result;
+			if(BHL_WriteRegister(NodeID, MUX_REG_TYPE_MEASURE, Settings->MeasureType))
+				if(BHL_WriteRegister(NodeID, MUX_REG_TYPE_CASE, Settings->Case))
+					if(BHL_WriteRegister(NodeID, MUX_REG_POSITION_OF_CASE, Settings->Position))
+						if(BHL_WriteRegister(NodeID, MUX_REG_TYPE_SIGNAL_CTRL, Settings->InputType))
+							if(BHL_WriteRegister(NodeID, MUX_REG_TYPE_LEAKAGE, Settings->LeakageType))
+								if(BHL_WriteRegister(NodeID, MUX_REG_TYPE_POLARITY, Settings->Polarity))
+									if(BHL_Call(NodeID, MUX_ACT_SET_RELAY_GROUP))
+										return ER_NoError;
+		}
+		else
+			return ER_NoError;
+
+		return ER_InterfaceError;
+	}
+	else
+		return ER_LogicError;
 }
 //-----------------------------
 
-bool MUX_Disconnect(pMuxObject Settings)
+ExecutionResult MUX_Disconnect()
 {
-	return BHL_Call(Settings->SlaveNode->NodeID, MUX_ACT_SET_RELAY_NONE);
+	pSlaveNode NodeData = COMM_GetSlaveDevicePointer(NAME_Multiplexer);
+	pMuxObject Settings = (pMuxObject)NodeData->Settings;
+
+	if(Settings != NULL)
+	{
+		if(!NodeData->Emulation)
+		{
+			uint16_t NodeID = NodeData->NodeID;
+			if(BHL_Call(NodeID, MUX_ACT_SET_RELAY_NONE))
+				return ER_NoError;
+		}
+		else
+			return ER_NoError;
+
+		return ER_InterfaceError;
+	}
+	else
+		return ER_LogicError;
 }
 //-----------------------------
