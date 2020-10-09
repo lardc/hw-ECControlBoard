@@ -4,12 +4,14 @@
 // Include
 #include "stdinc.h"
 #include "Common.h"
-#include "DCVoltageBoardDictionary.h"
+
+// Definitions
+#define DCV_EMULATION_RES_VOLTAGE			567
+#define DCV_EMULATION_RES_CURRENT			5678
 
 // Types
 typedef struct __DCVoltageBoardObject
 {
-	pSlaveNode SlaveNode;
 	DCV_OutputLine OutputLine;
 	DCV_OutputType OutputType;
 	DCV_OutputMode OutputMode;
@@ -20,8 +22,8 @@ typedef struct __DCVoltageBoardObject
 
 // Functions
 //
-bool DCV_Execute(pDCVoltageBoardObject Settings);
-bool DCV_Stop(pDCVoltageBoardObject Settings);
-bool DCV_ReadResult(pDCVoltageBoardObject Settings);
+ExecutionResult DCV_Execute(NodeName Name);
+ExecutionResult DCV_ReadResult(NodeName Name);
+ExecutionResult DCV_Stop(NodeName Name);
 
 #endif // __DC_VOLTAGE_BOARD_H
