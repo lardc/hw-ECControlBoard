@@ -31,17 +31,14 @@ uint16_t DUTLIB_GetStorageSize()
 }
 //------------------------------------------------
 
-bool DUTLIB_ExtractConfiguration(DL_Case Case, const DL_DUTConfiguration *Result)
+const DL_DUTConfiguration* DUTLIB_ExtractConfiguration(DL_Case Case)
 {
 	uint8_t DevNum = DUTLIB_GetStorageSize();
 	for(uint8_t i = 0; i < DevNum; ++i)
 	{
 		if(Case == DUTConfigStorage[i].Case)
-		{
-			Result = &DUTConfigStorage[i];
-			return true;
-		}
+			return &DUTConfigStorage[i];
 	}
-	return false;
+	return NULL;
 }
 //------------------------------------------------

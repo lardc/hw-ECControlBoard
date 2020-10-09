@@ -52,6 +52,6 @@ typedef struct __DL_DUTConfiguration
 } DL_DUTConfiguration, *pDL_DUTConfiguration;
 
 // Functions
-bool DUTLIB_ExtractConfiguration(DL_Case Case, const DL_DUTConfiguration *Result);
+const DL_DUTConfiguration* DUTLIB_ExtractConfiguration(DL_Case Case);
 
 #endif // __DUT_LIB_H
