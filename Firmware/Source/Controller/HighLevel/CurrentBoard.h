@@ -5,17 +5,20 @@
 #include "stdinc.h"
 #include "Common.h"
 
+// Definitions
+#define CURR_EMULATION_RES_VOLTAGE			123
+#define CURR_EMULATION_RES_CURRENT			1234
+
 // Types
 typedef struct __CurrentBoardObject
 {
-	pSlaveNode SlaveNode;
 	VIPair Setpoint;
 	VIPair Result;
 } CurrentBoardObject, *pCurrentBoardObject;
 
 // Functions
 //
-bool CURR_Execute(pCurrentBoardObject Settings);
-bool CURR_ReadResult(pCurrentBoardObject Settings);
+ExecutionResult CURR_Execute();
+ExecutionResult CURR_ReadResult();
 
 #endif // __CURRENT_BOARD_H

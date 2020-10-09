@@ -28,6 +28,13 @@ typedef enum __MeasurementType
 	MT_InhibitVoltage = 4
 } MeasurementType;
 
+typedef enum __ExecutionResult
+{
+	ER_NoError = 0,
+	ER_InterfaceError = 1,
+	ER_LogicError = 2
+} ExecutionResult;
+
 typedef enum __LeakageType
 {
 	LeakageDC = 1,
