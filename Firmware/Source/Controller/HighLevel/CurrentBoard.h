@@ -4,6 +4,7 @@
 // Include
 #include "stdinc.h"
 #include "Common.h"
+#include "CurrentBoardDictionary.h"
 
 // Definitions
 #define CURR_EMULATION_RES_VOLTAGE			123
