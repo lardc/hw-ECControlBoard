@@ -45,8 +45,8 @@ void CONTROL_Init()
 	DEVPROFILE_ResetControlSection();
 	CONTROL_ResetToDefaultState();
 
-	// Инициализация таблицы slave-узлов
-	COMM_InitSlaveArray();
+	// Инициализация сущностей логики верхнего уровня
+	LOGIC_InitEntities();
 }
 //------------------------------------------
 

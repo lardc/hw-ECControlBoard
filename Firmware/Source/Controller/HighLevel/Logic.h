@@ -7,6 +7,7 @@
 
 // Functions
 //
+void LOGIC_InitEntities();
 void LOGIC_HandleStateUpdate();
 void LOGIC_HandlePowerOn();
 void LOGIC_HandlePowerOff();

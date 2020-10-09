@@ -8,8 +8,38 @@
 #include "DataTable.h"
 #include "DeviceObjectDictionary.h"
 #include "Global.h"
+#include "Multiplexer.h"
+#include "CurrentBoard.h"
+#include "DCVoltageBoard.h"
+
+// Variables
+static volatile MuxObject Multiplexer;
+static volatile CurrentBoardObject CurrentBoard;
+static volatile DCVoltageBoardObject DCVoltageBoard1, DCVoltageBoard2, DCVoltageBoard3;
+
+// Forward functions
+void LOGIC_AttachSettings(NodeName Name, void *SettingsPointer);
 
 // Functions
+void LOGIC_InitEntities()
+{
+	COMM_InitSlaveArray();
+
+	LOGIC_AttachSettings(NAME_Multiplexer, (pMuxObject)&Multiplexer);
+	LOGIC_AttachSettings(NAME_DCCurrent, (pCurrentBoardObject)&CurrentBoard);
+	LOGIC_AttachSettings(NAME_DCVoltage1, (pDCVoltageBoardObject)&DCVoltageBoard1);
+	LOGIC_AttachSettings(NAME_DCVoltage2, (pDCVoltageBoardObject)&DCVoltageBoard2);
+	LOGIC_AttachSettings(NAME_DCVoltage3, (pDCVoltageBoardObject)&DCVoltageBoard3);
+}
+//-----------------------------
+
+void LOGIC_AttachSettings(NodeName Name, void *SettingsPointer)
+{
+	pSlaveNode NodePointer = COMM_GetSlaveDevicePointer(Name);
+	NodePointer->Settings = SettingsPointer;
+}
+//-----------------------------
+
 void LOGIC_HandleStateUpdate()
 {
 	static Int64U TimeCounter = 0;
@@ -77,7 +107,7 @@ void LOGIC_HandlePowerOff()
 }
 //-----------------------------
 
-void LOGIC_PrepareMeasurement()
+void LOGIC_PrepareOnStateMeasurement()
 {
 
 }

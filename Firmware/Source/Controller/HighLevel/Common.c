@@ -7,7 +7,7 @@
 
 // Variables
 //
-static SlaveNode NodeArray[MAX_SLAVE_NODES] = {0};
+static volatile SlaveNode NodeArray[MAX_SLAVE_NODES] = {0};
 
 // Forward functions
 //
@@ -132,6 +132,6 @@ bool COMM_SlavesClearWarning()
 
 pSlaveNode COMM_GetSlaveDevicePointer(NodeName Name)
 {
-	return &(NodeArray[Name]);
+	return (pSlaveNode)(&NodeArray[Name]);
 }
 //-----------------------------
