@@ -22,11 +22,24 @@ typedef enum __NodeName
 
 typedef enum __MeasurementType
 {
-	MT_LeakageCurrent = 0x1,
-	MT_OnVoltage = 0x2,
-	MT_InputVoltageCurrent = 0x4,
-	MT_InhibitVoltage = 0x8
+	MT_LeakageCurrent = 1,
+	MT_OnVoltage = 2,
+	MT_InputVoltageCurrent = 3,
+	MT_InhibitVoltage = 4
 } MeasurementType;
+
+typedef enum __LeakageType
+{
+	LeakageDC = 1,
+	LeakageAC = 2
+} LeakageType;
+
+typedef enum __InputType
+{
+	VDC = 1,
+	IDC = 2,
+	VAC = 3
+} InputType;
 
 typedef struct __SlaveNode
 {

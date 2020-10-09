@@ -21,12 +21,6 @@ typedef enum __MUX_Position
 	Position3 = 3
 } MUX_Position;
 
-typedef enum __MUX_LeakageType
-{
-	LeakageDC = 1,
-	LeakageAC = 2
-} MUX_LeakageType;
-
 typedef enum __MUX_Polarity
 {
 	Forward = 1,
