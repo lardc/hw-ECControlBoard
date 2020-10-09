@@ -9,7 +9,7 @@
 // Types
 typedef struct __MuxObject
 {
-	uint16_t NodeID;
+	pSlaveNode SlaveNode;
 	MeasurementType MeasureType;
 	DL_Case Case;
 	MUX_Position Position;

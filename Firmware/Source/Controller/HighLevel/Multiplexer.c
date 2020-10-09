@@ -9,7 +9,7 @@
 bool MUX_ConnectObject(pMuxObject Settings)
 {
 	bool result = false;
-	uint16_t NodeID = Settings->NodeID;
+	uint16_t NodeID = Settings->SlaveNode->NodeID;
 
 	if(BHL_WriteRegister(NodeID, MUX_REG_TYPE_MEASURE, Settings->MeasureType))
 		if(BHL_WriteRegister(NodeID, MUX_REG_TYPE_CASE, Settings->Case))
@@ -26,6 +26,6 @@ bool MUX_ConnectObject(pMuxObject Settings)
 
 bool MUX_Disconnect(pMuxObject Settings)
 {
-	return BHL_Call(Settings->NodeID, MUX_ACT_SET_RELAY_NONE);
+	return BHL_Call(Settings->SlaveNode->NodeID, MUX_ACT_SET_RELAY_NONE);
 }
 //-----------------------------

@@ -8,7 +8,7 @@
 // Types
 typedef struct __CurrentBoardObject
 {
-	uint16_t NodeID;
+	pSlaveNode SlaveNode;
 	VIPair Setpoint;
 	VIPair Result;
 } CurrentBoardObject, *pCurrentBoardObject;

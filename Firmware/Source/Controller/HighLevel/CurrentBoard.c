@@ -13,7 +13,7 @@ bool CURR_Execute(pCurrentBoardObject Settings)
 
 	uint16_t CurrentLow = (uint16_t)(Settings->Setpoint.Current & 0xFFFF);
 	uint16_t CurrentHigh = (uint16_t)(Settings->Setpoint.Current >> 16);
-	uint16_t NodeID = Settings->NodeID;
+	uint16_t NodeID = Settings->SlaveNode->NodeID;
 
 	if(BHL_WriteRegister(NodeID, CURR_REG_CURRENT_SETPOINT, CurrentLow))
 		if(BHL_WriteRegister(NodeID, CURR_REG_CURRENT_SETPOINT_32, CurrentHigh))
@@ -29,17 +29,15 @@ bool CURR_ReadResult(pCurrentBoardObject Settings)
 {
 	bool result = false;
 	uint16_t CurrentLow = 0, CurrentHigh = 0, Voltage = 0;
-	uint16_t NodeID = Settings->NodeID;
+	uint16_t NodeID = Settings->SlaveNode->NodeID;
 
 	if(BHL_ReadRegister(NodeID, CURR_REG_RESULT_CURRENT, &CurrentLow))
 		if(BHL_ReadRegister(NodeID, CURR_REG_RESULT_CURRENT_32, &CurrentHigh))
 			if(BHL_ReadRegister(NodeID, CURR_REG_RESULT_VOLTAGE, &Voltage))
 			{
-				VIPair Result;
-				Result.Current = CurrentLow;
-				Result.Current |= (uint32_t)CurrentHigh << 16;
-				Result.Voltage = Voltage;
-				Settings->Result = Result;
+				Settings->Result.Current = CurrentLow;
+				Settings->Result.Current |= (uint32_t)CurrentHigh << 16;
+				Settings->Result.Voltage = Voltage;
 				result = true;
 			}
 

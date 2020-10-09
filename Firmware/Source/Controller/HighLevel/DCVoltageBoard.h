@@ -9,7 +9,7 @@
 // Types
 typedef struct __DCVoltageBoardObject
 {
-	uint16_t NodeID;
+	pSlaveNode SlaveNode;
 	DCV_OutputLine OutputLine;
 	DCV_OutputType OutputType;
 	DCV_OutputMode OutputMode;
