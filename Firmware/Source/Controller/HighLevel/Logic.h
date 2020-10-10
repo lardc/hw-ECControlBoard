@@ -5,6 +5,14 @@
 #include "stdinc.h"
 #include "BCCIMHighLevel.h"
 
+// Types
+typedef enum __LogicConfigError
+{
+	LCE_None = 0,
+	LCE_UnknownCase = 1,
+	LCE_PositionMissmatch = 2
+} LogicConfigError;
+
 // Functions
 //
 void LOGIC_InitEntities();

@@ -112,3 +112,30 @@ void LOGIC_PrepareOnStateMeasurement()
 
 }
 //-----------------------------
+
+LogicConfigError LOGIC_CacheMuxSettings()
+{
+	Multiplexer.MeasureType = DataTable[REG_MEASUREMENT_TYPE];
+	Multiplexer.Case = DataTable[REG_DUT_CASE_TYPE];
+	Multiplexer.Position = DataTable[REG_DUT_POSITION_NUMBER];
+	Multiplexer.InputType = DataTable[REG_INPUT_CONTROL_TYPE];
+	Multiplexer.LeakageType = DataTable[REG_I_LEAK_VOLTAGE_TYPE];
+	// По умолчанию прямая полярность
+	Multiplexer.Polarity = Forward;
+
+	const DL_DUTConfiguration* DUTConfig = DUTLIB_ExtractConfiguration(Multiplexer.Case);
+
+	// Валидация конфигурации
+	// Проверка наличия требуемого корпуса
+	if(DUTConfig == NULL)
+		return LCE_UnknownCase;
+
+	// Проверка соответствия номеров позиций
+	if((Multiplexer.Position == Position2 && DUTConfig->OutputPositionsNum == OneOutput) ||
+		(Multiplexer.Position == Position3 && DUTConfig->OutputPositionsNum != ThreeOutputs))
+		return LCE_PositionMissmatch;
+
+	return LCE_None;
+}
+//-----------------------------
+
