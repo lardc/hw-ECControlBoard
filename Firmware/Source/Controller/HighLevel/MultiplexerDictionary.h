@@ -23,8 +23,8 @@ typedef enum __MUX_Position
 
 typedef enum __MUX_Polarity
 {
-	Forward = 1,
-	Reverse = 2
+	PolarityDirect = 1,
+	PolarityReverse = 2
 } MUX_Polarity;
 
 #endif // __MULTIPLEXER_DICTIONARY_H

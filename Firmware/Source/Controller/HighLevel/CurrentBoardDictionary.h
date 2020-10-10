@@ -14,4 +14,10 @@
 #define CURR_REG_RESULT_CURRENT_32			251
 #define CURR_REG_RESULT_VOLTAGE				252	// Полученное значение напряжения (в мВ)
 
+typedef enum __CurrentShape
+{
+	CurrentTrapeze = 1,
+	CurrentSin = 2
+} CurrentShape;
+
 #endif // __CURRENT_BOARD_DICTIONARY_H

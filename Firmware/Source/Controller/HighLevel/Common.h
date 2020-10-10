@@ -43,9 +43,9 @@ typedef enum __LeakageType
 
 typedef enum __InputType
 {
-	VDC = 1,
-	IDC = 2,
-	VAC = 3
+	ControlIDC = 1,
+	ControlVDC = 2,
+	ControlVAC = 3
 } InputType;
 
 typedef struct __SlaveNode

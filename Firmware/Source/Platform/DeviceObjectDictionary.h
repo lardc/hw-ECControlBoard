@@ -6,6 +6,7 @@
 #define ACT_DISABLE_POWER				2	// Отключение блока
 #define ACT_FAULT_CLEAR					3	// Очистка fault
 #define ACT_WARNING_CLEAR				4	// Очистка warning
+#define ACT_SAFETY_CLEAR				5	// Очистка нарушения контура безопасности
 
 #define ACT_FAN_ON						48	// Включить вентилятор
 #define ACT_FAN_OFF						49	// Отключить вентилятор
@@ -20,6 +21,8 @@
 
 #define ACT_START_TEST					100	// Запуск измерения
 #define ACT_STOP_TEST					101	// Запуск измерения
+#define ACT_SAFETY_SET_ACTIVE			102	// Активация контура безопасности
+#define ACT_SAFETY_SET_INACTIVE			103	// Деактивация контура безопасности
 
 #define ACT_SAVE_TO_ROM					200	// Сохранение пользовательских данных во FLASH процессора
 #define ACT_RESTORE_FROM_ROM			201	// Восстановление данных из FLASH
@@ -55,22 +58,21 @@
 #define REG_DUT_CASE_TYPE				129	// Тип корпуса испытуемого прибора
 #define REG_DUT_POSITION_NUMBER			130	// Номер позиции на приборе
 #define REG_INPUT_CONTROL_TYPE			131	// Тип входного сигнала управления
-#define REG_I_LEAK_VOLTAGE_TYPE			132	// Тип выходного напряжения измерения тока утечки
 
-#define REG32S_INPUT_VOLTAGE			135	// Напряжение входа управления
-#define REG32S_INPUT_VOLTAGE_32			136
-#define REG32S_INPUT_CURRENT			137	// Ток входа управления
-#define REG32S_INPUT_CURRENT_32			138
+#define REG_CONTROL_VOLTAGE				132	// Напряжение входа управления
+#define REG_CONTROL_CURRENT				133	// Ток входа управления
 
-#define REG32S_OUTPUT_VOLTAGE			139	// Напряжение входа управления
-#define REG32S_OUTPUT_VOLTAGE_32		140
-#define REG32S_OUTPUT_CURRENT			141	// Ток входа управления
-#define REG32S_OUTPUT_CURRENT_32		142
+#define REG_COMM_VOLTAGE_TYPE_LEAKAGE	134	// Тип коммутируемого напряжения при измерении утечки
+#define REG_COMM_POLARITY				135	// Полярность приложения постоянного коммутируемого напряжения
+#define REG_COMM_CURRENT_SHAPE			136	// Форма импульса коммутируемого тока
+#define REG_COMM_CURRENT_TIME			137	// Длительность импульса коммутируемого тока
+#define REG_COMM_CURRENT				138	// Коммутируемый ток
+#define REG_COMM_VOLTAGE				139	// Коммутируемого напряжение
 
-#define REG_AUX_PS1_VOLTAGE				143	// Напряжение вспомогательного источника питания 1
-#define REG_AUX_PS1_CURRENT				144	// Ток вспомогательного источника питания 1
-#define REG_AUX_PS2_VOLTAGE				145	// Напряжение вспомогательного источника питания 2
-#define REG_AUX_PS2_CURRENT				146	// Ток вспомогательного источника питания 2
+#define REG_AUX_PS1_VOLTAGE				140	// Напряжение вспомогательного источника питания 1
+#define REG_AUX_PS1_CURRENT				141	// Ток вспомогательного источника питания 1
+#define REG_AUX_PS2_VOLTAGE				142	// Напряжение вспомогательного источника питания 2
+#define REG_AUX_PS2_CURRENT				143	// Ток вспомогательного источника питания 2
 
 #define REG_DBG_STATE					190	// Регистр режима Отладки
 

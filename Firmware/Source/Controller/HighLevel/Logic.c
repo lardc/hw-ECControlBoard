@@ -119,9 +119,8 @@ LogicConfigError LOGIC_CacheMuxSettings()
 	Multiplexer.Case = DataTable[REG_DUT_CASE_TYPE];
 	Multiplexer.Position = DataTable[REG_DUT_POSITION_NUMBER];
 	Multiplexer.InputType = DataTable[REG_INPUT_CONTROL_TYPE];
-	Multiplexer.LeakageType = DataTable[REG_I_LEAK_VOLTAGE_TYPE];
-	// По умолчанию прямая полярность
-	Multiplexer.Polarity = Forward;
+	Multiplexer.LeakageType = DataTable[REG_COMM_VOLTAGE_TYPE_LEAKAGE];
+	Multiplexer.Polarity = DataTable[REG_COMM_POLARITY];
 
 	const DL_DUTConfiguration* DUTConfig = DUTLIB_ExtractConfiguration(Multiplexer.Case);
 

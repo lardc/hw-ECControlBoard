@@ -5,6 +5,12 @@
 // Header
 #include "Constraints.h"
 
+// Includes
+#include "DUTLibrary.h"
+#include "MultiplexerDictionary.h"
+#include "CurrentBoardDictionary.h"
+#include "Common.h"
+
 // Constants
 //
 const TableItemConstraint NVConstraint[DATA_TABLE_NV_SIZE] = {
@@ -139,22 +145,22 @@ const TableItemConstraint NVConstraint[DATA_TABLE_NV_SIZE] = {
 };
 
 const TableItemConstraint VConstraint[DATA_TABLE_WP_START - DATA_TABLE_WR_START] = {
-		{0, 0, 0},																	// 128
-		{0, 0, 0},																	// 129
-		{0, 0, 0},																	// 130
-		{0, 0, 0},																	// 131
-		{0, 0, 0},																	// 132
-		{0, 0, 0},																	// 133
-		{0, 0, 0},																	// 134
-		{0, INT16U_MAX, 0},															// 135
-		{0, INT16U_MAX, 0},															// 136
+		{MT_LeakageCurrent, MT_InhibitVoltage, MT_OnVoltage},						// 128
+		{A1, D192, A1},																// 129
+		{Position1, Position3, Position1},											// 130
+		{ControlIDC, ControlVAC, ControlIDC},										// 131
+		{0, INT16U_MAX, 0},															// 132
+		{0, INT16U_MAX, 0},															// 133
+		{LeakageDC, LeakageAC, LeakageDC},											// 134
+		{PolarityDirect, PolarityReverse, PolarityDirect},							// 135
+		{CurrentTrapeze, CurrentSin, CurrentTrapeze},								// 136
 		{0, INT16U_MAX, 0},															// 137
 		{0, INT16U_MAX, 0},															// 138
 		{0, INT16U_MAX, 0},															// 139
 		{0, INT16U_MAX, 0},															// 140
 		{0, INT16U_MAX, 0},															// 141
 		{0, INT16U_MAX, 0},															// 142
-		{0, 0, 0},																	// 143
+		{0, INT16U_MAX, 0},															// 143
 		{0, 0, 0},																	// 144
 		{0, 0, 0},																	// 145
 		{0, 0, 0},																	// 146
