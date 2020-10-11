@@ -4,6 +4,7 @@
 // Include
 //
 #include "stdinc.h"
+#include "Common.h"
 
 // Types
 //
@@ -25,7 +26,7 @@ typedef enum __DeviceSubState
 
 	DSS_PowerOff = 3,
 
-	DSS_OnVoltageStart = 4
+	DSS_OnVoltageCommutate = 4
 } DeviceSubState;
 
 // Variables
@@ -39,6 +40,7 @@ extern DeviceSubState CONTROL_SubState;
 void CONTROL_Init();
 void CONTROL_Idle();
 void CONTROL_SwitchToFault(Int16U Reason);
+void CONTROL_SwitchToExtendedFault(ExecutionResult Reason);
 void CONTROL_SetDeviceState(DeviceState NewState, DeviceSubState NewSubState);
 
 #endif // __CONTROLLER_H

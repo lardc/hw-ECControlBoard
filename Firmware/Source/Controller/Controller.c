@@ -10,7 +10,6 @@
 #include "LowLevel.h"
 #include "SysConfig.h"
 #include "Diagnostic.h"
-#include "Common.h"
 #include "Logic.h"
 
 // Types
@@ -111,7 +110,7 @@ static Boolean CONTROL_DispatchAction(Int16U ActionID, pInt16U pUserError)
 					DataTable[REG_CONFIG_ERR] = err;
 
 					if(err == LCE_None)
-						CONTROL_SetDeviceState(DS_InProcess, DSS_OnVoltageStart);
+						CONTROL_SetDeviceState(DS_InProcess, DSS_OnVoltageCommutate);
 					else
 						*pUserError = ERR_BAD_CONFIG;
 				}
@@ -156,6 +155,28 @@ void CONTROL_SwitchToFault(Int16U Reason)
 
 	CONTROL_SetDeviceState(DS_Fault, DSS_None);
 	DataTable[REG_FAULT_REASON] = Reason;
+}
+//------------------------------------------
+
+void CONTROL_SwitchToExtendedFault(ExecutionResult Reason)
+{
+	switch(Reason)
+	{
+		case ER_NoError:
+			break;
+
+		case ER_InterfaceError:
+			CONTROL_SwitchToFault(DF_INTERFACE);
+			break;
+
+		default:
+			{
+				DataTable[REG_FAULT_EXT_CODE] = Reason;
+				CONTROL_SetDeviceState(DS_Fault, DSS_None);
+				DataTable[REG_FAULT_REASON] = DF_LOGIC_EXEC;
+			}
+			break;
+	}
 }
 //------------------------------------------
 

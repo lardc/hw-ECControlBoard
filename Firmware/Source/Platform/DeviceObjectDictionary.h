@@ -85,6 +85,7 @@
 #define REG_OP_RESULT					197	// Регистр результата операции
 #define REG_DEV_SUB_STATE				198	// Регистр вспомогательного состояния
 #define REG_CONFIG_ERR					199	// Регистр хранения кода ошибки конфигурирования
+#define REG_FAULT_EXT_CODE				200	// Регистр расширенного кода Fault
 
 #define REG_BHL_ERROR_CODE				210	// Ошибка интерфейса ВУ: код ошибки
 #define REG_BHL_DEVICE					211	// Ошибка интерфейса ВУ: NID устройства
@@ -106,6 +107,7 @@
 #define DF_INTERFACE					1	// Ошибка мастер-интерфейса
 #define DF_LOGIC_WRONG_STATE			2	// Ведомый узел находится в некорректном состоянии
 #define DF_LOGIC_STATE_TIMEOUT			3	// Таймаут смены состояния ведомым узлом
+#define DF_LOGIC_EXEC					4	// Общий фолт выполнения логики
 
 // Problem
 #define PROBLEM_NONE					0

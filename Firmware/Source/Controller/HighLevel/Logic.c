@@ -120,7 +120,7 @@ void LOGIC_HandleMeasurementOnState()
 	{
 		switch(CONTROL_SubState)
 		{
-			case DSS_OnVoltageStart:
+			case DSS_OnVoltageCommutate:
 				{
 
 				}
