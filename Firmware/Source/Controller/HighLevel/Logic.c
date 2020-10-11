@@ -114,6 +114,25 @@ void LOGIC_HandlePowerOff()
 }
 //-----------------------------
 
+void LOGIC_HandleMeasurementOnState()
+{
+	if(CONTROL_State == DS_InProcess)
+	{
+		switch(CONTROL_SubState)
+		{
+			case DSS_OnVoltageStart:
+				{
+
+				}
+				break;
+
+			default:
+				break;
+		}
+	}
+}
+//-----------------------------
+
 LogicConfigError LOGIC_PrepareOnStateMeasurement()
 {
 	LogicConfigError err = LOGIC_CacheMuxSettings();

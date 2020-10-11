@@ -84,6 +84,7 @@
 #define REG_PROBLEM						196	// Регистр Problem
 #define REG_OP_RESULT					197	// Регистр результата операции
 #define REG_DEV_SUB_STATE				198	// Регистр вспомогательного состояния
+#define REG_CONFIG_ERR					199	// Регистр хранения кода ошибки конфигурирования
 
 #define REG_BHL_ERROR_CODE				210	// Ошибка интерфейса ВУ: код ошибки
 #define REG_BHL_DEVICE					211	// Ошибка интерфейса ВУ: NID устройства
@@ -118,5 +119,6 @@
 #define ERR_OPERATION_BLOCKED			2	//  Операция не может быть выполнена в текущем состоянии устройства
 #define ERR_DEVICE_NOT_READY			3	//  Устройство не готово для смены состояния
 #define ERR_WRONG_PWD					4	//  Неправильный ключ
+#define ERR_BAD_CONFIG					5	//  Попытка запуска измерения с неверной конфигурацией
 
 #endif //  __DEV_OBJ_DIC_H

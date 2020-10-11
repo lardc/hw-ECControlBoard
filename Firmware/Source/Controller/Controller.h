@@ -23,7 +23,9 @@ typedef enum __DeviceSubState
 	DSS_PowerEnable = 1,
 	DSS_PowerWaitReady = 2,
 
-	DSS_PowerOff = 3
+	DSS_PowerOff = 3,
+
+	DSS_OnVoltageStart = 4
 } DeviceSubState;
 
 // Variables

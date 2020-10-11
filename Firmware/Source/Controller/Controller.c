@@ -57,6 +57,7 @@ void CONTROL_ResetToDefaultState()
 	DataTable[REG_WARNING] = WARNING_NONE;
 	DataTable[REG_PROBLEM] = PROBLEM_NONE;
 	DataTable[REG_OP_RESULT] = OPRESULT_NONE;
+	DataTable[REG_CONFIG_ERR] = LCE_None;
 	
 	DEVPROFILE_ResetScopes(0);
 	DEVPROFILE_ResetEPReadState();
@@ -73,6 +74,8 @@ void CONTROL_Idle()
 	LOGIC_HandleStateUpdate();
 	LOGIC_HandlePowerOn();
 	LOGIC_HandlePowerOff();
+
+	LOGIC_HandleMeasurementOnState();
 }
 //------------------------------------------
 
@@ -85,9 +88,7 @@ static Boolean CONTROL_DispatchAction(Int16U ActionID, pInt16U pUserError)
 		case ACT_ENABLE_POWER:
 			{
 				if(CONTROL_State == DS_None)
-				{
 					CONTROL_SetDeviceState(DS_InProcess, DSS_PowerEnable);
-				}
 				else if(CONTROL_State != DS_Ready)
 					*pUserError = ERR_DEVICE_NOT_READY;
 			}
@@ -96,9 +97,7 @@ static Boolean CONTROL_DispatchAction(Int16U ActionID, pInt16U pUserError)
 		case ACT_DISABLE_POWER:
 			{
 				if(CONTROL_State == DS_Ready)
-				{
 					CONTROL_SetDeviceState(DS_None, DSS_PowerOff);
-				}
 				else if(CONTROL_State != DS_None)
 					*pUserError = ERR_OPERATION_BLOCKED;
 			}
@@ -108,7 +107,13 @@ static Boolean CONTROL_DispatchAction(Int16U ActionID, pInt16U pUserError)
 			{
 				if(CONTROL_State == DS_Ready)
 				{
-					
+					LogicConfigError err = LOGIC_PrepareOnStateMeasurement();
+					DataTable[REG_CONFIG_ERR] = err;
+
+					if(err == LCE_None)
+						CONTROL_SetDeviceState(DS_InProcess, DSS_OnVoltageStart);
+					else
+						*pUserError = ERR_BAD_CONFIG;
 				}
 				else
 					*pUserError = ERR_OPERATION_BLOCKED;
