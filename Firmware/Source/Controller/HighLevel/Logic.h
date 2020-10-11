@@ -20,4 +20,6 @@ void LOGIC_HandleStateUpdate();
 void LOGIC_HandlePowerOn();
 void LOGIC_HandlePowerOff();
 
+LogicConfigError LOGIC_PrepareOnStateMeasurement();
+
 #endif // __LOGIC_H

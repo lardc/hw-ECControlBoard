@@ -11,14 +11,21 @@
 #include "Multiplexer.h"
 #include "CurrentBoard.h"
 #include "DCVoltageBoard.h"
+#include "ACVoltageBoard.h"
+#include "DCHighVoltageBoard.h"
 
 // Variables
 static volatile MuxObject Multiplexer;
 static volatile CurrentBoardObject CurrentBoard;
 static volatile DCVoltageBoardObject DCVoltageBoard1, DCVoltageBoard2, DCVoltageBoard3;
+static volatile ACVoltageBoardObject ACVoltageBoard1, ACVoltageBoard2;
+static volatile DCHVoltageBoardObject DCHighVoltageBoard;
 
 // Forward functions
 void LOGIC_AttachSettings(NodeName Name, void *SettingsPointer);
+LogicConfigError LOGIC_CacheMuxSettings();
+void LOGIC_CacheCurrentBoardSettings();
+void LOGIC_CacheControlSettings();
 
 // Functions
 void LOGIC_InitEntities()
@@ -107,9 +114,15 @@ void LOGIC_HandlePowerOff()
 }
 //-----------------------------
 
-void LOGIC_PrepareOnStateMeasurement()
+LogicConfigError LOGIC_PrepareOnStateMeasurement()
 {
-
+	LogicConfigError err = LOGIC_CacheMuxSettings();
+	if(err == LCE_None)
+	{
+		LOGIC_CacheCurrentBoardSettings();
+		LOGIC_CacheControlSettings();
+	}
+	return err;
 }
 //-----------------------------
 
@@ -138,3 +151,22 @@ LogicConfigError LOGIC_CacheMuxSettings()
 }
 //-----------------------------
 
+void LOGIC_CacheCurrentBoardSettings()
+{
+	CurrentBoard.Setpoint.Current = DataTable[REG_COMM_CURRENT];
+	CurrentBoard.Setpoint.Voltage = DataTable[REG_COMM_VOLTAGE];
+}
+//-----------------------------
+
+void LOGIC_CacheControlSettings()
+{
+	VIPair Setpoint;
+	Setpoint.Voltage = DataTable[REG_CONTROL_VOLTAGE];
+	Setpoint.Current = DataTable[REG_CONTROL_CURRENT];
+
+	if(Multiplexer.InputType == ControlIDC || Multiplexer.InputType == ControlVDC)
+		DCVoltageBoard1.Setpoint = Setpoint;
+	else
+		ACVoltageBoard1.Setpoint = Setpoint;
+}
+//-----------------------------
