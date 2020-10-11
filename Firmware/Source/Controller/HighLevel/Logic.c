@@ -118,11 +118,28 @@ void LOGIC_HandleMeasurementOnState()
 {
 	if(CONTROL_State == DS_InProcess)
 	{
+		ExecutionResult res;
 		switch(CONTROL_SubState)
 		{
+			case DSS_StartOnVoltageTest:
+				if(COMM_AreSlavesInStateX(CDS_Ready))
+					CONTROL_SetDeviceState(DS_InProcess, DSS_OnVoltageCommutate);
+				else
+					CONTROL_SwitchToFault(DF_LOGIC_WRONG_STATE);
+				break;
+
 			case DSS_OnVoltageCommutate:
 				{
+					res = MUX_Connect();
+					if(res == ER_NoError)
+						CONTROL_SetDeviceState(DS_InProcess, DSS_GenControlVoltage);
+					else
+						CONTROL_SwitchToExtendedFault(res);
+				}
+				break;
 
+			case DSS_GenControlVoltage:
+				{
 				}
 				break;
 
