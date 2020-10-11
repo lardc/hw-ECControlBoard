@@ -165,8 +165,16 @@ void LOGIC_CacheControlSettings()
 	Setpoint.Current = DataTable[REG_CONTROL_CURRENT];
 
 	if(Multiplexer.InputType == ControlIDC || Multiplexer.InputType == ControlVDC)
+	{
 		DCVoltageBoard1.Setpoint = Setpoint;
+		DCVoltageBoard1.OutputLine = DC_CTRL;
+		DCVoltageBoard1.OutputType = Multiplexer.InputType;
+		DCVoltageBoard1.OutputMode = Continuous;
+	}
 	else
+	{
 		ACVoltageBoard1.Setpoint = Setpoint;
+		ACVoltageBoard1.OutputLine = AC_CTRL;
+	}
 }
 //-----------------------------
