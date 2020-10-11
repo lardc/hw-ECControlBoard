@@ -32,7 +32,7 @@ ExecutionResult MUX_Connect()
 		return ER_InterfaceError;
 	}
 	else
-		return ER_LogicError;
+		return ER_SettingsError;
 }
 //-----------------------------
 
@@ -55,6 +55,6 @@ ExecutionResult MUX_Disconnect()
 		return ER_InterfaceError;
 	}
 	else
-		return ER_LogicError;
+		return ER_SettingsError;
 }
 //-----------------------------

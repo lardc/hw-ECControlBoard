@@ -23,8 +23,8 @@
 
 typedef enum __DCV_OutputLine
 {
-	BUS_LV = 1,
-	CTRL = 2,
+	DC_BUS_LV = 1,
+	DC_CTRL = 2,
 	PS1 = 3,
 	PS2 = 4
 } DCV_OutputLine;

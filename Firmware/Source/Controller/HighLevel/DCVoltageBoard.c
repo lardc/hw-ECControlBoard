@@ -8,6 +8,9 @@
 //
 ExecutionResult DCV_Execute(NodeName Name)
 {
+	if(Name != NAME_DCVoltage1 && Name != NAME_DCVoltage2 && Name != NAME_DCVoltage3)
+		return ER_WrongNode;
+
 	pSlaveNode NodeData = COMM_GetSlaveDevicePointer(Name);
 	pDCVoltageBoardObject Settings = (pDCVoltageBoardObject)NodeData->Settings;
 
@@ -38,12 +41,15 @@ ExecutionResult DCV_Execute(NodeName Name)
 		return ER_InterfaceError;
 	}
 	else
-		return ER_LogicError;
+		return ER_SettingsError;
 }
 //-----------------------------
 
 ExecutionResult DCV_ReadResult(NodeName Name)
 {
+	if(Name != NAME_DCVoltage1 && Name != NAME_DCVoltage2 && Name != NAME_DCVoltage3)
+		return ER_WrongNode;
+
 	pSlaveNode NodeData = COMM_GetSlaveDevicePointer(Name);
 	pDCVoltageBoardObject Settings = (pDCVoltageBoardObject)NodeData->Settings;
 
@@ -77,12 +83,15 @@ ExecutionResult DCV_ReadResult(NodeName Name)
 		return ER_InterfaceError;
 	}
 	else
-		return ER_LogicError;
+		return ER_SettingsError;
 }
 //-----------------------------
 
 ExecutionResult DCV_Stop(NodeName Name)
 {
+	if(Name != NAME_DCVoltage1 && Name != NAME_DCVoltage2 && Name != NAME_DCVoltage3)
+		return ER_WrongNode;
+
 	pSlaveNode NodeData = COMM_GetSlaveDevicePointer(Name);
 	pDCVoltageBoardObject Settings = (pDCVoltageBoardObject)NodeData->Settings;
 
@@ -100,6 +109,6 @@ ExecutionResult DCV_Stop(NodeName Name)
 		return ER_InterfaceError;
 	}
 	else
-		return ER_LogicError;
+		return ER_SettingsError;
 }
 //-----------------------------

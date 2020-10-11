@@ -31,7 +31,7 @@ ExecutionResult CURR_Execute()
 		return ER_InterfaceError;
 	}
 	else
-		return ER_LogicError;
+		return ER_SettingsError;
 }
 //-----------------------------
 
@@ -68,6 +68,6 @@ ExecutionResult CURR_ReadResult()
 		return ER_InterfaceError;
 	}
 	else
-		return ER_LogicError;
+		return ER_SettingsError;
 }
 //-----------------------------
