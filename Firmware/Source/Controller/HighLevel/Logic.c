@@ -130,44 +130,44 @@ void LOGIC_HandleMeasurementOnState()
 		ExecutionResult res;
 		switch(CONTROL_SubState)
 		{
-			case DSS_StartOnVoltageTest:
+			case DSS_OnVoltage_StartTest:
 				if(COMM_AreSlavesInStateX(CDS_Ready))
-					CONTROL_SetDeviceState(DS_InProcess, DSS_OnVoltageCommutate);
+					CONTROL_SetDeviceState(DS_InProcess, DSS_OnVoltage_Commutate);
 				else
 					CONTROL_SwitchToFault(ER_WrongState, FAULT_EXT_GR_COMMON);
 				break;
 
-			case DSS_OnVoltageCommutate:
+			case DSS_OnVoltage_Commutate:
 				{
 					res = MUX_Connect();
 					if(res == ER_NoError)
-						CONTROL_SetDeviceState(DS_InProcess, DSS_GenControlVoltage);
+						CONTROL_SetDeviceState(DS_InProcess, DSS_OnVoltage_StartControl);
 					else
 						CONTROL_SwitchToFault(res, FAULT_EXT_GR_MUX);
 				}
 				break;
 
-			case DSS_GenControlVoltage:
+			case DSS_OnVoltage_StartControl:
 				{
 					res = LOGIC_ApplyControlVoltage();
 					if(res == ER_NoError)
 					{
 						Timeout = DataTable[REG_GENERAL_LOGIC_TIMEOUT] + CONTROL_TimeCounter;
-						CONTROL_SetDeviceState(DS_InProcess, DSS_WaitControlVoltageReady);
+						CONTROL_SetDeviceState(DS_InProcess, DSS_OnVoltage_WaitControlReady);
 					}
 					else
 						LOGIC_HandleControlExecResult(res);
 				}
 				break;
 
-			case DSS_WaitControlVoltageReady:
+			case DSS_OnVoltage_WaitControlReady:
 				{
 					bool IsVoltageReady;
 					res = LOGIC_IsControlVoltageReady(&IsVoltageReady);
 					if(res == ER_NoError)
 					{
 						if(IsVoltageReady)
-							CONTROL_SetDeviceState(DS_InProcess, DSS_PulseCurrent);
+							CONTROL_SetDeviceState(DS_InProcess, DSS_OnVoltage_PulseCurrent);
 						else if(CONTROL_TimeCounter > Timeout)
 							LOGIC_HandleControlExecResult(ER_ChangeStateTimeout);
 					}
@@ -176,7 +176,35 @@ void LOGIC_HandleMeasurementOnState()
 				}
 				break;
 
-			case DSS_PulseCurrent:
+			case DSS_OnVoltage_PulseCurrent:
+				{
+					res = CURR_Execute();
+					if(res == ER_NoError)
+					{
+						Timeout = DataTable[REG_GENERAL_LOGIC_TIMEOUT] + CONTROL_TimeCounter;
+						CONTROL_SetDeviceState(DS_InProcess, DSS_OnVoltage_WaitCurrentReady);
+					}
+					else
+						LOGIC_HandleControlExecResult(res);
+				}
+				break;
+
+			case DSS_OnVoltage_WaitCurrentReady:
+				{
+					if(COMM_AreSlavesInStateX(CDS_Ready))
+					{
+						CONTROL_SetDeviceState(DS_InProcess, DSS_OnVoltage_StopControl);
+					}
+					else if(COMM_IsSlaveInFaultOrDisabled())
+					{
+						CONTROL_SwitchToFault(ER_WrongState, FAULT_EXT_GR_COMMON);
+					}
+					else if(CONTROL_TimeCounter > Timeout)
+						CONTROL_SwitchToFault(ER_ChangeStateTimeout, FAULT_EXT_GR_DC_CURRENT);
+				}
+				break;
+
+			case DSS_OnVoltage_StopControl:
 				{
 					//
 				}

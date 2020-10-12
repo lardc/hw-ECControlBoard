@@ -110,7 +110,7 @@ static Boolean CONTROL_DispatchAction(Int16U ActionID, pInt16U pUserError)
 					DataTable[REG_CONFIG_ERR] = err;
 
 					if(err == LCE_None)
-						CONTROL_SetDeviceState(DS_InProcess, DSS_StartOnVoltageTest);
+						CONTROL_SetDeviceState(DS_InProcess, DSS_OnVoltage_StartTest);
 					else
 						*pUserError = ERR_BAD_CONFIG;
 				}
