@@ -158,7 +158,7 @@ void CONTROL_SwitchToFault(Int16U Reason)
 }
 //------------------------------------------
 
-void CONTROL_SwitchToExtendedFault(ExecutionResult Reason)
+void CONTROL_SwitchToExtendedFault(ExecutionResult Reason, Int16U Group)
 {
 	switch(Reason)
 	{
@@ -171,7 +171,7 @@ void CONTROL_SwitchToExtendedFault(ExecutionResult Reason)
 
 		default:
 			{
-				DataTable[REG_FAULT_EXT_CODE] = Reason;
+				DataTable[REG_FAULT_EXT_CODE] = Group + Reason;
 				CONTROL_SetDeviceState(DS_Fault, DSS_None);
 				DataTable[REG_FAULT_REASON] = DF_LOGIC_EXEC;
 			}

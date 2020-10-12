@@ -102,12 +102,21 @@
 #define OPRESULT_OK						1	// Operation was successful
 #define OPRESULT_FAIL					2	// Operation failed
 
-//  Fault and disable codes
+// Fault and disable codes
 #define DF_NONE							0
 #define DF_INTERFACE					1	// Ошибка мастер-интерфейса
 #define DF_LOGIC_WRONG_STATE			2	// Ведомый узел находится в некорректном состоянии
 #define DF_LOGIC_STATE_TIMEOUT			3	// Таймаут смены состояния ведомым узлом
-#define DF_LOGIC_EXEC					4	// Общий фолт выполнения логики
+#define DF_LOGIC_EXEC					4	// Общий фолт выполнения логики (см. значение расширенного кода Fault)
+
+// Группы кодов ошибок выполнения
+// Код ошибки задаётся как FAULT_EXT_GR + ExecutionResult
+#define FAULT_EXT_GR_MUX				10	// Multiplexer
+#define FAULT_EXT_GR_DC_CURRENT			20	// DCCurrentBoard
+#define FAULT_EXT_GR_DC_HV				30	// DCHighVoltageBoard
+#define FAULT_EXT_GR_DC_VOLTAGE1		40	// DCVoltageBoard1
+#define FAULT_EXT_GR_DC_VOLTAGE2		50	// DCVoltageBoard2
+#define FAULT_EXT_GR_DC_VOLTAGE3		60	// DCVoltageBoard3
 
 // Problem
 #define PROBLEM_NONE					0
