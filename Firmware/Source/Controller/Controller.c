@@ -129,12 +129,10 @@ static Boolean CONTROL_DispatchAction(Int16U ActionID, pInt16U pUserError)
 			{
 				if(CONTROL_State == DS_Ready)
 				{
-					LogicConfigError err = LOGIC_PrepareOnStateMeasurement();
+					LogicConfigError err = LOGIC_PrepareMeasurement();
 					DataTable[REG_CONFIG_ERR] = err;
 
-					if(err == LCE_None)
-						CONTROL_SetDeviceState(DS_InProcess, DSS_OnVoltage_StartTest);
-					else
+					if(err != LCE_None)
 						*pUserError = ERR_BAD_CONFIG;
 				}
 				else

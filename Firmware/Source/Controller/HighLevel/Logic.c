@@ -255,13 +255,33 @@ void LOGIC_HandleMeasurementOnState()
 }
 //-----------------------------
 
-LogicConfigError LOGIC_PrepareOnStateMeasurement()
+LogicConfigError LOGIC_PrepareMeasurement()
 {
 	LogicConfigError err = LOGIC_CacheMuxSettings();
 	if(err == LCE_None)
 	{
-		LOGIC_CacheCurrentBoardSettings();
-		LOGIC_CacheControlSettings();
+		switch(Multiplexer.MeasureType)
+		{
+			case MT_LeakageCurrent:
+				break;
+
+			case MT_OnVoltage:
+				{
+					LOGIC_CacheCurrentBoardSettings();
+					LOGIC_CacheControlSettings();
+					CONTROL_SetDeviceState(DS_InProcess, DSS_OnVoltage_StartTest);
+				}
+				break;
+
+			case MT_InputVoltageCurrent:
+				break;
+
+			case MT_InhibitVoltage:
+				break;
+
+			default:
+				return LCE_InvalidMeasurement;
+		}
 	}
 	return err;
 }

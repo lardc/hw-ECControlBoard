@@ -10,7 +10,8 @@ typedef enum __LogicConfigError
 {
 	LCE_None = 0,
 	LCE_UnknownCase = 1,
-	LCE_PositionMissmatch = 2
+	LCE_PositionMissmatch = 2,
+	LCE_InvalidMeasurement = 3
 } LogicConfigError;
 
 // Functions
@@ -20,8 +21,9 @@ void LOGIC_HandleStateUpdate();
 void LOGIC_HandlePowerOn();
 void LOGIC_HandlePowerOff();
 
+void LOGIC_HandleMeasurementLeakage();
 void LOGIC_HandleMeasurementOnState();
 
-LogicConfigError LOGIC_PrepareOnStateMeasurement();
+LogicConfigError LOGIC_PrepareMeasurement();
 
 #endif // __LOGIC_H
