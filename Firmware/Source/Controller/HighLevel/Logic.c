@@ -26,8 +26,11 @@ void LOGIC_AttachSettings(NodeName Name, void *SettingsPointer);
 LogicConfigError LOGIC_CacheMuxSettings();
 void LOGIC_CacheCurrentBoardSettings();
 void LOGIC_CacheControlSettings();
+void LOGIC_CacheLeakageSettings();
 bool LOGIC_IsDCControl();
+bool LOGIC_IsDCLeakage();
 void LOGIC_HandleControlExecResult(ExecutionResult Result);
+void LOGIC_HandleLeakageExecResult(ExecutionResult Result);
 ExecutionResult LOGIC_StartControl();
 ExecutionResult LOGIC_StopControl();
 ExecutionResult LOGIC_IsControlVoltageReady(bool *IsReady);
@@ -317,9 +320,33 @@ void LOGIC_CacheControlSettings()
 }
 //-----------------------------
 
+void LOGIC_CacheLeakageSettings()
+{
+	VIPair Setpoint;
+	Setpoint.Voltage = DataTable[REG_COMM_VOLTAGE];
+	Setpoint.Current = DataTable[REG_COMM_CURRENT];
+
+	if(LOGIC_IsDCLeakage())
+	{
+		DCHighVoltageBoard.Setpoint = Setpoint;
+	}
+	else
+	{
+		ACVoltageBoard2.Setpoint = Setpoint;
+		ACVoltageBoard2.OutputLine = AC_BUS_LV;
+	}
+}
+//-----------------------------
+
 bool LOGIC_IsDCControl()
 {
 	return Multiplexer.InputType == ControlIDC || Multiplexer.InputType == ControlVDC;
+}
+//-----------------------------
+
+bool LOGIC_IsDCLeakage()
+{
+	return Multiplexer.LeakageType == LeakageDC;
 }
 //-----------------------------
 
@@ -327,6 +354,13 @@ void LOGIC_HandleControlExecResult(ExecutionResult Result)
 {
 	CONTROL_SwitchToFault(Result,
 		LOGIC_IsDCControl() ? FAULT_EXT_GR_DC_VOLTAGE1 : FAULT_EXT_GR_AC_VOLTAGE1);
+}
+//-----------------------------
+
+void LOGIC_HandleLeakageExecResult(ExecutionResult Result)
+{
+	CONTROL_SwitchToFault(Result,
+		LOGIC_IsDCLeakage() ? FAULT_EXT_GR_DC_HV : FAULT_EXT_GR_AC_VOLTAGE2);
 }
 //-----------------------------
 
