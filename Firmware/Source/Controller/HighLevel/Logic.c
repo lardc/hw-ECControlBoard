@@ -26,6 +26,9 @@ void LOGIC_AttachSettings(NodeName Name, void *SettingsPointer);
 LogicConfigError LOGIC_CacheMuxSettings();
 void LOGIC_CacheCurrentBoardSettings();
 void LOGIC_CacheControlSettings();
+bool LOGIC_IsDCControl();
+ExecutionResult LOGIC_ApplyControlVoltage();
+void LOGIC_HandleControlExecResult(ExecutionResult Result);
 
 // Functions
 void LOGIC_InitEntities()
@@ -119,6 +122,8 @@ void LOGIC_HandlePowerOff()
 
 void LOGIC_HandleMeasurementOnState()
 {
+	static Int64U Timeout;
+
 	if(CONTROL_State == DS_InProcess)
 	{
 		ExecutionResult res;
@@ -137,12 +142,26 @@ void LOGIC_HandleMeasurementOnState()
 					if(res == ER_NoError)
 						CONTROL_SetDeviceState(DS_InProcess, DSS_GenControlVoltage);
 					else
-						CONTROL_SwitchToExtendedFault(res);
+						CONTROL_SwitchToExtendedFault(res, FAULT_EXT_GR_MUX);
 				}
 				break;
 
 			case DSS_GenControlVoltage:
 				{
+					res = LOGIC_ApplyControlVoltage();
+					if(res == ER_NoError)
+					{
+						Timeout = DataTable[REG_GENERAL_LOGIC_TIMEOUT] + CONTROL_TimeCounter;
+						CONTROL_SetDeviceState(DS_InProcess, DSS_WaitControlVoltageReady);
+					}
+					else
+						LOGIC_HandleControlExecResult(res);
+				}
+				break;
+
+			case DSS_WaitControlVoltageReady:
+				{
+					//
 				}
 				break;
 
@@ -203,7 +222,7 @@ void LOGIC_CacheControlSettings()
 	Setpoint.Voltage = DataTable[REG_CONTROL_VOLTAGE];
 	Setpoint.Current = DataTable[REG_CONTROL_CURRENT];
 
-	if(Multiplexer.InputType == ControlIDC || Multiplexer.InputType == ControlVDC)
+	if(LOGIC_IsDCControl())
 	{
 		DCVoltageBoard1.Setpoint = Setpoint;
 		DCVoltageBoard1.OutputLine = DC_CTRL;
@@ -215,5 +234,24 @@ void LOGIC_CacheControlSettings()
 		ACVoltageBoard1.Setpoint = Setpoint;
 		ACVoltageBoard1.OutputLine = AC_CTRL;
 	}
+}
+//-----------------------------
+
+bool LOGIC_IsDCControl()
+{
+	return Multiplexer.InputType == ControlIDC || Multiplexer.InputType == ControlVDC;
+}
+//-----------------------------
+
+ExecutionResult LOGIC_ApplyControlVoltage()
+{
+	return LOGIC_IsDCControl() ? DCV_Execute(NAME_DCVoltage1) : ACV_Execute(NAME_ACVoltage1);
+}
+//-----------------------------
+
+void LOGIC_HandleControlExecResult(ExecutionResult Result)
+{
+	CONTROL_SwitchToExtendedFault(Result,
+		LOGIC_IsDCControl() ? FAULT_EXT_GR_DC_VOLTAGE1 : FAULT_EXT_GR_AC_VOLTAGE1);
 }
 //-----------------------------

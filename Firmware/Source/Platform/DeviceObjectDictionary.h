@@ -52,6 +52,7 @@
 #define REG_EMULATE_AC_VOLTAGE2			17	// Режим эмуляции для ECACVoltageBoard №2
 // 18 - 19
 #define REG_POWER_ENABLE_TIMEOUT		20	// Таймаут ожидания включения питания (в сек.)
+#define REG_GENERAL_LOGIC_TIMEOUT		21	// Таймаут основных быстрых логических операций (в сек.)
 
 // Несохраняемы регистры чтения-записи
 #define REG_MEASUREMENT_TYPE			128	// Тип выполняемого измерения
@@ -117,6 +118,8 @@
 #define FAULT_EXT_GR_DC_VOLTAGE1		40	// DCVoltageBoard1
 #define FAULT_EXT_GR_DC_VOLTAGE2		50	// DCVoltageBoard2
 #define FAULT_EXT_GR_DC_VOLTAGE3		60	// DCVoltageBoard3
+#define FAULT_EXT_GR_AC_VOLTAGE1		70	// ACVoltageBoard1
+#define FAULT_EXT_GR_AC_VOLTAGE2		80	// ACVoltageBoard2
 
 // Problem
 #define PROBLEM_NONE					0

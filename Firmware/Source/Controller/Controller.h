@@ -28,7 +28,8 @@ typedef enum __DeviceSubState
 
 	DSS_StartOnVoltageTest = 4,
 	DSS_OnVoltageCommutate = 5,
-	DSS_GenControlVoltage = 6
+	DSS_GenControlVoltage = 6,
+	DSS_WaitControlVoltageReady = 7
 } DeviceSubState;
 
 // Variables
