@@ -308,7 +308,7 @@ void LOGIC_HandleMeasurementOnState()
 						CONTROL_SetDeviceState(DS_InProcess, DSS_OnVoltage_WaitCurrentReady);
 					}
 					else
-						LOGIC_HandleControlExecResult(res);
+						CONTROL_SwitchToFault(res, FAULT_EXT_GR_DC_CURRENT);
 				}
 				break;
 
