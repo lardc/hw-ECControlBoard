@@ -72,6 +72,11 @@ bool COMM_SlavesReadState()
 			if(!result)
 				return false;
 		}
+		else
+		{
+			NodeArray[i].State = CDS_Ready;
+			NodeArray[i].OpResult = COMM_OPRESULT_OK;
+		}
 	}
 
 	return true;

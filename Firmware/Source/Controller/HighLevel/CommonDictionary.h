@@ -15,6 +15,11 @@
 #define COMM_REG_PROBLEM					196	// Регистр Problem
 #define COMM_REG_OP_RESULT					197	// Регистр результата операции
 
+// Operation results
+#define COMM_OPRESULT_NONE					0	// No information or not finished
+#define COMM_OPRESULT_OK					1	// Operation was successful
+#define COMM_OPRESULT_FAIL					2	// Operation failed
+
 // States
 typedef enum __CommonDeviceState
 {
