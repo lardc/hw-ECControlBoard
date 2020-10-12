@@ -13,6 +13,6 @@
 #define TIME_LED_BLINK				500		// Мигание светодиодом (в мс)
 #define TIME_SLAVE_STATE_UPDATE		100		// Интервал опроса состояний ведомых узлов (в мс)
 
-#define MAX_SLAVE_NODES				10		// Максимальное чилсо slave-узлов
+#define MAX_SLAVE_NODES				8		// Максимальное чилсо slave-узлов
 
 #endif //  __GLOBAL_H
