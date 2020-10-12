@@ -28,7 +28,8 @@ void LOGIC_CacheCurrentBoardSettings();
 void LOGIC_CacheControlSettings();
 bool LOGIC_IsDCControl();
 void LOGIC_HandleControlExecResult(ExecutionResult Result);
-ExecutionResult LOGIC_ApplyControlVoltage();
+ExecutionResult LOGIC_StartControl();
+ExecutionResult LOGIC_StopControl();
 ExecutionResult LOGIC_IsControlVoltageReady(bool *IsReady);
 
 // Functions
@@ -127,6 +128,9 @@ void LOGIC_HandleMeasurementOnState()
 
 	if(CONTROL_State == DS_InProcess)
 	{
+		if(COMM_IsSlaveInFaultOrDisabled())
+			CONTROL_SwitchToFault(ER_WrongState, FAULT_EXT_GR_COMMON);
+
 		ExecutionResult res;
 		switch(CONTROL_SubState)
 		{
@@ -149,7 +153,7 @@ void LOGIC_HandleMeasurementOnState()
 
 			case DSS_OnVoltage_StartControl:
 				{
-					res = LOGIC_ApplyControlVoltage();
+					res = LOGIC_StartControl();
 					if(res == ER_NoError)
 					{
 						Timeout = DataTable[REG_GENERAL_LOGIC_TIMEOUT] + CONTROL_TimeCounter;
@@ -192,13 +196,7 @@ void LOGIC_HandleMeasurementOnState()
 			case DSS_OnVoltage_WaitCurrentReady:
 				{
 					if(COMM_AreSlavesInStateX(CDS_Ready))
-					{
 						CONTROL_SetDeviceState(DS_InProcess, DSS_OnVoltage_StopControl);
-					}
-					else if(COMM_IsSlaveInFaultOrDisabled())
-					{
-						CONTROL_SwitchToFault(ER_WrongState, FAULT_EXT_GR_COMMON);
-					}
 					else if(CONTROL_TimeCounter > Timeout)
 						CONTROL_SwitchToFault(ER_ChangeStateTimeout, FAULT_EXT_GR_DC_CURRENT);
 				}
@@ -206,7 +204,41 @@ void LOGIC_HandleMeasurementOnState()
 
 			case DSS_OnVoltage_StopControl:
 				{
-					//
+					res = LOGIC_StopControl();
+					if(res == ER_NoError)
+						CONTROL_SetDeviceState(DS_InProcess, DSS_OnVoltage_UnCommutate);
+					else
+						LOGIC_HandleControlExecResult(res);
+				}
+				break;
+
+			case DSS_OnVoltage_UnCommutate:
+				{
+					res = MUX_Disconnect();
+					if(res == ER_NoError)
+						CONTROL_SetDeviceState(DS_InProcess, DSS_OnVoltage_ReadResult);
+					else
+						CONTROL_SwitchToFault(res, FAULT_EXT_GR_MUX);
+				}
+				break;
+
+			case DSS_OnVoltage_ReadResult:
+				{
+					res = CURR_ReadResult();
+					if(res == ER_NoError)
+					{
+						pSlaveNode Node = COMM_GetSlaveDevicePointer(NAME_DCCurrent);
+						if(Node->OpResult == OPRESULT_OK)
+						{
+							DataTable[REG_OP_RESULT] = OPRESULT_OK;
+						}
+						else
+							DataTable[REG_OP_RESULT] = OPRESULT_FAIL;
+
+						CONTROL_SetDeviceState(DS_Ready, DSS_None);
+					}
+					else
+						CONTROL_SwitchToFault(res, FAULT_EXT_GR_DC_CURRENT);
 				}
 				break;
 
@@ -295,9 +327,15 @@ void LOGIC_HandleControlExecResult(ExecutionResult Result)
 }
 //-----------------------------
 
-ExecutionResult LOGIC_ApplyControlVoltage()
+ExecutionResult LOGIC_StartControl()
 {
 	return LOGIC_IsDCControl() ? DCV_Execute(NAME_DCVoltage1) : ACV_Execute(NAME_ACVoltage1);
+}
+//-----------------------------
+
+ExecutionResult LOGIC_StopControl()
+{
+	return LOGIC_IsDCControl() ? DCV_Stop(NAME_DCVoltage1) : ACV_Stop(NAME_ACVoltage1);
 }
 //-----------------------------
 
