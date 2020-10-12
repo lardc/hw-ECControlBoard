@@ -26,5 +26,6 @@ typedef struct __DCVoltageBoardObject
 ExecutionResult DCV_Execute(NodeName Name);
 ExecutionResult DCV_ReadResult(NodeName Name);
 ExecutionResult DCV_Stop(NodeName Name);
+ExecutionResult DCV_IsVoltageReady(NodeName Name, bool *VoltageReady);
 
 #endif // __DC_VOLTAGE_BOARD_H

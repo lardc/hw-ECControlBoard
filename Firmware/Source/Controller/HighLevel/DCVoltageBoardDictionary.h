@@ -21,6 +21,8 @@
 #define DCV_REG_VOLTAGE_RESULT				142	// Значение измерения напряжения
 #define DCV_REG_VOLTAGE_RESULT_32			143
 
+#define DCV_REG_VOLTAGE_READY				150	// Флаг выхода на уставку напряжения
+
 typedef enum __DCV_OutputLine
 {
 	DC_BUS_LV = 1,
