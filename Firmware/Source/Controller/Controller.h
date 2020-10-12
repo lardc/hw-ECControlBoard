@@ -34,7 +34,18 @@ typedef enum __DeviceSubState
 	DSS_OnVoltage_WaitCurrentReady = 9,
 	DSS_OnVoltage_StopControl = 10,
 	DSS_OnVoltage_UnCommutate = 11,
-	DSS_OnVoltage_ReadResult = 12
+	DSS_OnVoltage_ReadResult = 12,
+
+	DSS_Leakage_StartTest = 13,
+	DSS_Leakage_Commutate = 14,
+	DSS_Leakage_StartControl = 15,
+	DSS_Leakage_WaitControlReady = 16,
+	DSS_Leakage_StartOutVoltage = 17,
+	DSS_Leakage_WaitOutVoltageReady = 18,
+	DSS_Leakage_StopOutVoltage = 19,
+	DSS_Leakage_StopControl = 20,
+	DSS_Leakage_UnCommutate = 21,
+	DSS_Leakage_ReadResult = 22
 } DeviceSubState;
 
 // Variables
