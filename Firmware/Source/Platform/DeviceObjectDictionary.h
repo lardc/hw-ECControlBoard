@@ -84,13 +84,22 @@
 #define REG_WARNING						195	// Регистр Warning
 #define REG_PROBLEM						196	// Регистр Problem
 #define REG_OP_RESULT					197	// Регистр результата операции
-#define REG_DEV_SUB_STATE				198	// Регистр вспомогательного состояния
-#define REG_CONFIG_ERR					199	// Регистр хранения кода ошибки конфигурирования
 
-#define REG_BHL_ERROR_CODE				210	// Ошибка интерфейса ВУ: код ошибки
-#define REG_BHL_DEVICE					211	// Ошибка интерфейса ВУ: NID устройства
-#define REG_BHL_FUNCTION				212	// Ошибка интерфейса ВУ: код функции
-#define REG_BHL_EXT_DATA				213	// Ошибка интерфейса ВУ: расширенная информация
+#define REG_RESULT_LEAKAGE_CURRENT		198	// Ток утечки на выходе
+#define REG_RESULT_ON_VOLTAGE			199	// Остаточное напряжение на выходе
+#define REG_RESULT_CONTROL_CURRENT		200	// Ток управления
+#define REG_RESULT_CONTROL_VOLTAGE		201	// Напряжение управления
+#define REG_RESULT_INHIBIT_VOLTAGE		202	// Напряжение запрета
+#define REG_RESULT_AUX_CURRENT1			203	// Ток вспомогательного источника 1
+#define REG_RESULT_AUX_CURRENT2			204	// Ток вспомогательного источника 2
+
+#define REG_DEV_SUB_STATE				220	// Регистр вспомогательного состояния
+#define REG_CONFIG_ERR					221	// Регистр хранения кода ошибки конфигурирования
+
+#define REG_BHL_ERROR_CODE				225	// Ошибка интерфейса ВУ: код ошибки
+#define REG_BHL_DEVICE					226	// Ошибка интерфейса ВУ: NID устройства
+#define REG_BHL_FUNCTION				227	// Ошибка интерфейса ВУ: код функции
+#define REG_BHL_EXT_DATA				228	// Ошибка интерфейса ВУ: расширенная информация
 
 #define REG_DBG_INT_SYNC1				251	// Регистр состояния внутреннейи линии SYNC1
 #define REG_DBG_INT_SYNC2				252	// Регистр состояния внутреннейи линии SYNC2
