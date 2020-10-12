@@ -20,7 +20,7 @@ typedef void (*FUNC_AsyncDelegate)();
 //
 DeviceState CONTROL_State = DS_None;
 DeviceSubState CONTROL_SubState = DSS_None;
-static Boolean CycleActive = false;
+static Boolean CycleActive = false, SafetyMonitorActive = false;
 
 volatile Int64U CONTROL_TimeCounter = 0;
 
@@ -98,6 +98,27 @@ static Boolean CONTROL_DispatchAction(Int16U ActionID, pInt16U pUserError)
 				if(CONTROL_State == DS_Ready)
 					CONTROL_SetDeviceState(DS_None, DSS_PowerOff);
 				else if(CONTROL_State != DS_None)
+					*pUserError = ERR_OPERATION_BLOCKED;
+			}
+			break;
+
+		case ACT_SAFETY_SET_ACTIVE:
+			{
+				if(CONTROL_State == DS_Ready)
+					SafetyMonitorActive = true;
+				else
+					*pUserError = ERR_DEVICE_NOT_READY;
+			}
+			break;
+
+		case ACT_SAFETY_SET_INACTIVE:
+			{
+				if(CONTROL_State == DS_SafetyTrig)
+				{
+					SafetyMonitorActive = false;
+					CONTROL_SetDeviceState(DS_Ready, DSS_None);
+				}
+				else if(CONTROL_State != DS_Ready)
 					*pUserError = ERR_OPERATION_BLOCKED;
 			}
 			break;
