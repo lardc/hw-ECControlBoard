@@ -117,7 +117,7 @@ ExecutionResult ACV_IsVoltageReady(NodeName Name, bool *VoltageReady)
 		if(!NodeData->Emulation)
 		{
 			uint16_t NodeID = NodeData->NodeID;
-			if(BHL_ReadRegister(NodeID, ACV_REG_VOLTAGE_READY, VoltageReady))
+			if(BHL_ReadRegister(NodeID, ACV_REG_VOLTAGE_READY, (pInt16U)VoltageReady))
 				return ER_NoError;
 		}
 		else
