@@ -1,4 +1,4 @@
-// ----------------------------------------
+﻿// ----------------------------------------
 // Device data table
 // ----------------------------------------
 
@@ -6,6 +6,7 @@
 #include "DataTable.h"
 //
 #include "SysConfig.h"
+#include "FirmwareInfo.h"
 
 // Constants
 //
@@ -70,11 +71,15 @@ void DT_ResetWRPart(FUNC_SetDefaultValues SetFunc)
 }
 //-------------------------------------------
 
-void DT_ResetNVPartToDefault(void)
+void DT_SaveFirmwareInfo(Int16U SlaveNID, Int16U MasterNID)
 {
-	DEVPROFILE_FillNVPartDefault();
-	
-	if(EPROMServiceCfg.WriteService)
-		EPROMServiceCfg.WriteService(DT_EPROM_ADDRESS, (pInt16U)&DataTable[DATA_TABLE_NV_START], DATA_TABLE_NV_SIZE);
+	if(DATA_TABLE_SIZE > REG_FWINFO_STR_BEGIN)
+	{
+		DataTable[REG_FWINFO_SLAVE_NID] = SlaveNID;
+		DataTable[REG_FWINFO_MASTER_NID] = MasterNID;
+
+		DataTable[REG_FWINFO_STR_LEN] = FWINF_Compose((pInt16U)(&DataTable[REG_FWINFO_STR_BEGIN]),
+				(DATA_TABLE_SIZE - REG_FWINFO_STR_BEGIN) * 2);
+	}
 }
 //------------------------------------------
