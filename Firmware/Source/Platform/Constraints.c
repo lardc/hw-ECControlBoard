@@ -34,8 +34,8 @@ const TableItemConstraint NVConstraint[DATA_TABLE_NV_SIZE] = {
 		{NO, YES, NO},																// 17
 		{0, 0, 0},																	// 18
 		{0, 0, 0},																	// 19
-		{TIMEOUT_POWER_EN_MIN, TIMEOUT_POWER_EN_MAX, TIMEOUT_POWER_EN_DEF},			// 20
-		{0, 0, 0},																	// 21
+		{TIMEOUT_MIN, TIMEOUT_MAX, TIMEOUT_DEF},									// 20
+		{TIMEOUT_MIN, TIMEOUT_MAX, TIMEOUT_DEF},									// 21
 		{0, 0, 0},																	// 22
 		{0, 0, 0},																	// 23
 		{0, 0, 0},																	// 24

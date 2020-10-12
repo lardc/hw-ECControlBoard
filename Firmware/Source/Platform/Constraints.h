@@ -13,9 +13,9 @@
 #define NODE_ID_MIN					1
 #define NODE_ID_MAX					255
 
-#define TIMEOUT_POWER_EN_MIN		5
-#define TIMEOUT_POWER_EN_MAX		60
-#define TIMEOUT_POWER_EN_DEF		10
+#define TIMEOUT_MIN					1000
+#define TIMEOUT_MAX					60000
+#define TIMEOUT_DEF					5000
 
 // Types
 typedef struct __TableItemConstraint
