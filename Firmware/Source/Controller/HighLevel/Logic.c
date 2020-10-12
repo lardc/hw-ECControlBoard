@@ -27,8 +27,9 @@ LogicConfigError LOGIC_CacheMuxSettings();
 void LOGIC_CacheCurrentBoardSettings();
 void LOGIC_CacheControlSettings();
 bool LOGIC_IsDCControl();
-ExecutionResult LOGIC_ApplyControlVoltage();
 void LOGIC_HandleControlExecResult(ExecutionResult Result);
+ExecutionResult LOGIC_ApplyControlVoltage();
+ExecutionResult LOGIC_IsControlVoltageReady(bool *IsReady);
 
 // Functions
 void LOGIC_InitEntities()
@@ -161,6 +162,22 @@ void LOGIC_HandleMeasurementOnState()
 
 			case DSS_WaitControlVoltageReady:
 				{
+					bool IsVoltageReady;
+					res = LOGIC_IsControlVoltageReady(&IsVoltageReady);
+					if(res == ER_NoError)
+					{
+						if(IsVoltageReady)
+							CONTROL_SetDeviceState(DS_InProcess, DSS_PulseCurrent);
+						else if(CONTROL_TimeCounter > Timeout)
+							CONTROL_SwitchToFault(DF_LOGIC_STATE_TIMEOUT);
+					}
+					else
+						LOGIC_HandleControlExecResult(res);
+				}
+				break;
+
+			case DSS_PulseCurrent:
+				{
 					//
 				}
 				break;
@@ -243,15 +260,22 @@ bool LOGIC_IsDCControl()
 }
 //-----------------------------
 
+void LOGIC_HandleControlExecResult(ExecutionResult Result)
+{
+	CONTROL_SwitchToExtendedFault(Result,
+		LOGIC_IsDCControl() ? FAULT_EXT_GR_DC_VOLTAGE1 : FAULT_EXT_GR_AC_VOLTAGE1);
+}
+//-----------------------------
+
 ExecutionResult LOGIC_ApplyControlVoltage()
 {
 	return LOGIC_IsDCControl() ? DCV_Execute(NAME_DCVoltage1) : ACV_Execute(NAME_ACVoltage1);
 }
 //-----------------------------
 
-void LOGIC_HandleControlExecResult(ExecutionResult Result)
+ExecutionResult LOGIC_IsControlVoltageReady(bool *IsReady)
 {
-	CONTROL_SwitchToExtendedFault(Result,
-		LOGIC_IsDCControl() ? FAULT_EXT_GR_DC_VOLTAGE1 : FAULT_EXT_GR_AC_VOLTAGE1);
+	return LOGIC_IsDCControl() ? DCV_IsVoltageReady(NAME_DCVoltage1, IsReady) :
+		ACV_IsVoltageReady(NAME_ACVoltage1, IsReady);
 }
 //-----------------------------
