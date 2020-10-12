@@ -132,7 +132,10 @@ ExecutionResult DCV_IsVoltageReady(NodeName Name, bool *VoltageReady)
 				return ER_NoError;
 		}
 		else
+		{
+			*VoltageReady = true;
 			return ER_NoError;
+		}
 
 		return ER_InterfaceError;
 	}
