@@ -227,10 +227,13 @@ void LOGIC_HandleMeasurementOnState()
 					res = CURR_ReadResult();
 					if(res == ER_NoError)
 					{
-						pSlaveNode Node = COMM_GetSlaveDevicePointer(NAME_DCCurrent);
-						if(Node->OpResult == OPRESULT_OK)
+						pSlaveNode NodeData = COMM_GetSlaveDevicePointer(NAME_DCCurrent);
+						pCurrentBoardObject Settings = (pCurrentBoardObject)NodeData->Settings;
+
+						if(NodeData->OpResult == OPRESULT_OK)
 						{
 							DataTable[REG_OP_RESULT] = OPRESULT_OK;
+							DataTable[REG_RESULT_ON_VOLTAGE] = Settings->Result.Current;
 						}
 						else
 							DataTable[REG_OP_RESULT] = OPRESULT_FAIL;
