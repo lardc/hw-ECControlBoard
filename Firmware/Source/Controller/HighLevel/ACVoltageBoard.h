@@ -23,5 +23,6 @@ typedef struct __ACVoltageBoardObject
 ExecutionResult ACV_Execute(NodeName Name);
 ExecutionResult ACV_ReadResult(NodeName Name);
 ExecutionResult ACV_Stop(NodeName Name);
+ExecutionResult ACV_IsVoltageReady(NodeName Name, bool *VoltageReady);
 
 #endif // __AC_VOLTAGE_BOARD_H

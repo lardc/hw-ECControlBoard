@@ -13,6 +13,8 @@
 #define ACV_REG_CURRENT_RESULT				200	// Значение измерения тока
 #define ACV_REG_VOLTAGE_RESULT				201	// Значение измерения напряжения
 
+#define ACV_REG_VOLTAGE_READY				202	// Флаг выхода на уставку напряжения
+
 typedef enum __ACV_OutputLine
 {
 	AC_BUS_LV = 1,

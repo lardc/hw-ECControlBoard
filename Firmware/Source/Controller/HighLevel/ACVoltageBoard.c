@@ -101,3 +101,31 @@ ExecutionResult ACV_Stop(NodeName Name)
 		return ER_SettingsError;
 }
 //-----------------------------
+
+ExecutionResult ACV_IsVoltageReady(NodeName Name, bool *VoltageReady)
+{
+	*VoltageReady = false;
+
+	if(Name != NAME_ACVoltage1 && Name != NAME_ACVoltage2)
+		return ER_WrongNode;
+
+	pSlaveNode NodeData = COMM_GetSlaveDevicePointer(Name);
+	pACVoltageBoardObject Settings = (pACVoltageBoardObject)NodeData->Settings;
+
+	if(Settings != NULL)
+	{
+		if(!NodeData->Emulation)
+		{
+			uint16_t NodeID = NodeData->NodeID;
+			if(BHL_ReadRegister(NodeID, ACV_REG_VOLTAGE_READY, VoltageReady))
+				return ER_NoError;
+		}
+		else
+			return ER_NoError;
+
+		return ER_InterfaceError;
+	}
+	else
+		return ER_SettingsError;
+}
+//-----------------------------
