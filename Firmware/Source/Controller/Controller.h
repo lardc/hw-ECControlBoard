@@ -43,8 +43,7 @@ extern DeviceSubState CONTROL_SubState;
 //
 void CONTROL_Init();
 void CONTROL_Idle();
-void CONTROL_SwitchToFault(Int16U Reason);
-void CONTROL_SwitchToExtendedFault(ExecutionResult Reason, Int16U Group);
+void CONTROL_SwitchToFault(ExecutionResult Result, Int16U Group);
 void CONTROL_SetDeviceState(DeviceState NewState, DeviceSubState NewSubState);
 
 #endif // __CONTROLLER_H

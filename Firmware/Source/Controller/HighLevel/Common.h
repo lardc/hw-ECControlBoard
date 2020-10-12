@@ -33,7 +33,9 @@ typedef enum __ExecutionResult
 	ER_NoError = 0,
 	ER_InterfaceError = 1,
 	ER_SettingsError = 2,
-	ER_WrongNode = 3
+	ER_WrongNode = 3,
+	ER_ChangeStateTimeout = 4,
+	ER_WrongState = 5
 } ExecutionResult;
 
 typedef enum __LeakageType

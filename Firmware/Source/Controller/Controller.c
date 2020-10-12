@@ -125,7 +125,7 @@ static Boolean CONTROL_DispatchAction(Int16U ActionID, pInt16U pUserError)
 				{
 					CONTROL_SetDeviceState(DS_None, DSS_None);
 					if(!COMM_SlavesClearFault())
-						CONTROL_SwitchToFault(DF_INTERFACE);
+						CONTROL_SwitchToFault(ER_InterfaceError, FAULT_EXT_GR_COMMON);
 				}
 			}
 			break;
@@ -142,40 +142,21 @@ static Boolean CONTROL_DispatchAction(Int16U ActionID, pInt16U pUserError)
 }
 //-----------------------------------------------
 
-void CONTROL_SwitchToFault(Int16U Reason)
+void CONTROL_SwitchToFault(ExecutionResult Result, Int16U Group)
 {
-	if(Reason == DF_INTERFACE)
+	if(Result != ER_NoError)
 	{
-		BHLError Error = BHL_GetError();
-		DataTable[REG_BHL_ERROR_CODE] = Error.ErrorCode;
-		DataTable[REG_BHL_DEVICE] = Error.Device;
-		DataTable[REG_BHL_FUNCTION] = Error.Func;
-		DataTable[REG_BHL_EXT_DATA] = Error.ExtData;
-	}
+		if(Result == ER_InterfaceError)
+		{
+			BHLError Error = BHL_GetError();
+			DataTable[REG_BHL_ERROR_CODE] = Error.ErrorCode;
+			DataTable[REG_BHL_DEVICE] = Error.Device;
+			DataTable[REG_BHL_FUNCTION] = Error.Func;
+			DataTable[REG_BHL_EXT_DATA] = Error.ExtData;
+		}
 
-	CONTROL_SetDeviceState(DS_Fault, DSS_None);
-	DataTable[REG_FAULT_REASON] = Reason;
-}
-//------------------------------------------
-
-void CONTROL_SwitchToExtendedFault(ExecutionResult Reason, Int16U Group)
-{
-	switch(Reason)
-	{
-		case ER_NoError:
-			break;
-
-		case ER_InterfaceError:
-			CONTROL_SwitchToFault(DF_INTERFACE);
-			break;
-
-		default:
-			{
-				DataTable[REG_FAULT_EXT_CODE] = Group + Reason;
-				CONTROL_SetDeviceState(DS_Fault, DSS_None);
-				DataTable[REG_FAULT_REASON] = DF_LOGIC_EXEC;
-			}
-			break;
+		CONTROL_SetDeviceState(DS_Fault, DSS_None);
+		DataTable[REG_FAULT_REASON] = Result + Group;
 	}
 }
 //------------------------------------------

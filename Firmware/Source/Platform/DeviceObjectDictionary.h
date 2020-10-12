@@ -86,7 +86,6 @@
 #define REG_OP_RESULT					197	// Регистр результата операции
 #define REG_DEV_SUB_STATE				198	// Регистр вспомогательного состояния
 #define REG_CONFIG_ERR					199	// Регистр хранения кода ошибки конфигурирования
-#define REG_FAULT_EXT_CODE				200	// Регистр расширенного кода Fault
 
 #define REG_BHL_ERROR_CODE				210	// Ошибка интерфейса ВУ: код ошибки
 #define REG_BHL_DEVICE					211	// Ошибка интерфейса ВУ: NID устройства
@@ -112,14 +111,15 @@
 
 // Группы кодов ошибок выполнения
 // Код ошибки задаётся как FAULT_EXT_GR + ExecutionResult
-#define FAULT_EXT_GR_MUX				10	// Multiplexer
-#define FAULT_EXT_GR_DC_CURRENT			20	// DCCurrentBoard
-#define FAULT_EXT_GR_DC_HV				30	// DCHighVoltageBoard
-#define FAULT_EXT_GR_DC_VOLTAGE1		40	// DCVoltageBoard1
-#define FAULT_EXT_GR_DC_VOLTAGE2		50	// DCVoltageBoard2
-#define FAULT_EXT_GR_DC_VOLTAGE3		60	// DCVoltageBoard3
-#define FAULT_EXT_GR_AC_VOLTAGE1		70	// ACVoltageBoard1
-#define FAULT_EXT_GR_AC_VOLTAGE2		80	// ACVoltageBoard2
+#define FAULT_EXT_GR_COMMON				0	// Общие ошибки
+#define FAULT_EXT_GR_MUX				100	// Multiplexer
+#define FAULT_EXT_GR_DC_CURRENT			200	// DCCurrentBoard
+#define FAULT_EXT_GR_DC_HV				300	// DCHighVoltageBoard
+#define FAULT_EXT_GR_DC_VOLTAGE1		400	// DCVoltageBoard1
+#define FAULT_EXT_GR_DC_VOLTAGE2		500	// DCVoltageBoard2
+#define FAULT_EXT_GR_DC_VOLTAGE3		600	// DCVoltageBoard3
+#define FAULT_EXT_GR_AC_VOLTAGE1		700	// ACVoltageBoard1
+#define FAULT_EXT_GR_AC_VOLTAGE2		800	// ACVoltageBoard2
 
 // Problem
 #define PROBLEM_NONE					0

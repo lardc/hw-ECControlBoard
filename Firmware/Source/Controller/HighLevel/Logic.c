@@ -62,7 +62,7 @@ void LOGIC_HandleStateUpdate()
 	{
 		TimeCounter = CONTROL_TimeCounter + TIME_SLAVE_STATE_UPDATE;
 		if(!COMM_SlavesReadState())
-			CONTROL_SwitchToFault(DF_INTERFACE);
+			CONTROL_SwitchToFault(ER_InterfaceError, FAULT_EXT_GR_COMMON);
 	}
 }
 //-----------------------------
@@ -83,7 +83,7 @@ void LOGIC_HandlePowerOn()
 						CONTROL_SetDeviceState(DS_InProcess, DSS_PowerWaitReady);
 					}
 					else
-						CONTROL_SwitchToFault(DF_INTERFACE);
+						CONTROL_SwitchToFault(ER_InterfaceError, FAULT_EXT_GR_COMMON);
 				}
 				break;
 
@@ -95,10 +95,10 @@ void LOGIC_HandlePowerOn()
 					}
 					else if(COMM_IsSlaveInFaultOrDisabled())
 					{
-						CONTROL_SwitchToFault(DF_LOGIC_WRONG_STATE);
+						CONTROL_SwitchToFault(ER_WrongState, FAULT_EXT_GR_COMMON);
 					}
 					else if(CONTROL_TimeCounter > TimeCounter)
-						CONTROL_SwitchToFault(DF_LOGIC_STATE_TIMEOUT);
+						CONTROL_SwitchToFault(ER_ChangeStateTimeout, FAULT_EXT_GR_COMMON);
 				}
 				break;
 
@@ -116,7 +116,7 @@ void LOGIC_HandlePowerOff()
 		if(COMM_SlavesDisablePower())
 			CONTROL_SetDeviceState(DS_None, DSS_None);
 		else
-			CONTROL_SwitchToFault(DF_INTERFACE);
+			CONTROL_SwitchToFault(ER_InterfaceError, FAULT_EXT_GR_COMMON);
 	}
 }
 //-----------------------------
@@ -134,7 +134,7 @@ void LOGIC_HandleMeasurementOnState()
 				if(COMM_AreSlavesInStateX(CDS_Ready))
 					CONTROL_SetDeviceState(DS_InProcess, DSS_OnVoltageCommutate);
 				else
-					CONTROL_SwitchToFault(DF_LOGIC_WRONG_STATE);
+					CONTROL_SwitchToFault(ER_WrongState, FAULT_EXT_GR_COMMON);
 				break;
 
 			case DSS_OnVoltageCommutate:
@@ -143,7 +143,7 @@ void LOGIC_HandleMeasurementOnState()
 					if(res == ER_NoError)
 						CONTROL_SetDeviceState(DS_InProcess, DSS_GenControlVoltage);
 					else
-						CONTROL_SwitchToExtendedFault(res, FAULT_EXT_GR_MUX);
+						CONTROL_SwitchToFault(res, FAULT_EXT_GR_MUX);
 				}
 				break;
 
@@ -169,7 +169,7 @@ void LOGIC_HandleMeasurementOnState()
 						if(IsVoltageReady)
 							CONTROL_SetDeviceState(DS_InProcess, DSS_PulseCurrent);
 						else if(CONTROL_TimeCounter > Timeout)
-							CONTROL_SwitchToFault(DF_LOGIC_STATE_TIMEOUT);
+							LOGIC_HandleControlExecResult(ER_ChangeStateTimeout);
 					}
 					else
 						LOGIC_HandleControlExecResult(res);
@@ -262,7 +262,7 @@ bool LOGIC_IsDCControl()
 
 void LOGIC_HandleControlExecResult(ExecutionResult Result)
 {
-	CONTROL_SwitchToExtendedFault(Result,
+	CONTROL_SwitchToFault(Result,
 		LOGIC_IsDCControl() ? FAULT_EXT_GR_DC_VOLTAGE1 : FAULT_EXT_GR_AC_VOLTAGE1);
 }
 //-----------------------------
