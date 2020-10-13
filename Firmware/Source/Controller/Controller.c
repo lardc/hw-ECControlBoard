@@ -12,6 +12,7 @@
 #include "Diagnostic.h"
 #include "Logic.h"
 #include "LogicLeakage.h"
+#include "LogicOnState.h"
 #include "BCCIxParams.h"
 
 // Types
@@ -78,7 +79,7 @@ void CONTROL_Idle()
 	LOGIC_HandlePowerOff();
 
 	LEAK_HandleMeasurement();
-	LOGIC_HandleMeasurementOnState();
+	ONSTATE_HandleMeasurement();
 }
 //------------------------------------------
 
