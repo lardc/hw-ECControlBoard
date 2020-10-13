@@ -34,6 +34,10 @@ void LOGIC_HandleLeakageExecResult(ExecutionResult Result);
 ExecutionResult LOGIC_StartControl();
 ExecutionResult LOGIC_StopControl();
 ExecutionResult LOGIC_IsControlVoltageReady(bool *IsReady);
+ExecutionResult LOGIC_StartLeakage();
+ExecutionResult LOGIC_StopLeakage();
+ExecutionResult LOGIC_IsLeakageVoltageReady(bool *IsReady);
+ExecutionResult LOGIC_LeakageReadResult(uint16_t *OpResult, pVIPair Result);
 
 // Functions
 void LOGIC_InitEntities()
@@ -185,7 +189,7 @@ void LOGIC_HandleMeasurementLeakage()
 
 			case DSS_Leakage_StartOutVoltage:
 				{
-					res = DCHV_Execute();
+					res = LOGIC_StartLeakage();
 					if(res == ER_NoError)
 					{
 						Timeout = DataTable[REG_GENERAL_LOGIC_TIMEOUT] + CONTROL_TimeCounter;
@@ -198,13 +202,27 @@ void LOGIC_HandleMeasurementLeakage()
 
 			case DSS_Leakage_WaitOutVoltageReady:
 				{
-					//
+					bool IsVoltageReady;
+					res = LOGIC_IsLeakageVoltageReady(&IsVoltageReady);
+					if(res == ER_NoError)
+					{
+						if(IsVoltageReady)
+							CONTROL_SetDeviceState(DS_InProcess, DSS_Leakage_StopOutVoltage);
+						else if(CONTROL_TimeCounter > Timeout)
+							LOGIC_HandleLeakageExecResult(ER_ChangeStateTimeout);
+					}
+					else
+						LOGIC_HandleLeakageExecResult(res);
 				}
 				break;
 
 			case DSS_Leakage_StopOutVoltage:
 				{
-					//
+					res = LOGIC_StopLeakage();
+					if(res == ER_NoError)
+						CONTROL_SetDeviceState(DS_InProcess, DSS_Leakage_StopControl);
+					else
+						LOGIC_HandleLeakageExecResult(res);
 				}
 				break;
 
@@ -230,7 +248,24 @@ void LOGIC_HandleMeasurementLeakage()
 
 			case DSS_Leakage_ReadResult:
 				{
-					//
+					VIPair Result;
+					uint16_t OpResult;
+					res = LOGIC_LeakageReadResult(&OpResult, &Result);
+
+					if(res == ER_NoError)
+					{
+						if(OpResult == OPRESULT_OK)
+						{
+							DataTable[REG_OP_RESULT] = OPRESULT_OK;
+							DataTable[REG_RESULT_LEAKAGE_CURRENT] = Result.Current;
+						}
+						else
+							DataTable[REG_OP_RESULT] = OPRESULT_FAIL;
+
+						CONTROL_SetDeviceState(DS_Ready, DSS_None);
+					}
+					else
+						LOGIC_HandleLeakageExecResult(res);
 				}
 				break;
 
@@ -347,12 +382,10 @@ void LOGIC_HandleMeasurementOnState()
 					if(res == ER_NoError)
 					{
 						pSlaveNode NodeData = COMM_GetSlaveDevicePointer(NAME_DCCurrent);
-						pCurrentBoardObject Settings = (pCurrentBoardObject)NodeData->Settings;
-
 						if(NodeData->OpResult == OPRESULT_OK)
 						{
 							DataTable[REG_OP_RESULT] = OPRESULT_OK;
-							DataTable[REG_RESULT_ON_VOLTAGE] = Settings->Result.Current;
+							DataTable[REG_RESULT_ON_VOLTAGE] = CurrentBoard.Result.Current;
 						}
 						else
 							DataTable[REG_OP_RESULT] = OPRESULT_FAIL;
@@ -521,5 +554,46 @@ ExecutionResult LOGIC_IsControlVoltageReady(bool *IsReady)
 {
 	return LOGIC_IsDCControl() ? DCV_IsVoltageReady(NAME_DCVoltage1, IsReady) :
 		ACV_IsVoltageReady(NAME_ACVoltage1, IsReady);
+}
+//-----------------------------
+
+ExecutionResult LOGIC_StartLeakage()
+{
+	return LOGIC_IsDCLeakage() ? DCHV_Execute() : ACV_Execute(NAME_ACVoltage2);
+}
+//-----------------------------
+
+ExecutionResult LOGIC_StopLeakage()
+{
+	return LOGIC_IsDCLeakage() ? DCHV_Stop() : ACV_Stop(NAME_ACVoltage2);
+}
+//-----------------------------
+
+ExecutionResult LOGIC_IsLeakageVoltageReady(bool *IsReady)
+{
+	return LOGIC_IsDCLeakage() ? DCHV_IsVoltageReady(IsReady) : ACV_IsVoltageReady(NAME_ACVoltage2, IsReady);
+}
+//-----------------------------
+
+ExecutionResult LOGIC_LeakageReadResult(uint16_t *OpResult, pVIPair Result)
+{
+	ExecutionResult res;
+	pSlaveNode NodeData;
+
+	if(LOGIC_IsDCLeakage())
+	{
+		NodeData = COMM_GetSlaveDevicePointer(NAME_DCHighVoltage);
+		res = DCHV_ReadResult();
+		*Result = DCHighVoltageBoard.Result;
+	}
+	else
+	{
+		NodeData = COMM_GetSlaveDevicePointer(NAME_ACVoltage2);
+		res = ACV_ReadResult(NAME_ACVoltage2);
+		*Result = ACVoltageBoard2.Result;
+	}
+
+	*OpResult = NodeData->OpResult;
+	return res;
 }
 //-----------------------------
