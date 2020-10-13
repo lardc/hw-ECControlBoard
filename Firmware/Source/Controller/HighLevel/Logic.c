@@ -24,7 +24,7 @@ static volatile DCHVoltageBoardObject DCHighVoltageBoard;
 void LOGIC_AttachSettings(NodeName Name, void *SettingsPointer);
 LogicConfigError LOGIC_CacheMuxSettings();
 void LOGIC_CacheCurrentBoardSettings();
-void LOGIC_CacheControlSettings();
+void LOGIC_CacheControlSettings(DCV_OutputMode Mode);
 void LOGIC_CacheLeakageSettings();
 
 // Functions
@@ -127,7 +127,7 @@ LogicConfigError LOGIC_PrepareMeasurement()
 			case MT_LeakageCurrent:
 				{
 					LOGIC_CacheLeakageSettings();
-					LOGIC_CacheControlSettings();
+					LOGIC_CacheControlSettings(Continuous);
 					CONTROL_SetDeviceState(DS_InProcess, DSS_OnVoltage_StartTest);
 				}
 				break;
@@ -135,12 +135,16 @@ LogicConfigError LOGIC_PrepareMeasurement()
 			case MT_OnVoltage:
 				{
 					LOGIC_CacheCurrentBoardSettings();
-					LOGIC_CacheControlSettings();
+					LOGIC_CacheControlSettings(Continuous);
 					CONTROL_SetDeviceState(DS_InProcess, DSS_OnVoltage_StartTest);
 				}
 				break;
 
 			case MT_InputVoltageCurrent:
+				{
+					LOGIC_CacheControlSettings(Pulse);
+					CONTROL_SetDeviceState(DS_InProcess, DSS_OnVoltage_StartTest);
+				}
 				break;
 
 			case MT_InhibitVoltage:
@@ -186,7 +190,7 @@ void LOGIC_CacheCurrentBoardSettings()
 }
 //-----------------------------
 
-void LOGIC_CacheControlSettings()
+void LOGIC_CacheControlSettings(DCV_OutputMode Mode)
 {
 	VIPair Setpoint;
 	Setpoint.Voltage = DataTable[REG_CONTROL_VOLTAGE];
@@ -197,7 +201,7 @@ void LOGIC_CacheControlSettings()
 		DCVoltageBoard1.Setpoint = Setpoint;
 		DCVoltageBoard1.OutputLine = DC_CTRL;
 		DCVoltageBoard1.OutputType = Multiplexer.InputType;
-		DCVoltageBoard1.OutputMode = Continuous;
+		DCVoltageBoard1.OutputMode = Mode;
 	}
 	else
 	{
