@@ -53,7 +53,10 @@ typedef enum __DeviceSubState
 	DSS_Control_WaitControlReady = 26,
 	DSS_Control_StopControl = 27,
 	DSS_Control_UnCommutate = 28,
-	DSS_Control_ReadResult = 29
+	DSS_Control_ReadResult = 29,
+
+	DSS_Inhibit_StartTest = 30,
+	DSS_Inhibit_ReadResult = 31
 } DeviceSubState;
 
 // Variables

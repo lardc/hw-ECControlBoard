@@ -15,6 +15,7 @@
 #include "LogicLeakage.h"
 #include "LogicOnState.h"
 #include "LogicControl.h"
+#include "LogicInhibit.h"
 
 // Types
 //
@@ -82,6 +83,7 @@ void CONTROL_Idle()
 	LEAK_HandleMeasurement();
 	ONSTATE_HandleMeasurement();
 	CTRL_HandleMeasurement();
+	INHIBIT_HandleMeasurement();
 }
 //------------------------------------------
 

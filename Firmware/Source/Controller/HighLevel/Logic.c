@@ -148,6 +148,10 @@ LogicConfigError LOGIC_PrepareMeasurement()
 				break;
 
 			case MT_InhibitVoltage:
+				{
+					LOGIC_CacheControlSettings(Continuous);
+					CONTROL_SetDeviceState(DS_InProcess, DSS_Inhibit_StartTest);
+				}
 				break;
 
 			default:
