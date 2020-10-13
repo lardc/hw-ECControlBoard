@@ -45,7 +45,15 @@ typedef enum __DeviceSubState
 	DSS_Leakage_StopOutVoltage = 19,
 	DSS_Leakage_StopControl = 20,
 	DSS_Leakage_UnCommutate = 21,
-	DSS_Leakage_ReadResult = 22
+	DSS_Leakage_ReadResult = 22,
+
+	DSS_Control_StartTest = 23,
+	DSS_Control_Commutate = 24,
+	DSS_Control_StartControl = 25,
+	DSS_Control_WaitControlReady = 26,
+	DSS_Control_StopControl = 27,
+	DSS_Control_UnCommutate = 28,
+	DSS_Control_ReadResult = 29
 } DeviceSubState;
 
 // Variables

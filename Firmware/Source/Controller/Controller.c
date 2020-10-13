@@ -10,10 +10,11 @@
 #include "LowLevel.h"
 #include "SysConfig.h"
 #include "Diagnostic.h"
+#include "BCCIxParams.h"
 #include "Logic.h"
 #include "LogicLeakage.h"
 #include "LogicOnState.h"
-#include "BCCIxParams.h"
+#include "LogicControl.h"
 
 // Types
 //
@@ -80,6 +81,7 @@ void CONTROL_Idle()
 
 	LEAK_HandleMeasurement();
 	ONSTATE_HandleMeasurement();
+	CTRL_HandleMeasurement();
 }
 //------------------------------------------
 

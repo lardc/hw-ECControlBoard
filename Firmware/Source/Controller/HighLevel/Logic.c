@@ -128,7 +128,7 @@ LogicConfigError LOGIC_PrepareMeasurement()
 				{
 					LOGIC_CacheLeakageSettings();
 					LOGIC_CacheControlSettings(Continuous);
-					CONTROL_SetDeviceState(DS_InProcess, DSS_OnVoltage_StartTest);
+					CONTROL_SetDeviceState(DS_InProcess, DSS_Leakage_StartTest);
 				}
 				break;
 
@@ -143,7 +143,7 @@ LogicConfigError LOGIC_PrepareMeasurement()
 			case MT_InputVoltageCurrent:
 				{
 					LOGIC_CacheControlSettings(Pulse);
-					CONTROL_SetDeviceState(DS_InProcess, DSS_OnVoltage_StartTest);
+					CONTROL_SetDeviceState(DS_InProcess, DSS_Control_StartTest);
 				}
 				break;
 
