@@ -140,3 +140,48 @@ pSlaveNode COMM_GetSlaveDevicePointer(NodeName Name)
 	return (pSlaveNode)(&NodeArray[Name]);
 }
 //-----------------------------
+
+ExecutionResult COMM_NodeReadReg(NodeName Name, uint16_t Register, uint16_t *Data)
+{
+	*VoltageReady = false;
+
+	if(NodeArray[Name].Settings != NULL)
+	{
+		if(!NodeArray[Name].Emulation)
+		{
+			uint16_t NodeID = NodeArray[Name].NodeID;
+			if(BHL_ReadRegister(NodeID, ReadyReg, Data))
+				return ER_NoError;
+		}
+		else
+		{
+			*VoltageReady = true;
+			return ER_NoError;
+		}
+
+		return ER_InterfaceError;
+	}
+	else
+		return ER_SettingsError;
+}
+//-----------------------------
+
+ExecutionResult COMM_NodeCall(NodeName Name, uint16_t Command)
+{
+	if(NodeArray[Name].Settings != NULL)
+	{
+		if(!NodeArray[Name].Emulation)
+		{
+			uint16_t NodeID = NodeArray[Name].NodeID;
+			if(BHL_Call(NodeID, Command))
+				return ER_NoError;
+		}
+		else
+			return ER_NoError;
+
+		return ER_InterfaceError;
+	}
+	else
+		return ER_SettingsError;
+}
+//-----------------------------

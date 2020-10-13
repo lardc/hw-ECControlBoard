@@ -81,4 +81,7 @@ bool COMM_SlavesClearWarning();
 
 pSlaveNode COMM_GetSlaveDevicePointer(NodeName Name);
 
+ExecutionResult COMM_NodeReadReg(NodeName Name, uint16_t Register, uint16_t *Data);
+ExecutionResult COMM_NodeCall(NodeName Name, uint16_t Command);
+
 #endif // __COMMON_H
