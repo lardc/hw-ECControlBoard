@@ -3,6 +3,7 @@
 
 // Include
 #include "stdinc.h"
+#include "Common.h"
 #include "BCCIMHighLevel.h"
 
 // Types
@@ -21,7 +22,14 @@ void LOGIC_HandleStateUpdate();
 void LOGIC_HandlePowerOn();
 void LOGIC_HandlePowerOff();
 
-void LOGIC_HandleMeasurementLeakage();
+bool LOGIC_IsDCControl();
+bool LOGIC_IsDCLeakage();
+
+void LOGIC_HandleControlExecResult(ExecutionResult Result);
+ExecutionResult LOGIC_StartControl();
+ExecutionResult LOGIC_StopControl();
+ExecutionResult LOGIC_IsControlVoltageReady(bool *IsReady);
+
 void LOGIC_HandleMeasurementOnState();
 
 LogicConfigError LOGIC_PrepareMeasurement();

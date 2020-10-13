@@ -3,7 +3,6 @@
 
 // Includes
 #include "Controller.h"
-#include "Common.h"
 #include "CommonDictionary.h"
 #include "DataTable.h"
 #include "DeviceObjectDictionary.h"
@@ -27,17 +26,6 @@ LogicConfigError LOGIC_CacheMuxSettings();
 void LOGIC_CacheCurrentBoardSettings();
 void LOGIC_CacheControlSettings();
 void LOGIC_CacheLeakageSettings();
-bool LOGIC_IsDCControl();
-bool LOGIC_IsDCLeakage();
-void LOGIC_HandleControlExecResult(ExecutionResult Result);
-void LOGIC_HandleLeakageExecResult(ExecutionResult Result);
-ExecutionResult LOGIC_StartControl();
-ExecutionResult LOGIC_StopControl();
-ExecutionResult LOGIC_IsControlVoltageReady(bool *IsReady);
-ExecutionResult LOGIC_StartLeakage();
-ExecutionResult LOGIC_StopLeakage();
-ExecutionResult LOGIC_IsLeakageVoltageReady(bool *IsReady);
-ExecutionResult LOGIC_LeakageReadResult(uint16_t *OpResult, pVIPair Result);
 
 // Functions
 void LOGIC_InitEntities()
@@ -125,153 +113,6 @@ void LOGIC_HandlePowerOff()
 			CONTROL_SetDeviceState(DS_None, DSS_None);
 		else
 			CONTROL_SwitchToFault(ER_InterfaceError, FAULT_EXT_GR_COMMON);
-	}
-}
-//-----------------------------
-
-void LOGIC_HandleMeasurementLeakage()
-{
-	static Int64U Timeout;
-
-	if(CONTROL_State == DS_InProcess)
-	{
-		if(COMM_IsSlaveInFaultOrDisabled())
-			CONTROL_SwitchToFault(ER_WrongState, FAULT_EXT_GR_COMMON);
-
-		ExecutionResult res;
-		switch(CONTROL_SubState)
-		{
-			case DSS_Leakage_StartTest:
-				if(COMM_AreSlavesInStateX(CDS_Ready))
-					CONTROL_SetDeviceState(DS_InProcess, DSS_Leakage_Commutate);
-				else
-					CONTROL_SwitchToFault(ER_WrongState, FAULT_EXT_GR_COMMON);
-				break;
-
-			case DSS_Leakage_Commutate:
-				{
-					res = MUX_Connect();
-					if(res == ER_NoError)
-						CONTROL_SetDeviceState(DS_InProcess, DSS_Leakage_StartControl);
-					else
-						CONTROL_SwitchToFault(res, FAULT_EXT_GR_MUX);
-				}
-				break;
-
-			case DSS_Leakage_StartControl:
-				{
-					res = LOGIC_StartControl();
-					if(res == ER_NoError)
-					{
-						Timeout = DataTable[REG_GENERAL_LOGIC_TIMEOUT] + CONTROL_TimeCounter;
-						CONTROL_SetDeviceState(DS_InProcess, DSS_Leakage_WaitControlReady);
-					}
-					else
-						LOGIC_HandleControlExecResult(res);
-				}
-				break;
-
-			case DSS_Leakage_WaitControlReady:
-				{
-					bool IsVoltageReady;
-					res = LOGIC_IsControlVoltageReady(&IsVoltageReady);
-					if(res == ER_NoError)
-					{
-						if(IsVoltageReady)
-							CONTROL_SetDeviceState(DS_InProcess, DSS_Leakage_StartOutVoltage);
-						else if(CONTROL_TimeCounter > Timeout)
-							LOGIC_HandleControlExecResult(ER_ChangeStateTimeout);
-					}
-					else
-						LOGIC_HandleControlExecResult(res);
-				}
-				break;
-
-			case DSS_Leakage_StartOutVoltage:
-				{
-					res = LOGIC_StartLeakage();
-					if(res == ER_NoError)
-					{
-						Timeout = DataTable[REG_GENERAL_LOGIC_TIMEOUT] + CONTROL_TimeCounter;
-						CONTROL_SetDeviceState(DS_InProcess, DSS_Leakage_WaitOutVoltageReady);
-					}
-					else
-						LOGIC_HandleLeakageExecResult(res);
-				}
-				break;
-
-			case DSS_Leakage_WaitOutVoltageReady:
-				{
-					bool IsVoltageReady;
-					res = LOGIC_IsLeakageVoltageReady(&IsVoltageReady);
-					if(res == ER_NoError)
-					{
-						if(IsVoltageReady)
-							CONTROL_SetDeviceState(DS_InProcess, DSS_Leakage_StopOutVoltage);
-						else if(CONTROL_TimeCounter > Timeout)
-							LOGIC_HandleLeakageExecResult(ER_ChangeStateTimeout);
-					}
-					else
-						LOGIC_HandleLeakageExecResult(res);
-				}
-				break;
-
-			case DSS_Leakage_StopOutVoltage:
-				{
-					res = LOGIC_StopLeakage();
-					if(res == ER_NoError)
-						CONTROL_SetDeviceState(DS_InProcess, DSS_Leakage_StopControl);
-					else
-						LOGIC_HandleLeakageExecResult(res);
-				}
-				break;
-
-			case DSS_Leakage_StopControl:
-				{
-					res = LOGIC_StopControl();
-					if(res == ER_NoError)
-						CONTROL_SetDeviceState(DS_InProcess, DSS_Leakage_UnCommutate);
-					else
-						LOGIC_HandleControlExecResult(res);
-				}
-				break;
-
-			case DSS_Leakage_UnCommutate:
-				{
-					res = MUX_Disconnect();
-					if(res == ER_NoError)
-						CONTROL_SetDeviceState(DS_InProcess, DSS_Leakage_ReadResult);
-					else
-						CONTROL_SwitchToFault(res, FAULT_EXT_GR_MUX);
-				}
-				break;
-
-			case DSS_Leakage_ReadResult:
-				{
-					VIPair Result;
-					uint16_t OpResult;
-					res = LOGIC_LeakageReadResult(&OpResult, &Result);
-
-					if(res == ER_NoError)
-					{
-						if(OpResult == OPRESULT_OK)
-						{
-							DataTable[REG_OP_RESULT] = OPRESULT_OK;
-							DataTable[REG_RESULT_LEAKAGE_CURRENT] = Result.Current;
-						}
-						else
-							DataTable[REG_OP_RESULT] = OPRESULT_FAIL;
-
-						CONTROL_SetDeviceState(DS_Ready, DSS_None);
-					}
-					else
-						LOGIC_HandleLeakageExecResult(res);
-				}
-				break;
-
-			default:
-				break;
-		}
 	}
 }
 //-----------------------------
@@ -531,13 +372,6 @@ void LOGIC_HandleControlExecResult(ExecutionResult Result)
 }
 //-----------------------------
 
-void LOGIC_HandleLeakageExecResult(ExecutionResult Result)
-{
-	CONTROL_SwitchToFault(Result,
-		LOGIC_IsDCLeakage() ? FAULT_EXT_GR_DC_HV : FAULT_EXT_GR_AC_VOLTAGE2);
-}
-//-----------------------------
-
 ExecutionResult LOGIC_StartControl()
 {
 	return LOGIC_IsDCControl() ? DCV_Execute(NAME_DCVoltage1) : ACV_Execute(NAME_ACVoltage1);
@@ -554,46 +388,5 @@ ExecutionResult LOGIC_IsControlVoltageReady(bool *IsReady)
 {
 	return LOGIC_IsDCControl() ? DCV_IsVoltageReady(NAME_DCVoltage1, IsReady) :
 		ACV_IsVoltageReady(NAME_ACVoltage1, IsReady);
-}
-//-----------------------------
-
-ExecutionResult LOGIC_StartLeakage()
-{
-	return LOGIC_IsDCLeakage() ? DCHV_Execute() : ACV_Execute(NAME_ACVoltage2);
-}
-//-----------------------------
-
-ExecutionResult LOGIC_StopLeakage()
-{
-	return LOGIC_IsDCLeakage() ? DCHV_Stop() : ACV_Stop(NAME_ACVoltage2);
-}
-//-----------------------------
-
-ExecutionResult LOGIC_IsLeakageVoltageReady(bool *IsReady)
-{
-	return LOGIC_IsDCLeakage() ? DCHV_IsVoltageReady(IsReady) : ACV_IsVoltageReady(NAME_ACVoltage2, IsReady);
-}
-//-----------------------------
-
-ExecutionResult LOGIC_LeakageReadResult(uint16_t *OpResult, pVIPair Result)
-{
-	ExecutionResult res;
-	pSlaveNode NodeData;
-
-	if(LOGIC_IsDCLeakage())
-	{
-		NodeData = COMM_GetSlaveDevicePointer(NAME_DCHighVoltage);
-		res = DCHV_ReadResult();
-		*Result = DCHighVoltageBoard.Result;
-	}
-	else
-	{
-		NodeData = COMM_GetSlaveDevicePointer(NAME_ACVoltage2);
-		res = ACV_ReadResult(NAME_ACVoltage2);
-		*Result = ACVoltageBoard2.Result;
-	}
-
-	*OpResult = NodeData->OpResult;
-	return res;
 }
 //-----------------------------
