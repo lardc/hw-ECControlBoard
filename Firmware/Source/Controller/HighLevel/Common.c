@@ -141,21 +141,21 @@ pSlaveNode COMM_GetSlaveDevicePointer(NodeName Name)
 }
 //-----------------------------
 
-ExecutionResult COMM_NodeReadReg(NodeName Name, uint16_t Register, uint16_t *Data)
+ExecutionResult COMM_NodeOutputReady(NodeName Name, uint16_t RegOutReady, bool *OutputReady)
 {
-	*VoltageReady = false;
+	*OutputReady = false;
 
 	if(NodeArray[Name].Settings != NULL)
 	{
 		if(!NodeArray[Name].Emulation)
 		{
 			uint16_t NodeID = NodeArray[Name].NodeID;
-			if(BHL_ReadRegister(NodeID, ReadyReg, Data))
+			if(BHL_ReadRegister(NodeID, RegOutReady, (uint16_t *)OutputReady))
 				return ER_NoError;
 		}
 		else
 		{
-			*VoltageReady = true;
+			*OutputReady = true;
 			return ER_NoError;
 		}
 
