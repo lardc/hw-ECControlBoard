@@ -92,54 +92,15 @@ ExecutionResult DCV_Stop(NodeName Name)
 	if(Name != NAME_DCVoltage1 && Name != NAME_DCVoltage2 && Name != NAME_DCVoltage3)
 		return ER_WrongNode;
 
-	pSlaveNode NodeData = COMM_GetSlaveDevicePointer(Name);
-	pDCVoltageBoardObject Settings = (pDCVoltageBoardObject)NodeData->Settings;
-
-	if(Settings != NULL)
-	{
-		if(!NodeData->Emulation)
-		{
-			uint16_t NodeID = NodeData->NodeID;
-			if(BHL_Call(NodeID, DCV_ACT_STOP_PROCESS))
-				return ER_NoError;
-		}
-		else
-			return ER_NoError;
-
-		return ER_InterfaceError;
-	}
-	else
-		return ER_SettingsError;
+	return COMM_NodeCall(Name, DCV_ACT_STOP_PROCESS);
 }
 //-----------------------------
 
 ExecutionResult DCV_IsVoltageReady(NodeName Name, bool *VoltageReady)
 {
-	*VoltageReady = false;
-
 	if(Name != NAME_DCVoltage1 && Name != NAME_DCVoltage2 && Name != NAME_DCVoltage3)
 		return ER_WrongNode;
 
-	pSlaveNode NodeData = COMM_GetSlaveDevicePointer(Name);
-	pDCVoltageBoardObject Settings = (pDCVoltageBoardObject)NodeData->Settings;
-
-	if(Settings != NULL)
-	{
-		if(!NodeData->Emulation)
-		{
-			uint16_t NodeID = NodeData->NodeID;
-			if(BHL_ReadRegister(NodeID, DCV_REG_VOLTAGE_READY, (pInt16U)VoltageReady))
-				return ER_NoError;
-		}
-		else
-		{
-			*VoltageReady = true;
-			return ER_NoError;
-		}
-
-		return ER_InterfaceError;
-	}
-	else
-		return ER_SettingsError;
+	return COMM_NodeOutputReady(Name, DCV_REG_VOLTAGE_READY, VoltageReady);
 }
 //-----------------------------
