@@ -69,25 +69,14 @@ ExecutionResult DCHV_ReadResult()
 }
 //-----------------------------
 
+ExecutionResult DCHV_IsVoltageReady(bool *VoltageReady)
+{
+	return COMM_NodeOutputReady(NAME_DCHighVoltage, DCHV_REG_VOLTAGE_READY, VoltageReady);
+}
+//-----------------------------
+
 ExecutionResult DCHV_Stop()
 {
-	pSlaveNode NodeData = COMM_GetSlaveDevicePointer(NAME_DCHighVoltage);
-	pDCHVoltageBoardObject Settings = (pDCHVoltageBoardObject)NodeData->Settings;
-
-	if(Settings != NULL)
-	{
-		if(!NodeData->Emulation)
-		{
-			uint16_t NodeID = NodeData->NodeID;
-			if(BHL_Call(NodeID, DCHV_ACT_STOP_PROCESS))
-				return ER_NoError;
-		}
-		else
-			return ER_NoError;
-
-		return ER_InterfaceError;
-	}
-	else
-		return ER_SettingsError;
+	return COMM_NodeCall(NAME_DCHighVoltage, DCHV_ACT_STOP_PROCESS);
 }
 //-----------------------------

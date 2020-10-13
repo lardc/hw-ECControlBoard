@@ -9,6 +9,7 @@
 #define DCHV_REG_CURRENT_SETPOINT			128	// Значение задания тока
 #define DCHV_REG_VOLTAGE_SETPOINT			129	// Значение задания напряжения
 
+#define DCHV_REG_VOLTAGE_READY				199	// Флаг выхода на уставку напряжения
 #define DCHV_REG_CURRENT_RESULT				200	// Значение измерения тока
 #define DCHV_REG_VOLTAGE_RESULT				201	// Значение измерения напряжения
 

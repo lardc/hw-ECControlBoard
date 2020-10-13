@@ -22,5 +22,6 @@ typedef struct __DCHVoltageBoardObject
 ExecutionResult DCHV_Execute();
 ExecutionResult DCHV_ReadResult();
 ExecutionResult DCHV_Stop();
+ExecutionResult DCHV_IsVoltageReady(bool *VoltageReady);
 
 #endif // __DC_HIGH_VOLTAGE_BOARD_H
