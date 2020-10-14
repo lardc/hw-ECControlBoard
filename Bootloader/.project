@@ -40,22 +40,12 @@
 			<locationURI>virtual:/virtual</locationURI>
 		</link>
 		<link>
-			<name>Source/Interrupts.c</name>
-			<type>1</type>
-			<locationURI>PARENT-2-PROJECT_LOC/hw-STM32-libs/BootLoader/Root/Interrupts.c</locationURI>
-		</link>
-		<link>
 			<name>Source/Interrupts.h</name>
 			<type>1</type>
 			<locationURI>PARENT-2-PROJECT_LOC/hw-STM32-libs/BootLoader/Root/Interrupts.h</locationURI>
 		</link>
 		<link>
 			<name>Source/Library</name>
-			<type>2</type>
-			<locationURI>virtual:/virtual</locationURI>
-		</link>
-		<link>
-			<name>Source/Platform</name>
 			<type>2</type>
 			<locationURI>virtual:/virtual</locationURI>
 		</link>
@@ -270,16 +260,6 @@
 			<locationURI>PARENT-2-PROJECT_LOC/hw-STM32-libs/Library/ZwRCC.h</locationURI>
 		</link>
 		<link>
-			<name>Source/Library/ZwSCI.c</name>
-			<type>1</type>
-			<locationURI>PARENT-2-PROJECT_LOC/hw-STM32-libs/Library/ZwSCI.c</locationURI>
-		</link>
-		<link>
-			<name>Source/Library/ZwSCI.h</name>
-			<type>1</type>
-			<locationURI>PARENT-2-PROJECT_LOC/hw-STM32-libs/Library/ZwSCI.h</locationURI>
-		</link>
-		<link>
 			<name>Source/Library/ZwSPI.c</name>
 			<type>1</type>
 			<locationURI>PARENT-2-PROJECT_LOC/hw-STM32-libs/Library/ZwSPI.c</locationURI>
@@ -300,6 +280,16 @@
 			<locationURI>PARENT-2-PROJECT_LOC/hw-STM32-libs/Library/ZwTIM.h</locationURI>
 		</link>
 		<link>
+			<name>Source/Library/ZwUSART.c</name>
+			<type>1</type>
+			<locationURI>PARENT-2-PROJECT_LOC/hw-STM32-libs/Library/ZwUSART.c</locationURI>
+		</link>
+		<link>
+			<name>Source/Library/ZwUSART.h</name>
+			<type>1</type>
+			<locationURI>PARENT-2-PROJECT_LOC/hw-STM32-libs/Library/ZwUSART.h</locationURI>
+		</link>
+		<link>
 			<name>Source/Library/ZwWWDG.c</name>
 			<type>1</type>
 			<locationURI>PARENT-2-PROJECT_LOC/hw-STM32-libs/Library/ZwWWDG.c</locationURI>
@@ -308,41 +298,6 @@
 			<name>Source/Library/ZwWWDG.h</name>
 			<type>1</type>
 			<locationURI>PARENT-2-PROJECT_LOC/hw-STM32-libs/Library/ZwWWDG.h</locationURI>
-		</link>
-		<link>
-			<name>Source/Platform/Constraints.c</name>
-			<type>1</type>
-			<locationURI>PARENT-2-PROJECT_LOC/hw-STM32-libs/BootLoader/Platform/Constraints.c</locationURI>
-		</link>
-		<link>
-			<name>Source/Platform/Constraints.h</name>
-			<type>1</type>
-			<locationURI>PARENT-2-PROJECT_LOC/hw-STM32-libs/BootLoader/Platform/Constraints.h</locationURI>
-		</link>
-		<link>
-			<name>Source/Platform/DataTable.c</name>
-			<type>1</type>
-			<locationURI>PARENT-2-PROJECT_LOC/hw-STM32-libs/BootLoader/Platform/DataTable.c</locationURI>
-		</link>
-		<link>
-			<name>Source/Platform/DataTable.h</name>
-			<type>1</type>
-			<locationURI>PARENT-2-PROJECT_LOC/hw-STM32-libs/BootLoader/Platform/DataTable.h</locationURI>
-		</link>
-		<link>
-			<name>Source/Platform/DeviceObjectDictionary.h</name>
-			<type>1</type>
-			<locationURI>PARENT-2-PROJECT_LOC/hw-STM32-libs/BootLoader/Platform/DeviceObjectDictionary.h</locationURI>
-		</link>
-		<link>
-			<name>Source/Platform/DeviceProfile.c</name>
-			<type>1</type>
-			<locationURI>PARENT-2-PROJECT_LOC/hw-STM32-libs/BootLoader/Platform/DeviceProfile.c</locationURI>
-		</link>
-		<link>
-			<name>Source/Platform/DeviceProfile.h</name>
-			<type>1</type>
-			<locationURI>PARENT-2-PROJECT_LOC/hw-STM32-libs/BootLoader/Platform/DeviceProfile.h</locationURI>
 		</link>
 		<link>
 			<name>System/Core/arm_common_tables.h</name>

@@ -10,7 +10,7 @@
 #include "ZwRCC.h"
 #include "ZwGPIO.h"
 #include "ZwNCAN.h"
-#include "ZwSCI.h"
+#include "ZwUSART.h"
 #include "ZwTIM.h"
 #include "ZwIWDG.h"
 #include "ZwNFLASH.h"

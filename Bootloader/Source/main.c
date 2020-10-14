@@ -71,6 +71,11 @@ void ConfigGPIO()
 	GPIO_Config(GPIOA, Pin_12, AltFn, PushPull, HighSpeed, NoPull); //PA12(CAN TX)
 	GPIO_AltFn(GPIOA, Pin_12, AltFn_9);
 	
+	GPIO_Config(GPIOB, Pin_3, AltFn, PushPull, HighSpeed, NoPull); //PB3(USART2 TX)
+	GPIO_AltFn(GPIOB, Pin_3, AltFn_7);
+
+	GPIO_Config(GPIOB, Pin_4, AltFn, PushPull, HighSpeed, NoPull); //PB4(USART2 RX)
+	GPIO_AltFn(GPIOB, Pin_4, AltFn_7);
 }
 //--------------------------------------------
 
@@ -79,14 +84,17 @@ void ConfigCAN()
 	RCC_CAN_Clk_EN(CAN_1_ClkEN);
 	NCAN_Init(SYSCLK, CAN_BAUDRATE, FALSE);
 	NCAN_FIFOInterrupt(TRUE);
-	NCAN_FilterInit(0, CAN_SLAVE_FILTER_ID, CAN_MASTER_FILTER_ID); // Фильтр 0 пропускает все сообщения
+	NCAN_FilterInit(0, CAN_SLAVE_FILTER_ID, CAN_SLAVE_NID_MASK);
 }
 //--------------------------------------------
 
 void ConfigUART()
 {
-	USART_Init(USART1, SYSCLK, USART_BAUDRATE);
-	USART_Recieve_Interupt(USART1, 0, true);
+	USARTx_Init(USART1, SYSCLK, USART_BAUDRATE);
+	USARTx_RecieveInterrupt(USART1, true);
+
+	USARTx_Init(USART2, SYSCLK, USART_BAUDRATE);
+	USARTx_RecieveInterrupt(USART2, true);
 }
 //--------------------------------------------
 
