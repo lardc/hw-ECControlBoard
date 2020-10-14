@@ -33,6 +33,7 @@ void INHIBIT_HandleMeasurement()
 			case DSS_Inhibit_ReadResult:
 				{
 					DataTable[REG_OP_RESULT] = OPRESULT_OK;
+					DataTable[REG_RESULT_INHIBIT_VOLTAGE] = 228;
 					CONTROL_SetDeviceState(DS_Ready, DSS_None);
 				}
 				break;

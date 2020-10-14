@@ -34,6 +34,7 @@ volatile Int64U CONTROL_TimeCounter = 0;
 static Boolean CONTROL_DispatchAction(Int16U ActionID, pInt16U pUserError);
 void CONTROL_UpdateWatchDog();
 void CONTROL_ResetToDefaultState();
+void CONTROL_ResetOutputRegisters();
 
 // Functions
 //
@@ -55,7 +56,7 @@ void CONTROL_Init()
 }
 //------------------------------------------
 
-void CONTROL_ResetToDefaultState()
+void CONTROL_ResetOutputRegisters()
 {
 	DataTable[REG_FAULT_REASON] = DF_NONE;
 	DataTable[REG_DISABLE_REASON] = DF_NONE;
@@ -64,9 +65,22 @@ void CONTROL_ResetToDefaultState()
 	DataTable[REG_OP_RESULT] = OPRESULT_NONE;
 	DataTable[REG_CONFIG_ERR] = LCE_None;
 	
+	DataTable[REG_RESULT_LEAKAGE_CURRENT] = 0;
+	DataTable[REG_RESULT_ON_VOLTAGE] = 0;
+	DataTable[REG_RESULT_CONTROL_CURRENT] = 0;
+	DataTable[REG_RESULT_CONTROL_VOLTAGE] = 0;
+	DataTable[REG_RESULT_INHIBIT_VOLTAGE] = 0;
+	DataTable[REG_RESULT_AUX_CURRENT1] = 0;
+	DataTable[REG_RESULT_AUX_CURRENT2] = 0;
+
 	DEVPROFILE_ResetScopes(0);
 	DEVPROFILE_ResetEPReadState();
-	
+}
+//------------------------------------------
+
+void CONTROL_ResetToDefaultState()
+{
+	CONTROL_ResetOutputRegisters();
 	CONTROL_SetDeviceState(DS_None, DSS_None);
 }
 //------------------------------------------
@@ -136,6 +150,7 @@ static Boolean CONTROL_DispatchAction(Int16U ActionID, pInt16U pUserError)
 			{
 				if(CONTROL_State == DS_Ready)
 				{
+					CONTROL_ResetOutputRegisters();
 					LogicConfigError err = LOGIC_PrepareMeasurement();
 					DataTable[REG_CONFIG_ERR] = err;
 
