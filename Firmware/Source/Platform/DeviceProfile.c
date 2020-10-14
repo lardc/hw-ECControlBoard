@@ -219,6 +219,7 @@ void DEVPROFILE_InitEPService(pInt16U Indexes, pInt16U Sizes, pInt16U* Counters,
 		CAN_EPState.EPs[i].ReadCounter = CAN_EPState.EPs[i].LastReadCounter = 0;
 		
 		SCCI_RegisterReadEndpoint16(&DEVICE_RS232_Interface, Indexes[i], &DEVPROFILE_CallbackReadX);
+		SCCI_RegisterReadEndpoint16(&DEVICE_USB_UART_Interface, Indexes[i], &DEVPROFILE_CallbackReadX);
 		BCCI_RegisterReadEndpoint16(&DEVICE_CAN_Interface, Indexes[i], &DEVPROFILE_CallbackReadX);
 	}
 }
@@ -309,6 +310,7 @@ void DEVPROFILE_InitEPWriteService(pInt16U Indexes, pInt16U Sizes, pInt16U* Coun
 		CAN_EPState.WriteEPs[i].WriteCounter = 0;
 		
 		SCCI_RegisterWriteEndpoint16(&DEVICE_RS232_Interface, Indexes[i], &DEVPROFILE_CallbackWriteX);
+		SCCI_RegisterWriteEndpoint16(&DEVICE_USB_UART_Interface, Indexes[i], &DEVPROFILE_CallbackWriteX);
 		BCCI_RegisterWriteEndpoint16(&DEVICE_CAN_Interface, Indexes[i], &DEVPROFILE_CallbackWriteX);
 	}
 }
