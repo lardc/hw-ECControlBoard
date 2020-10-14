@@ -35,11 +35,11 @@ typedef struct __EPStates
 
 // Variables
 //
-SCCI_Interface DEVICE_RS232_Interface;
+SCCI_Interface DEVICE_RS232_Interface, DEVICE_USB_UART_Interface;
 BCCI_Interface DEVICE_CAN_Interface;
 BCCIM_Interface MASTER_DEVICE_CAN_Interface;
 //
-static SCCI_IOConfig RS232_IOConfig;
+static SCCI_IOConfig RS232_IOConfig, USB_UART_IOConfig;
 static BCCI_IOConfig CAN_IOConfig;
 static BCCI_IOConfig CAN_Master_IOConfig;
 static xCCI_ServiceConfig X_ServiceConfig;
@@ -69,6 +69,11 @@ void DEVPROFILE_Init(xCCI_FUNC_CallbackAction SpecializedDispatch, Boolean* Mask
 	RS232_IOConfig.IO_GetBytesToReceive = &USART1_GetBytesToReceive;
 	RS232_IOConfig.IO_ReceiveByte = &USART1_ReceiveChar;
 
+	USB_UART_IOConfig.IO_SendArray16 = &USART2_SendArray16;
+	USB_UART_IOConfig.IO_ReceiveArray16 = &USART2_ReceiveArray16;
+	USB_UART_IOConfig.IO_GetBytesToReceive = &USART2_GetBytesToReceive;
+	USB_UART_IOConfig.IO_ReceiveByte = &USART2_ReceiveChar;
+
 	CAN_IOConfig.IO_SendMessage = &NCAN_SendMessage;
 	CAN_IOConfig.IO_SendMessageEx = &NCAN_SendMessageEx;
 	CAN_IOConfig.IO_GetMessage = &NCAN_GetMessage;
@@ -87,12 +92,14 @@ void DEVPROFILE_Init(xCCI_FUNC_CallbackAction SpecializedDispatch, Boolean* Mask
 	
 	// Init interface driver
 	SCCI_Init(&DEVICE_RS232_Interface, &RS232_IOConfig, &X_ServiceConfig, (pInt16U)DataTable, DATA_TABLE_SIZE, SCCI_TIMEOUT_TICKS, 0);
+	SCCI_Init(&DEVICE_USB_UART_Interface, &USB_UART_IOConfig, &X_ServiceConfig, (pInt16U)DataTable, DATA_TABLE_SIZE, SCCI_TIMEOUT_TICKS, 0);
 	BCCI_Init(&DEVICE_CAN_Interface, &CAN_IOConfig, &X_ServiceConfig, (pInt16U)DataTable, DATA_TABLE_SIZE, 0);
 	BCCIM_Init(&MASTER_DEVICE_CAN_Interface, &CAN_Master_IOConfig, BCCIM_TIMEOUT_TICKS, &CONTROL_TimeCounter);
 	BHL_Init(&MASTER_DEVICE_CAN_Interface);
 
 	// Set write protection
 	SCCI_AddProtectedArea(&DEVICE_RS232_Interface, DATA_TABLE_WP_START, DATA_TABLE_SIZE - 1);
+	SCCI_AddProtectedArea(&DEVICE_USB_UART_Interface, DATA_TABLE_WP_START, DATA_TABLE_SIZE - 1);
 	BCCI_AddProtectedArea(&DEVICE_CAN_Interface, DATA_TABLE_WP_START, DATA_TABLE_SIZE - 1);
 }
 // ----------------------------------------
@@ -101,6 +108,7 @@ void DEVPROFILE_ProcessRequests()
 {
 	// Handle interface requests
 	SCCI_Process(&DEVICE_RS232_Interface, CONTROL_TimeCounter, *MaskChangesFlag);
+	SCCI_Process(&DEVICE_USB_UART_Interface, CONTROL_TimeCounter, *MaskChangesFlag);
 	// Handle interface requests
 	BCCI_Process(&DEVICE_CAN_Interface, *MaskChangesFlag);
 }

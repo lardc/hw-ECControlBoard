@@ -50,6 +50,9 @@ void INITCFG_ConfigUART()
 {
 	USARTx_Init(USART1, SYSCLK, USART_BAUDRATE);
 	USARTx_RecieveInterrupt(USART1, true);
+
+	USARTx_Init(USART2, SYSCLK, USART_BAUDRATE);
+	USARTx_RecieveInterrupt(USART2, true);
 }
 //------------------------------------------------
 

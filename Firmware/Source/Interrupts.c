@@ -21,6 +21,16 @@ void USART1_IRQHandler()
 }
 //-----------------------------------------
 
+void USART2_IRQHandler()
+{
+	if(USARTx_RecieveCheck(USART2))
+	{
+		USARTx_RegisterToFIFO(USART2);
+		USARTx_RecieveFlagClear(USART2);
+	}
+}
+//-----------------------------------------
+
 void USB_LP_CAN_RX0_IRQHandler()
 {
 	if(NCAN_RecieveCheck())
