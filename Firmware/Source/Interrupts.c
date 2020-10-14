@@ -13,10 +13,10 @@
 //
 void USART1_IRQHandler()
 {
-	if(ZwSCI_RecieveCheck(USART1))
+	if(USARTx_RecieveCheck(USART1))
 	{
-		ZwSCI_RegisterToFIFO(USART1);
-		ZwSCI_RecieveFlagClear(USART1);
+		USARTx_RegisterToFIFO(USART1);
+		USARTx_RecieveFlagClear(USART1);
 	}
 }
 //-----------------------------------------

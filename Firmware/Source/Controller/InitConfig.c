@@ -48,8 +48,8 @@ void INITCFG_ConfigCAN()
 
 void INITCFG_ConfigUART()
 {
-	USART_Init(USART1, SYSCLK, USART_BAUDRATE);
-	USART_Recieve_Interupt(USART1, 0, true);
+	USARTx_Init(USART1, SYSCLK, USART_BAUDRATE);
+	USARTx_RecieveInterrupt(USART1, true);
 }
 //------------------------------------------------
 

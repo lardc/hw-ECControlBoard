@@ -11,7 +11,7 @@
 #include "ZwDMA.h"
 #include "ZwADC.h"
 #include "ZwEXTI.h"
-#include "ZwSCI.h"
+#include "ZwUSART.h"
 #include "ZwIWDG.h"
 #include "ZwNFLASH.h"
 #include "ZwSPI.h"
