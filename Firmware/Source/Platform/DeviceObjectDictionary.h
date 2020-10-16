@@ -75,6 +75,8 @@
 #define REG_AUX_PS2_VOLTAGE				142	// Напряжение вспомогательного источника питания 2
 #define REG_AUX_PS2_CURRENT				143	// Ток вспомогательного источника питания 2
 
+#define REG_MODE_OUTPUT_RES				144	// Измерение сопротивления выходной цепи (1 - активировать режим)
+
 #define REG_DBG_STATE					190	// Регистр режима Отладки
 
 // Регистры только чтение
@@ -92,6 +94,7 @@
 #define REG_RESULT_INHIBIT_VOLTAGE		202	// Напряжение запрета
 #define REG_RESULT_AUX_CURRENT1			203	// Ток вспомогательного источника 1
 #define REG_RESULT_AUX_CURRENT2			204	// Ток вспомогательного источника 2
+#define REG_RESULT_OUTPUT_RES			205	// Выходное сопротивление
 
 #define REG_DEV_SUB_STATE				220	// Регистр вспомогательного состояния
 #define REG_CONFIG_ERR					221	// Регистр хранения кода ошибки конфигурирования
