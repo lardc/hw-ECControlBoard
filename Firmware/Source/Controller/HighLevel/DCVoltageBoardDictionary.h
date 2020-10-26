@@ -16,12 +16,12 @@
 #define DCV_REG_VOLTAGE_SETPOINT			137	// Значение задания напряжения
 #define DCV_REG_VOLTAGE_SETPOINT_32			138
 
-#define DCV_REG_CURRENT_RESULT				140	// Значение измерения тока
-#define DCV_REG_CURRENT_RESULT_32			141
-#define DCV_REG_VOLTAGE_RESULT				142	// Значение измерения напряжения
-#define DCV_REG_VOLTAGE_RESULT_32			143
+#define DCV_REG_CURRENT_RESULT				200	// Значение измерения тока
+#define DCV_REG_CURRENT_RESULT_32			201
+#define DCV_REG_VOLTAGE_RESULT				202	// Значение измерения напряжения
+#define DCV_REG_VOLTAGE_RESULT_32			203
 
-#define DCV_REG_VOLTAGE_READY				150	// Флаг выхода на уставку напряжения
+#define DCV_REG_VOLTAGE_READY				205	// Флаг выхода на уставку напряжения
 
 typedef enum __DCV_OutputLine
 {
