@@ -10,6 +10,7 @@
 #include "LowLevel.h"
 #include "SysConfig.h"
 #include "Diagnostic.h"
+#include "BCCIMHighLevel.h"
 #include "BCCIxParams.h"
 #include "Logic.h"
 #include "LogicLeakage.h"
@@ -175,6 +176,49 @@ static Boolean CONTROL_DispatchAction(Int16U ActionID, pInt16U pUserError)
 
 		case ACT_WARNING_CLEAR:
 			DataTable[REG_WARNING] = WARNING_NONE;
+			break;
+
+		case ACT_DIAG_READ_REG:
+			{
+				uint16_t val;
+				bool ret = BHL_ReadRegister(DataTable[REG_DIAG_NID], DataTable[REG_DIAG_IN_1], &val);
+				if(ret)
+				{
+					DataTable[REG_DIAG_OUT_1] = ERR_NO_ERROR;
+					DataTable[REG_DIAG_OUT_2] = val;
+				}
+				else
+				{
+					BHLError err = BHL_GetError();
+					DataTable[REG_DIAG_OUT_1] = err.ErrorCode;
+				}
+			}
+			break;
+
+		case ACT_DIAG_WRITE_REG:
+			{
+				bool ret = BHL_WriteRegister(DataTable[REG_DIAG_NID], DataTable[REG_DIAG_IN_1], DataTable[REG_DIAG_IN_2]);
+				if(ret)
+					DataTable[REG_DIAG_OUT_1] = ERR_NO_ERROR;
+				else
+				{
+					BHLError err = BHL_GetError();
+					DataTable[REG_DIAG_OUT_1] = err.ErrorCode;
+				}
+			}
+			break;
+
+		case ACT_DIAG_CALL:
+			{
+				bool ret = BHL_Call(DataTable[REG_DIAG_NID], DataTable[REG_DIAG_IN_1]);
+				if(ret)
+					DataTable[REG_DIAG_OUT_1] = ERR_NO_ERROR;
+				else
+				{
+					BHLError err = BHL_GetError();
+					DataTable[REG_DIAG_OUT_1] = err.ErrorCode;
+				}
+			}
 			break;
 
 		default:

@@ -8,8 +8,10 @@
 #define ACT_WARNING_CLEAR				4	// Очистка warning
 #define ACT_SAFETY_CLEAR				5	// Очистка нарушения контура безопасности
 
-#define ACT_FAN_ON						48	// Включить вентилятор
-#define ACT_FAN_OFF						49	// Отключить вентилятор
+#define ACT_DIAG_READ_REG				10	// Чтение регистра slave-устройства по CAN-шине
+#define ACT_DIAG_WRITE_REG				11	// Запись регистра slave-устройства по CAN-шине
+#define ACT_DIAG_CALL					12	// Вызов команды slave-устройства по CAN-шине
+#define ACT_DIAG_READ_EP				13	// Чтение EP slave-устройства по CAN-шине
 
 #define ACT_DBG_PULSE_EXT_SYNC1			50	// Одиночный импусль во внешнюю цепь SYNC_1
 #define ACT_DBG_PULSE_EXT_SYNC2			51	// Одиночный импусль во внешнюю цепь SYNC_2
@@ -18,6 +20,8 @@
 #define ACT_DBG_IS_STATE_INT_SYNC_1		54	// Состояние внутренней цепи SYNC_1
 #define ACT_DBG_IS_STATE_INT_SYNC_2		55	// Состояние внутренней цепи SYNC_2
 #define ACT_DBG_PULSE_EXT_LED			56	// Одиночный импусль внешнего светодиода
+#define ACT_FAN_ON						57	// Включить вентилятор
+#define ACT_FAN_OFF						58	// Отключить вентилятор
 
 #define ACT_START_TEST					100	// Запуск измерения
 #define ACT_STOP_TEST					101	// Запуск измерения
@@ -77,6 +81,10 @@
 
 #define REG_MODE_OUTPUT_RES				144	// Измерение сопротивления выходной цепи (1 - активировать режим)
 
+#define REG_DIAG_NID					185	// CAN: регистр NodeID для доступа к slave-устройствам
+#define REG_DIAG_IN_1					186	// CAN: входной отладочный регистр 1
+#define REG_DIAG_IN_2					187	// CAN: входной отладочный регистр 2
+
 #define REG_DBG_STATE					190	// Регистр режима Отладки
 
 // Регистры только чтение
@@ -103,6 +111,9 @@
 #define REG_BHL_DEVICE					226	// Ошибка интерфейса ВУ: NID устройства
 #define REG_BHL_FUNCTION				227	// Ошибка интерфейса ВУ: код функции
 #define REG_BHL_EXT_DATA				228	// Ошибка интерфейса ВУ: расширенная информация
+
+#define REG_DIAG_OUT_1					230	// CAN: отладочный выходной регистр 1
+#define REG_DIAG_OUT_2					231	// CAN: отладочный выходной регистр 2
 
 #define REG_DBG_INT_SYNC1				251	// Регистр состояния внутреннейи линии SYNC1
 #define REG_DBG_INT_SYNC2				252	// Регистр состояния внутреннейи линии SYNC2
