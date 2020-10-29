@@ -83,3 +83,16 @@ void DT_SaveFirmwareInfo(Int16U SlaveNID, Int16U MasterNID)
 	}
 }
 //------------------------------------------
+
+void DT_Write32(Int16U RegL, Int16U RegM, Int32U Value)
+{
+	DataTable[RegL] = Value & 0xffff;
+	DataTable[RegM] = (Value >> 16) & 0xffff;
+}
+//------------------------------------------
+
+Int32U DT_Read32(Int16U RegL, Int16U RegM)
+{
+	return (Int32U)DataTable[RegL] | ((Int32U)DataTable[RegM] << 16);
+}
+//------------------------------------------

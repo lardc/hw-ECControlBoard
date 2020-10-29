@@ -65,6 +65,9 @@ void DT_SaveNVPartToEPROM();
 void DT_ResetNVPart(FUNC_SetDefaultValues SetFunc);
 // Reset volatile read-write part of data table
 void DT_ResetWRPart(FUNC_SetDefaultValues SetFunc);
+// Работа с 32битными регистрами
+void DT_Write32(Int16U RegL, Int16U RegM, Int32U Value);
+Int32U DT_Read32(Int16U RegL, Int16U RegM);
 // Save firmware information to data table
 void DT_SaveFirmwareInfo(Int16U SlaveNID, Int16U MasterNID);
 
