@@ -71,8 +71,8 @@
 #define REG_COMM_POLARITY				135	// Полярность приложения постоянного коммутируемого напряжения
 #define REG_COMM_CURRENT_SHAPE			136	// Форма импульса коммутируемого тока
 #define REG_COMM_CURRENT_TIME			137	// Длительность импульса коммутируемого тока
-#define REG_COMM_CURRENT				138	// Коммутируемый ток
-#define REG_COMM_VOLTAGE				139	// Коммутируемого напряжение
+#define REG_COMM_CURRENT				138	// Коммутируемый ток (мкА)
+#define REG_COMM_VOLTAGE				139	// Коммутируемого напряжение (мкВ)
 
 #define REG_AUX_PS1_VOLTAGE				140	// Напряжение вспомогательного источника питания 1
 #define REG_AUX_PS1_CURRENT				141	// Ток вспомогательного источника питания 1
@@ -80,6 +80,12 @@
 #define REG_AUX_PS2_CURRENT				143	// Ток вспомогательного источника питания 2
 
 #define REG_MODE_OUTPUT_RES				144	// Измерение сопротивления выходной цепи (1 - активировать режим)
+
+// Старшие слова 32битных чисел уставок
+#define REG_CONTROL_VOLTAGE_32			150	// Напряжение входа управления
+#define REG_CONTROL_CURRENT_32			151	// Ток входа управления
+#define REG_COMM_CURRENT_32				152	// Коммутируемый ток (мкА)
+#define REG_COMM_VOLTAGE_32				153	// Коммутируемого напряжение (мкВ)
 
 #define REG_DIAG_NID					185	// CAN: регистр NodeID для доступа к slave-устройствам
 #define REG_DIAG_IN_1					186	// CAN: входной отладочный регистр 1
@@ -96,7 +102,7 @@
 #define REG_OP_RESULT					197	// Регистр результата операции
 
 #define REG_RESULT_LEAKAGE_CURRENT		198	// Ток утечки на выходе
-#define REG_RESULT_ON_VOLTAGE			199	// Остаточное напряжение на выходе
+#define REG_RESULT_ON_VOLTAGE			199	// Остаточное напряжение на выходе (в мкВ)
 #define REG_RESULT_CONTROL_CURRENT		200	// Ток управления
 #define REG_RESULT_CONTROL_VOLTAGE		201	// Напряжение управления
 #define REG_RESULT_INHIBIT_VOLTAGE		202	// Напряжение запрета
@@ -114,6 +120,16 @@
 
 #define REG_DIAG_OUT_1					230	// CAN: отладочный выходной регистр 1
 #define REG_DIAG_OUT_2					231	// CAN: отладочный выходной регистр 2
+
+// Старшие слова 32битных чисел результатов
+#define REG_RESULT_LEAKAGE_CURRENT_32	230	// Ток утечки на выходе
+#define REG_RESULT_ON_VOLTAGE_32		231	// Остаточное напряжение на выходе (в мкВ)
+#define REG_RESULT_CONTROL_CURRENT_32	232	// Ток управления
+#define REG_RESULT_CONTROL_VOLTAGE_32	233	// Напряжение управления
+#define REG_RESULT_INHIBIT_VOLTAGE_32	234	// Напряжение запрета
+#define REG_RESULT_AUX_CURRENT1_32		235	// Ток вспомогательного источника 1
+#define REG_RESULT_AUX_CURRENT2_32		236	// Ток вспомогательного источника 2
+#define REG_RESULT_OUTPUT_RES_32		237	// Выходное сопротивление
 
 #define REG_DBG_INT_SYNC1				251	// Регистр состояния внутреннейи линии SYNC1
 #define REG_DBG_INT_SYNC2				252	// Регистр состояния внутреннейи линии SYNC2
