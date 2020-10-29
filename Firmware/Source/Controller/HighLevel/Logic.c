@@ -189,8 +189,8 @@ LogicConfigError LOGIC_CacheMuxSettings()
 
 void LOGIC_CacheCurrentBoardSettings()
 {
-	CurrentBoard.Setpoint.Current = DataTable[REG_COMM_CURRENT];
-	CurrentBoard.Setpoint.Voltage = DataTable[REG_COMM_VOLTAGE];
+	CurrentBoard.Setpoint.Current = DT_Read32(REG_COMM_CURRENT, REG_COMM_CURRENT_32);
+	CurrentBoard.Setpoint.Voltage = DT_Read32(REG_COMM_VOLTAGE, REG_COMM_VOLTAGE_32);
 }
 //-----------------------------
 

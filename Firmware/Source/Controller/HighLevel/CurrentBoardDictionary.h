@@ -8,11 +8,13 @@
 // Регистры
 #define CURR_REG_CURRENT_SETPOINT			128	// Значение задания тока (в мкА)
 #define CURR_REG_CURRENT_SETPOINT_32		129
-#define CURR_REG_VOLTAGE_DUT_LIM			130	// Предельное значение падения напряжения (в мВ)
+#define CURR_REG_VOLTAGE_DUT_LIM			130	// Предельное значение падения напряжения (в мкВ)
+#define CURR_REG_VOLTAGE_DUT_LIM_32			131
 
 #define CURR_REG_RESULT_CURRENT				250	// Полученное значение тока (в мкА)
 #define CURR_REG_RESULT_CURRENT_32			251
-#define CURR_REG_RESULT_VOLTAGE				252	// Полученное значение напряжения (в мВ)
+#define CURR_REG_RESULT_VOLTAGE				252	// Полученное значение напряжения (в мкВ)
+#define CURR_REG_RESULT_VOLTAGE_32			253
 
 typedef enum __CurrentShape
 {
