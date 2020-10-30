@@ -11,7 +11,7 @@ static volatile SlaveNode NodeArray[MAX_SLAVE_NODES] = {0};
 
 // Forward functions
 //
-void COMM_InitNode(NodeName Name, uint16_t RegNodeID, bool RegEmulation);
+void COMM_InitNode(NodeName Name, uint16_t RegNodeID, uint16_t RegEmulation);
 bool COMM_SlavesExecute(uint16_t Command);
 
 // Functions
@@ -29,9 +29,10 @@ void COMM_InitSlaveArray()
 }
 //-----------------------------
 
-void COMM_InitNode(NodeName Name, uint16_t RegNodeID, bool RegEmulation)
+void COMM_InitNode(NodeName Name, uint16_t RegNodeID, uint16_t RegEmulation)
 {
 	NodeArray[Name].Emulation = DataTable[RegEmulation];
+	NodeArray[Name].StateIsUpToDate = false;
 	NodeArray[Name].NodeID = DataTable[RegNodeID];
 	NodeArray[Name].Settings = NULL;
 }
@@ -42,8 +43,12 @@ bool COMM_SlavesExecute(uint16_t Command)
 	for(uint8_t i = 0; i < MAX_SLAVE_NODES; ++i)
 	{
 		if(!NodeArray[i].Emulation)
-			if(!BHL_Call(NodeArray[i].NodeID, Command))
+		{
+			if(BHL_Call(NodeArray[i].NodeID, Command))
+				NodeArray[i].StateIsUpToDate = false;
+			else
 				return false;
+		}
 	}
 
 	return true;
@@ -66,6 +71,7 @@ bool COMM_SlavesReadState()
 				{
 					NodeArray[i].State = State;
 					NodeArray[i].OpResult = OpResult;
+					NodeArray[i].StateIsUpToDate = true;
 					result = true;
 				}
 
@@ -90,7 +96,7 @@ bool COMM_AreSlavesInStateX(uint16_t State)
 	for(uint16_t i = 0; i < MAX_SLAVE_NODES; ++i)
 		if(!NodeArray[i].Emulation)
 		{
-			if(NodeArray[i].State != State)
+			if(NodeArray[i].State != State || !NodeArray[i].StateIsUpToDate)
 				result = false;
 		}
 
@@ -103,7 +109,7 @@ bool COMM_IsSlaveInFaultOrDisabled()
 	for(uint8_t i = 0; i < MAX_SLAVE_NODES; ++i)
 		if(!NodeArray[i].Emulation)
 		{
-			if(NodeArray[i].State == CDS_Fault || NodeArray[i].State == CDS_Disabled)
+			if((NodeArray[i].State == CDS_Fault || NodeArray[i].State == CDS_Disabled) && NodeArray[i].StateIsUpToDate)
 				return true;
 		}
 

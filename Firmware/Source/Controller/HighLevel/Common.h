@@ -54,6 +54,7 @@ typedef enum __InputType
 typedef struct __SlaveNode
 {
 	bool Emulation;
+	bool StateIsUpToDate;
 	uint16_t NodeID;
 	uint16_t State;
 	uint16_t OpResult;
