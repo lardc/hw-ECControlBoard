@@ -37,6 +37,7 @@ static Boolean CONTROL_DispatchAction(Int16U ActionID, pInt16U pUserError);
 void CONTROL_UpdateWatchDog();
 void CONTROL_ResetToDefaultState();
 void CONTROL_ResetOutputRegisters();
+void CONTROL_ClearFault();
 
 // Functions
 //
@@ -183,7 +184,8 @@ static Boolean CONTROL_DispatchAction(Int16U ActionID, pInt16U pUserError)
 			{
 				if(CONTROL_State == DS_Fault)
 				{
-					CONTROL_SetDeviceState(DS_None, DSS_None);
+					CONTROL_ClearFault();
+
 					if(!COMM_SlavesClearFault())
 						CONTROL_SwitchToFault(ER_InterfaceError, FAULT_EXT_GR_COMMON);
 				}
@@ -280,6 +282,19 @@ void CONTROL_SwitchToFault(ExecutionResult Result, Int16U Group)
 		CONTROL_SetDeviceState(DS_Fault, DSS_None);
 		DataTable[REG_FAULT_REASON] = Result + Group;
 	}
+}
+//------------------------------------------
+
+void CONTROL_ClearFault()
+{
+	CONTROL_SetDeviceState(DS_None, DSS_None);
+	DataTable[REG_FAULT_REASON] = 0;
+
+	BHL_ResetError();
+	DataTable[REG_BHL_ERROR_CODE] = 0;
+	DataTable[REG_BHL_DEVICE] = 0;
+	DataTable[REG_BHL_FUNCTION] = 0;
+	DataTable[REG_BHL_EXT_DATA] = 0;
 }
 //------------------------------------------
 
