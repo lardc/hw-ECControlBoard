@@ -27,6 +27,7 @@ typedef void (*FUNC_AsyncDelegate)();
 DeviceState CONTROL_State = DS_None;
 DeviceSubState CONTROL_SubState = DSS_None;
 static Boolean CycleActive = false, SafetyMonitorActive = false;
+static Int16U CONTROL_EPCounter, CONTROL_EPArray[XCCI_EP_SIZE];
 
 volatile Int64U CONTROL_TimeCounter = 0;
 
@@ -41,6 +42,12 @@ void CONTROL_ResetOutputRegisters();
 //
 void CONTROL_Init()
 {
+	// Переменные для конфигурации EndPoint
+	Int16U EPIndexes[EP_COUNT] = {EP_SLAVE_DATA};
+	Int16U EPSized[EP_COUNT] = {XCCI_EP_SIZE};
+	pInt16U EPCounters[EP_COUNT] = {&CONTROL_EPCounter};
+	pInt16U EPDatas[EP_COUNT] = {CONTROL_EPArray};
+
 	// Конфигурация сервиса работы Data-table и EPROM
 	EPROMServiceConfig EPROMService = {(FUNC_EPROM_WriteValues)&NFLASH_WriteDT, (FUNC_EPROM_ReadValues)&NFLASH_ReadDT};
 	// Инициализация data table
@@ -48,6 +55,7 @@ void CONTROL_Init()
 	DT_SaveFirmwareInfo(CAN_SLAVE_NID, CAN_MASTER_NID);
 	// Инициализация device profile
 	DEVPROFILE_Init(&CONTROL_DispatchAction, &CycleActive);
+	DEVPROFILE_InitEPService(EPIndexes, EPSized, EPCounters, EPDatas);
 	// Сброс значений
 	DEVPROFILE_ResetControlSection();
 	CONTROL_ResetToDefaultState();

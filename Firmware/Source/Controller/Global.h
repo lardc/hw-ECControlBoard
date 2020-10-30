@@ -6,8 +6,9 @@
 #define	SCCI_TIMEOUT_TICKS			1000	// Таймаут интерфейса SCCI (в мс)
 #define	BCCIM_TIMEOUT_TICKS			1000	// Таймаут протоколоа мастер BCCI (в мс)
 #define EP_WRITE_COUNT				0		// Количество массивов для записи
-#define EP_COUNT					0		// Количество массивов для чтения
+#define EP_COUNT					1		// Количество массивов для чтения
 #define ENABLE_LOCKING				FALSE	// Защита NV регистров паролем
+#define XCCI_EP_SIZE				2000	// Размер массива для вычитывания EP
 
 // Временные параметры
 #define TIME_LED_BLINK				500		// Мигание светодиодом (в мс)

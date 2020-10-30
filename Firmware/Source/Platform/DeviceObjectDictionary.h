@@ -171,6 +171,9 @@
 //  Warning
 #define WARNING_NONE					0
 
+// Endpoints
+#define EP_SLAVE_DATA					1	// Данные вычитанные из Slave-устройств
+
 //  User Errors
 #define ERR_NONE						0
 #define ERR_CONFIGURATION_LOCKED		1	//  Устройство защищено от записи
