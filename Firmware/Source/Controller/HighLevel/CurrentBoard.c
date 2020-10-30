@@ -26,7 +26,10 @@ ExecutionResult CURR_Execute()
 					if(BHL_WriteRegister(NodeID, CURR_REG_VOLTAGE_DUT_LIM, VoltageLow))
 						if(BHL_WriteRegister(NodeID, CURR_REG_VOLTAGE_DUT_LIM_32, VoltageHigh))
 							if(BHL_Call(NodeID, CURR_ACT_START_PROCESS))
+							{
+								NodeData->StateIsUpToDate = false;
 								return ER_NoError;
+							}
 		}
 		else
 			return ER_NoError;
