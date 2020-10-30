@@ -229,6 +229,25 @@ static Boolean CONTROL_DispatchAction(Int16U ActionID, pInt16U pUserError)
 			}
 			break;
 
+		case ACT_DIAG_READ_EP:
+			{
+				DEVPROFILE_ResetEPReadState();
+				DEVPROFILE_ResetScopes(0);
+
+				bool ret = BHL_ReadArray16(DataTable[REG_DIAG_NID], DataTable[REG_DIAG_IN_1], CONTROL_EPArray, XCCI_EP_SIZE, &CONTROL_EPCounter);
+				if (ret)
+				{
+					DataTable[REG_DIAG_OUT_1] = ERR_NO_ERROR;
+					DataTable[REG_DIAG_OUT_2] = CONTROL_EPCounter;
+				}
+				else
+				{
+					BHLError err = BHL_GetError();
+					DataTable[REG_DIAG_OUT_1] = err.ErrorCode;
+				}
+			}
+			break;
+
 		default:
 			return DIAG_HandleDiagnosticAction(ActionID, pUserError);
 	}
