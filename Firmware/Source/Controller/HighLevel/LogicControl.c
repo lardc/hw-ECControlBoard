@@ -106,8 +106,8 @@ void CTRL_HandleMeasurement()
 						if(OpResult == OPRESULT_OK)
 						{
 							DataTable[REG_OP_RESULT] = OPRESULT_OK;
-							DataTable[REG_RESULT_CONTROL_VOLTAGE] = Result.Voltage;
-							DataTable[REG_RESULT_CONTROL_CURRENT] = Result.Current;
+							DT_Write32(REG_RESULT_CONTROL_VOLTAGE, REG_RESULT_CONTROL_VOLTAGE_32, Result.Voltage);
+							DT_Write32(REG_RESULT_CONTROL_CURRENT, REG_RESULT_CONTROL_CURRENT_32, Result.Current);
 						}
 						else
 							DataTable[REG_OP_RESULT] = OPRESULT_FAIL;
