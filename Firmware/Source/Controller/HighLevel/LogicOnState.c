@@ -126,7 +126,8 @@ void ONSTATE_HandleMeasurement()
 						if(NodeData->OpResult == OPRESULT_OK)
 						{
 							DataTable[REG_OP_RESULT] = OPRESULT_OK;
-							DataTable[REG_RESULT_ON_VOLTAGE] = Settings->Result.Current;
+							DT_Write32(REG_RESULT_ON_VOLTAGE, REG_RESULT_ON_VOLTAGE_32, Settings->Result.Voltage);
+							DT_Write32(REG_RESULT_ON_CURRENT, REG_RESULT_ON_CURRENT_32, Settings->Result.Current);
 						}
 						else
 							DataTable[REG_OP_RESULT] = OPRESULT_FAIL;
