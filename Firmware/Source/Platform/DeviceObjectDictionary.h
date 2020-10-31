@@ -110,6 +110,11 @@
 #define REG_RESULT_AUX_CURRENT2			204	// Ток вспомогательного источника 2
 #define REG_RESULT_OUTPUT_RES			205	// Выходное сопротивление
 
+#define REG_RESULT_LEAKAGE_VOLTAGE		206	// Напряжение измерения утечки
+#define REG_RESULT_LEAKAGE_VOLTAGE_32	207
+#define REG_RESULT_ON_CURRENT			208	// Ток измерения остаточного напряжения
+#define REG_RESULT_ON_CURRENT_32		209
+
 #define REG_DEV_SUB_STATE				220	// Регистр вспомогательного состояния
 #define REG_CONFIG_ERR					221	// Регистр хранения кода ошибки конфигурирования
 
