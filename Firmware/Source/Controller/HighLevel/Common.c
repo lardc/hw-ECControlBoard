@@ -180,7 +180,10 @@ ExecutionResult COMM_NodeCall(NodeName Name, uint16_t Command)
 		{
 			uint16_t NodeID = NodeArray[Name].NodeID;
 			if(BHL_Call(NodeID, Command))
+			{
+				NodeArray[Name].StateIsUpToDate = false;
 				return ER_NoError;
+			}
 		}
 		else
 			return ER_NoError;

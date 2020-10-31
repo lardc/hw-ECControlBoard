@@ -24,7 +24,10 @@ ExecutionResult MUX_Connect()
 							if(BHL_WriteRegister(NodeID, MUX_REG_TYPE_LEAKAGE, Settings->LeakageType))
 								if(BHL_WriteRegister(NodeID, MUX_REG_TYPE_POLARITY, Settings->Polarity))
 									if(BHL_Call(NodeID, MUX_ACT_SET_RELAY_GROUP))
+									{
+										NodeData->StateIsUpToDate = false;
 										return ER_NoError;
+									}
 		}
 		else
 			return ER_NoError;
@@ -47,7 +50,10 @@ ExecutionResult MUX_Disconnect()
 		{
 			uint16_t NodeID = NodeData->NodeID;
 			if(BHL_Call(NodeID, MUX_ACT_SET_RELAY_NONE))
+			{
+				NodeData->StateIsUpToDate = false;
 				return ER_NoError;
+			}
 		}
 		else
 			return ER_NoError;

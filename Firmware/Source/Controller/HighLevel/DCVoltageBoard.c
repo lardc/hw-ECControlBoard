@@ -33,7 +33,10 @@ ExecutionResult DCV_Execute(NodeName Name)
 									if(BHL_WriteRegister(NodeID, DCV_REG_VOLTAGE_SETPOINT, VoltageLow))
 										if(BHL_WriteRegister(NodeID, DCV_REG_VOLTAGE_SETPOINT_32, VoltageHigh))
 											if(BHL_Call(NodeID, DCV_ACT_START_PROCESS))
+											{
+												NodeData->StateIsUpToDate = false;
 												return ER_NoError;
+											}
 		}
 		else
 			return ER_NoError;

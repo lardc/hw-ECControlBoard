@@ -26,7 +26,10 @@ ExecutionResult ACV_Execute(NodeName Name)
 				if(BHL_WriteRegister(NodeID, ACV_REG_CURRENT_SETPOINT, CurrentLow))
 					if(BHL_WriteRegister(NodeID, ACV_REG_VOLTAGE_SETPOINT, VoltageLow))
 						if(BHL_Call(NodeID, ACV_ACT_START_PROCESS))
+						{
+							NodeData->StateIsUpToDate = false;
 							return ER_NoError;
+						}
 		}
 		else
 			return ER_NoError;
