@@ -128,7 +128,10 @@ static Boolean CONTROL_DispatchAction(Int16U ActionID, pInt16U pUserError)
 		case ACT_ENABLE_POWER:
 			{
 				if(CONTROL_State == DS_None)
+				{
+					COMM_UpdateEmulationSettings();
 					CONTROL_SetDeviceState(DS_InProcess, DSS_PowerEnable);
+				}
 				else if(CONTROL_State != DS_Ready)
 					*pUserError = ERR_DEVICE_NOT_READY;
 			}
