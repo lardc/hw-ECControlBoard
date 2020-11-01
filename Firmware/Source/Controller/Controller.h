@@ -26,17 +26,7 @@ typedef enum __DeviceSubState
 	DSS_PowerWaitReady = 2,
 	DSS_PowerOff = 3,
 
-	DSS_OnVoltage_StartTest = 20,
-	DSS_OnVoltage_Commutate,
-	DSS_OnVoltage_StartControl,
-	DSS_OnVoltage_WaitControlReady,
-	DSS_OnVoltage_PulseCurrent,
-	DSS_OnVoltage_WaitCurrentReady,
-	DSS_OnVoltage_StopControl,
-	DSS_OnVoltage_UnCommutate,
-	DSS_OnVoltage_ReadResult,
-
-	DSS_Leakage_StartTest = 40,
+	DSS_Leakage_StartTest = 100,
 	DSS_Leakage_Commutate,
 	DSS_Leakage_StartControl,
 	DSS_Leakage_WaitControlReady,
@@ -47,7 +37,20 @@ typedef enum __DeviceSubState
 	DSS_Leakage_UnCommutate,
 	DSS_Leakage_ReadResult,
 
-	DSS_Control_StartTest = 60,
+	DSS_OnVoltage_StartTest = 200,
+	DSS_OnVoltage_Commutate,
+	DSS_OnVoltage_WaitCommutation,
+	DSS_OnVoltage_StartControl,
+	DSS_OnVoltage_WaitControlReady,
+	DSS_OnVoltage_PulseCurrent,
+	DSS_OnVoltage_WaitCurrentReady,
+	DSS_OnVoltage_StopControl,
+	DSS_OnVoltage_WaitStopControl,
+	DSS_OnVoltage_UnCommutate,
+	DSS_OnVoltage_WaitUnCommutate,
+	DSS_OnVoltage_ReadResult,
+
+	DSS_Control_StartTest = 300,
 	DSS_Control_Commutate,
 	DSS_Control_StartControl,
 	DSS_Control_WaitControlReady,
@@ -55,7 +58,7 @@ typedef enum __DeviceSubState
 	DSS_Control_UnCommutate,
 	DSS_Control_ReadResult,
 
-	DSS_Inhibit_StartTest = 80,
+	DSS_Inhibit_StartTest = 400,
 	DSS_Inhibit_ReadResult
 } DeviceSubState;
 
