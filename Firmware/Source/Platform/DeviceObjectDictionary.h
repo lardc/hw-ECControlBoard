@@ -153,10 +153,6 @@
 
 // Fault and disable codes
 #define DF_NONE							0
-#define DF_INTERFACE					1	// Ошибка мастер-интерфейса
-#define DF_LOGIC_WRONG_STATE			2	// Ведомый узел находится в некорректном состоянии
-#define DF_LOGIC_STATE_TIMEOUT			3	// Таймаут смены состояния ведомым узлом
-#define DF_LOGIC_EXEC					4	// Общий фолт выполнения логики (см. значение расширенного кода Fault)
 
 // Группы кодов ошибок выполнения
 // Код ошибки задаётся как FAULT_EXT_GR + ExecutionResult
