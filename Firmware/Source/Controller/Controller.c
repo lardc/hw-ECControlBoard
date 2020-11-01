@@ -192,10 +192,8 @@ static Boolean CONTROL_DispatchAction(Int16U ActionID, pInt16U pUserError)
 			{
 				if(CONTROL_State == DS_Fault)
 				{
+					COMM_SlavesClearFault();
 					CONTROL_ClearFault();
-
-					if(!COMM_SlavesClearFault())
-						CONTROL_SwitchToFault(ER_InterfaceError, FAULT_EXT_GR_COMMON);
 				}
 			}
 			break;
