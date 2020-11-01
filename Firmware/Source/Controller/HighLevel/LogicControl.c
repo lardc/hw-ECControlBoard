@@ -30,19 +30,28 @@ void CTRL_HandleMeasurement()
 		switch(CONTROL_SubState)
 		{
 			case DSS_Control_StartTest:
-				if(COMM_AreSlavesInStateX(CDS_Ready))
-					CONTROL_SetDeviceState(DS_InProcess, DSS_Control_Commutate);
-				else
-					CONTROL_SwitchToFault(ER_WrongState, FAULT_EXT_GR_COMMON);
+				{
+					if(COMM_AreSlavesInStateX(CDS_Ready))
+						CONTROL_SetDeviceState(DS_InProcess, DSS_Control_Commutate);
+					else
+						CONTROL_SwitchToFault(ER_WrongState, FAULT_EXT_GR_COMMON);
+				}
 				break;
 
 			case DSS_Control_Commutate:
 				{
 					res = MUX_Connect();
 					if(res == ER_NoError)
-						CONTROL_SetDeviceState(DS_InProcess, DSS_Control_StartControl);
+						CONTROL_SetDeviceState(DS_InProcess, DSS_Control_WaitCommutation);
 					else
 						CONTROL_SwitchToFault(res, FAULT_EXT_GR_MUX);
+				}
+				break;
+
+			case DSS_Control_WaitCommutation:
+				{
+					if(COMM_AreSlavesInStateX(CDS_Ready))
+							CONTROL_SetDeviceState(DS_InProcess, DSS_Control_StartControl);
 				}
 				break;
 
@@ -79,9 +88,16 @@ void CTRL_HandleMeasurement()
 				{
 					res = LOGIC_StopControl();
 					if(res == ER_NoError)
-						CONTROL_SetDeviceState(DS_InProcess, DSS_Control_UnCommutate);
+						CONTROL_SetDeviceState(DS_InProcess, DSS_Control_WaitStopControl);
 					else
 						LOGIC_HandleControlExecResult(res);
+				}
+				break;
+
+			case DSS_Control_WaitStopControl:
+				{
+					if(COMM_AreSlavesInStateX(CDS_Ready))
+							CONTROL_SetDeviceState(DS_InProcess, DSS_Control_UnCommutate);
 				}
 				break;
 
@@ -89,9 +105,16 @@ void CTRL_HandleMeasurement()
 				{
 					res = MUX_Disconnect();
 					if(res == ER_NoError)
-						CONTROL_SetDeviceState(DS_InProcess, DSS_Control_ReadResult);
+						CONTROL_SetDeviceState(DS_InProcess, DSS_Control_WaitUnCommutate);
 					else
 						CONTROL_SwitchToFault(res, FAULT_EXT_GR_MUX);
+				}
+				break;
+
+			case DSS_Control_WaitUnCommutate:
+				{
+					if(COMM_AreSlavesInStateX(CDS_Ready))
+							CONTROL_SetDeviceState(DS_InProcess, DSS_Control_ReadResult);
 				}
 				break;
 

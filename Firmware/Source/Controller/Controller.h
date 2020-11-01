@@ -52,10 +52,13 @@ typedef enum __DeviceSubState
 
 	DSS_Control_StartTest = 300,
 	DSS_Control_Commutate,
+	DSS_Control_WaitCommutation,
 	DSS_Control_StartControl,
 	DSS_Control_WaitControlReady,
 	DSS_Control_StopControl,
+	DSS_Control_WaitStopControl,
 	DSS_Control_UnCommutate,
+	DSS_Control_WaitUnCommutate,
 	DSS_Control_ReadResult,
 
 	DSS_Inhibit_StartTest = 400,
