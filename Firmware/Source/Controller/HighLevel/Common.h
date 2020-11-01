@@ -70,6 +70,7 @@ typedef struct __VIPair
 // Functions
 //
 void COMM_InitSlaveArray();
+void COMM_UpdateEmulationSettings();
 
 bool COMM_SlavesReadState();
 bool COMM_AreSlavesInStateX(uint16_t State);

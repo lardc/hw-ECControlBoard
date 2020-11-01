@@ -12,6 +12,7 @@ static volatile SlaveNode NodeArray[MAX_SLAVE_NODES] = {0};
 // Forward functions
 //
 void COMM_InitNode(NodeName Name, uint16_t RegNodeID, uint16_t RegEmulation);
+void COMM_UpdateNodeEmulation(NodeName Name, uint16_t RegEmulation);
 bool COMM_SlavesExecute(uint16_t Command);
 
 // Functions
@@ -29,12 +30,31 @@ void COMM_InitSlaveArray()
 }
 //-----------------------------
 
+void COMM_UpdateEmulationSettings()
+{
+	COMM_UpdateNodeEmulation(NAME_Multiplexer,		REG_EMULATE_MULTIPLEXER);
+	COMM_UpdateNodeEmulation(NAME_DCCurrent,		REG_EMULATE_DC_CURRENT);
+	COMM_UpdateNodeEmulation(NAME_DCHighVoltage,	REG_EMULATE_DC_HV);
+	COMM_UpdateNodeEmulation(NAME_DCVoltage1,		REG_EMULATE_DC_VOLTAGE1);
+	COMM_UpdateNodeEmulation(NAME_DCVoltage2,		REG_EMULATE_DC_VOLTAGE2);
+	COMM_UpdateNodeEmulation(NAME_DCVoltage3,		REG_EMULATE_DC_VOLTAGE3);
+	COMM_UpdateNodeEmulation(NAME_ACVoltage1,		REG_EMULATE_AC_VOLTAGE1);
+	COMM_UpdateNodeEmulation(NAME_ACVoltage2,		REG_EMULATE_AC_VOLTAGE2);
+}
+//-----------------------------
+
 void COMM_InitNode(NodeName Name, uint16_t RegNodeID, uint16_t RegEmulation)
 {
 	NodeArray[Name].Emulation = DataTable[RegEmulation];
 	NodeArray[Name].StateIsUpToDate = false;
 	NodeArray[Name].NodeID = DataTable[RegNodeID];
 	NodeArray[Name].Settings = NULL;
+}
+//-----------------------------
+
+void COMM_UpdateNodeEmulation(NodeName Name, uint16_t RegEmulation)
+{
+	NodeArray[Name].Emulation = DataTable[RegEmulation];
 }
 //-----------------------------
 

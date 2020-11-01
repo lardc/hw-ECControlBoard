@@ -168,6 +168,7 @@ static Boolean CONTROL_DispatchAction(Int16U ActionID, pInt16U pUserError)
 			{
 				if(CONTROL_State == DS_Ready)
 				{
+					COMM_UpdateEmulationSettings();
 					CONTROL_ResetOutputRegisters();
 					LogicConfigError err = LOGIC_PrepareMeasurement();
 					DataTable[REG_CONFIG_ERR] = err;
