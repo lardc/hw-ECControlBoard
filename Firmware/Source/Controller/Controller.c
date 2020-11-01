@@ -171,6 +171,7 @@ static Boolean CONTROL_DispatchAction(Int16U ActionID, pInt16U pUserError)
 			{
 				if(CONTROL_State == DS_Ready)
 				{
+					LL_SetStateExtLed(true);
 					COMM_UpdateEmulationSettings();
 					CONTROL_ResetOutputRegisters();
 					LogicConfigError err = LOGIC_PrepareMeasurement();
@@ -309,6 +310,9 @@ void CONTROL_SetDeviceState(DeviceState NewState, DeviceSubState NewSubState)
 
 	CONTROL_SubState = NewSubState;
 	DataTable[REG_DEV_SUB_STATE] = NewSubState;
+
+	if(CONTROL_SubState == DSS_None)
+		LL_SetStateExtLed(false);
 }
 //------------------------------------------
 
