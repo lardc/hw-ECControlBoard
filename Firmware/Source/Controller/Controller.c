@@ -285,7 +285,10 @@ void CONTROL_SwitchToFault(ExecutionResult Result, Int16U Group)
 			DataTable[REG_BHL_EXT_DATA] = Error.ExtData;
 		}
 
+		DeviceSubState SavedSubState = CONTROL_SubState;
 		CONTROL_SetDeviceState(DS_Fault, DSS_None);
+
+		DataTable[REG_DEV_SUB_STATE] = SavedSubState;
 		DataTable[REG_FAULT_REASON] = Result + Group;
 	}
 }
