@@ -142,7 +142,7 @@ LogicConfigError LOGIC_PrepareMeasurement()
 
 			case MT_InputVoltageCurrent:
 				{
-					LOGIC_CacheControlSettings(Pulse);
+					LOGIC_CacheControlSettings(Continuous);
 					CONTROL_SetDeviceState(DS_InProcess, DSS_Control_StartTest);
 				}
 				break;
