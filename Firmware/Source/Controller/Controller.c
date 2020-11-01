@@ -137,7 +137,10 @@ static Boolean CONTROL_DispatchAction(Int16U ActionID, pInt16U pUserError)
 		case ACT_DISABLE_POWER:
 			{
 				if(CONTROL_State == DS_Ready)
+				{
+					CONTROL_ResetOutputRegisters();
 					CONTROL_SetDeviceState(DS_None, DSS_PowerOff);
+				}
 				else if(CONTROL_State != DS_None)
 					*pUserError = ERR_OPERATION_BLOCKED;
 			}
