@@ -17,6 +17,10 @@
 #define TIMEOUT_MAX					60000
 #define TIMEOUT_DEF					5000
 
+#define CTRL_PULSE_LENGH_MIN		5
+#define CTRL_PULSE_LENGH_MAX		500
+#define CTRL_PULSE_LENGH_DEF		10
+
 // Types
 typedef struct __TableItemConstraint
 {
