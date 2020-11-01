@@ -2,9 +2,8 @@
 #define __MULTIPLEXER_DICTIONARY_H
 
 // Команды
-#define MUX_ACT_SET_RELAY_GROUP				20 	// Подключить группу реле (на основании корпуса и т.д.)
-#define MUX_ACT_SET_RELAY_NONE				21 	// Отключить все релле
-#define MUX_ACT_SET_RELAY_TABLE				22 	// Подключить группу реле по номеру таблицы
+#define MUX_ACT_SET_RELAY_GROUP				100	// Подключить группу реле (на основании корпуса и т.д.)
+#define MUX_ACT_SET_RELAY_NONE				101	// Отключить все релле
 
 // Регистры
 #define MUX_REG_TYPE_MEASURE				130	// Тип измерения
@@ -26,5 +25,11 @@ typedef enum __MUX_Polarity
 	PolarityDirect = 1,
 	PolarityReverse = 2
 } MUX_Polarity;
+
+typedef enum __MUX_VoltageSupply
+{
+	MUXVS_DC = 1,
+	MUXVS_AC = 2
+} MUX_VoltageSupply;
 
 #endif // __MULTIPLEXER_DICTIONARY_H
