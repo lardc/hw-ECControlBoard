@@ -74,6 +74,7 @@ void COMM_UpdateEmulationSettings();
 
 bool COMM_SlavesReadState();
 bool COMM_AreSlavesInStateX(uint16_t State);
+bool COMM_IsSlaveInStateX(NodeName Name, uint16_t State);
 bool COMM_IsSlaveInFaultOrDisabled();
 
 bool COMM_SlavesEnablePower();
