@@ -204,7 +204,7 @@ void LOGIC_CacheControlSettings(DCV_OutputMode Mode)
 	{
 		DCVoltageBoard1.Setpoint = Setpoint;
 		DCVoltageBoard1.OutputLine = DCV_CTRL;
-		DCVoltageBoard1.OutputType = Multiplexer.InputType;
+		DCVoltageBoard1.OutputType = (Multiplexer.InputType == IT_ControlVDC) ? DCV_Voltage : DCV_Current;
 		DCVoltageBoard1.OutputMode = Mode;
 		DCVoltageBoard1.PulseLength = DataTable[REG_CTRL_PULSE_LENGTH];
 	}
