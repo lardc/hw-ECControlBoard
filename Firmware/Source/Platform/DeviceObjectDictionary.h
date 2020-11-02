@@ -88,6 +88,10 @@
 #define REG_CONTROL_CURRENT_32			151	// Ток входа управления
 #define REG_COMM_CURRENT_32				152	// Коммутируемый ток (мкА)
 #define REG_COMM_VOLTAGE_32				153	// Коммутируемого напряжение (мкВ)
+#define REG_AUX_PS1_VOLTAGE_32			154	// Напряжение вспомогательного источника питания 1
+#define REG_AUX_PS1_CURRENT_32			155	// Ток вспомогательного источника питания 1
+#define REG_AUX_PS2_VOLTAGE_32			156	// Напряжение вспомогательного источника питания 2
+#define REG_AUX_PS2_CURRENT_32			157	// Ток вспомогательного источника питания 2
 
 #define REG_DIAG_NID					185	// CAN: регистр NodeID для доступа к slave-устройствам
 #define REG_DIAG_IN_1					186	// CAN: входной отладочный регистр 1
