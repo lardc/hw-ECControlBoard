@@ -127,7 +127,7 @@ LogicConfigError LOGIC_PrepareMeasurement()
 			case MT_LeakageCurrent:
 				{
 					LOGIC_CacheLeakageSettings();
-					LOGIC_CacheControlSettings(Continuous);
+					LOGIC_CacheControlSettings(DCV_Continuous);
 					CONTROL_SetDeviceState(DS_InProcess, DSS_Leakage_StartTest);
 				}
 				break;
@@ -135,21 +135,21 @@ LogicConfigError LOGIC_PrepareMeasurement()
 			case MT_OnVoltage:
 				{
 					LOGIC_CacheCurrentBoardSettings();
-					LOGIC_CacheControlSettings(Continuous);
+					LOGIC_CacheControlSettings(DCV_Continuous);
 					CONTROL_SetDeviceState(DS_InProcess, DSS_OnVoltage_StartTest);
 				}
 				break;
 
 			case MT_InputVoltageCurrent:
 				{
-					LOGIC_CacheControlSettings(Continuous);
+					LOGIC_CacheControlSettings(DCV_Continuous);
 					CONTROL_SetDeviceState(DS_InProcess, DSS_Control_StartTest);
 				}
 				break;
 
 			case MT_InhibitVoltage:
 				{
-					LOGIC_CacheControlSettings(Continuous);
+					LOGIC_CacheControlSettings(DCV_Continuous);
 					CONTROL_SetDeviceState(DS_InProcess, DSS_Inhibit_StartTest);
 				}
 				break;
@@ -179,8 +179,8 @@ LogicConfigError LOGIC_CacheMuxSettings()
 		return LCE_UnknownCase;
 
 	// ѕроверка соответстви€ номеров позиций
-	if((Multiplexer.Position == Position2 && DUTConfig->OutputPositionsNum == OneOutput) ||
-		(Multiplexer.Position == Position3 && DUTConfig->OutputPositionsNum != ThreeOutputs))
+	if((Multiplexer.Position == MX_Position2 && DUTConfig->OutputPositionsNum == OneOutput) ||
+		(Multiplexer.Position == MX_Position3 && DUTConfig->OutputPositionsNum != ThreeOutputs))
 		return LCE_PositionMissmatch;
 
 	return LCE_None;
@@ -203,7 +203,7 @@ void LOGIC_CacheControlSettings(DCV_OutputMode Mode)
 	if(LOGIC_IsDCControl())
 	{
 		DCVoltageBoard1.Setpoint = Setpoint;
-		DCVoltageBoard1.OutputLine = DC_CTRL;
+		DCVoltageBoard1.OutputLine = DCV_CTRL;
 		DCVoltageBoard1.OutputType = Multiplexer.InputType;
 		DCVoltageBoard1.OutputMode = Mode;
 		DCVoltageBoard1.PulseLength = DataTable[REG_CTRL_PULSE_LENGTH];
@@ -211,7 +211,7 @@ void LOGIC_CacheControlSettings(DCV_OutputMode Mode)
 	else
 	{
 		ACVoltageBoard1.Setpoint = Setpoint;
-		ACVoltageBoard1.OutputLine = AC_CTRL;
+		ACVoltageBoard1.OutputLine = ACV_CTRL;
 	}
 }
 //-----------------------------
@@ -229,20 +229,20 @@ void LOGIC_CacheLeakageSettings()
 	else
 	{
 		ACVoltageBoard2.Setpoint = Setpoint;
-		ACVoltageBoard2.OutputLine = AC_BUS_LV;
+		ACVoltageBoard2.OutputLine = ACV_BUS_LV;
 	}
 }
 //-----------------------------
 
 bool LOGIC_IsDCControl()
 {
-	return Multiplexer.InputType == ControlIDC || Multiplexer.InputType == ControlVDC;
+	return Multiplexer.InputType == IT_ControlIDC || Multiplexer.InputType == IT_ControlVDC;
 }
 //-----------------------------
 
 bool LOGIC_IsDCLeakage()
 {
-	return Multiplexer.LeakageType == LeakageDC;
+	return Multiplexer.LeakageType == LT_LeakageDC;
 }
 //-----------------------------
 

@@ -17,8 +17,8 @@
 
 typedef enum __ACV_OutputLine
 {
-	AC_BUS_LV = 1,
-	AC_CTRL = 2
+	ACV_BUS_LV = 1,
+	ACV_CTRL = 2
 } ACV_OutputLine;
 
 #endif // __AC_VOLTAGE_BOARD_DICT_H

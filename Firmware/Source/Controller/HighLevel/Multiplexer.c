@@ -16,7 +16,7 @@ ExecutionResult MUX_Connect()
 		if(!NodeData->Emulation)
 		{
 			uint16_t NodeID = NodeData->NodeID;
-			MUX_VoltageSupply InputVoltageSupply = (Settings->InputType == ControlVAC) ? MUXVS_AC : MUXVS_DC;
+			MUX_ControlSupply InputVoltageSupply = (Settings->InputType == IT_ControlVAC) ? MUX_ControlAC : MUX_ControlDC;
 
 			if(BHL_WriteRegister(NodeID, MUX_REG_TYPE_MEASURE, Settings->MeasureType))
 				if(BHL_WriteRegister(NodeID, MUX_REG_TYPE_CASE, Settings->Case))

@@ -18,8 +18,8 @@
 
 typedef enum __CurrentShape
 {
-	CurrentTrapeze = 1,
-	CurrentSin = 2
+	CB_CurrentTrapeze = 1,
+	CB_CurrentSin = 2
 } CurrentShape;
 
 #endif // __CURRENT_BOARD_DICTIONARY_H

@@ -40,15 +40,15 @@ typedef enum __ExecutionResult
 
 typedef enum __LeakageType
 {
-	LeakageDC = 1,
-	LeakageAC = 2
+	LT_LeakageDC = 1,
+	LT_LeakageAC = 2
 } LeakageType;
 
 typedef enum __InputType
 {
-	ControlIDC = 1,
-	ControlVDC = 2,
-	ControlVAC = 3
+	IT_ControlIDC = 1,
+	IT_ControlVDC = 2,
+	IT_ControlVAC = 3
 } InputType;
 
 typedef struct __SlaveNode

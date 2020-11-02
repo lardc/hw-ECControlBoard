@@ -25,22 +25,22 @@
 
 typedef enum __DCV_OutputLine
 {
-	DC_BUS_LV = 1,
-	DC_CTRL = 2,
-	PS1 = 3,
-	PS2 = 4
+	DCV_BUS_LV = 1,
+	DCV_CTRL = 2,
+	DCV_PS1 = 3,
+	DCV_PS2 = 4
 } DCV_OutputLine;
 
 typedef enum __DCV_OutputType
 {
-	Voltage = 1,
-	Current = 2
+	DCV_Voltage = 1,
+	DCV_Current = 2
 } DCV_OutputType;
 
 typedef enum __DCV_OutputMode
 {
-	Pulse = 1,
-	Continuous = 2
+	DCV_Pulse = 1,
+	DCV_Continuous = 2
 } DCV_OutputMode;
 
 #endif // __DC_VOLTAGE_BOARD_DICT_H
