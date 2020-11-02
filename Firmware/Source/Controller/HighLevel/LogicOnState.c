@@ -97,7 +97,7 @@ void ONSTATE_HandleMeasurement()
 
 			case DSS_OnVoltage_WaitCurrentReady:
 				{
-					if(COMM_AreSlavesInStateX(CDS_Ready))
+					if(COMM_IsSlaveInStateX(NAME_DCCurrent, CDS_Ready))
 						CONTROL_SetDeviceState(DS_InProcess, DSS_OnVoltage_StopControl);
 					else if(CONTROL_TimeCounter > Timeout)
 						CONTROL_SwitchToFault(ER_ChangeStateTimeout, FAULT_EXT_GR_DC_CURRENT);

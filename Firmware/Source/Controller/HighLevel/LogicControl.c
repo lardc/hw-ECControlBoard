@@ -51,7 +51,7 @@ void CTRL_HandleMeasurement()
 			case DSS_Control_WaitCommutation:
 				{
 					if(COMM_AreSlavesInStateX(CDS_Ready))
-							CONTROL_SetDeviceState(DS_InProcess, DSS_Control_StartControl);
+						CONTROL_SetDeviceState(DS_InProcess, DSS_Control_StartControl);
 				}
 				break;
 
@@ -97,7 +97,7 @@ void CTRL_HandleMeasurement()
 			case DSS_Control_WaitStopControl:
 				{
 					if(COMM_AreSlavesInStateX(CDS_Ready))
-							CONTROL_SetDeviceState(DS_InProcess, DSS_Control_UnCommutate);
+						CONTROL_SetDeviceState(DS_InProcess, DSS_Control_UnCommutate);
 				}
 				break;
 
@@ -114,7 +114,7 @@ void CTRL_HandleMeasurement()
 			case DSS_Control_WaitUnCommutate:
 				{
 					if(COMM_AreSlavesInStateX(CDS_Ready))
-							CONTROL_SetDeviceState(DS_InProcess, DSS_Control_ReadResult);
+						CONTROL_SetDeviceState(DS_InProcess, DSS_Control_ReadResult);
 				}
 				break;
 
