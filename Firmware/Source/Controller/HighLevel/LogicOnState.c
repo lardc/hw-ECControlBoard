@@ -3,6 +3,7 @@
 
 // Includes
 #include "Logic.h"
+#include "LogicControl.h"
 #include "Controller.h"
 #include "Common.h"
 #include "CommonDictionary.h"
@@ -140,7 +141,13 @@ void ONSTATE_HandleMeasurement()
 
 			case DSS_OnVoltage_ReadResult:
 				{
+					VIPair ControlResult;
+					uint16_t ControlOpResult;
+
 					res = CURR_ReadResult();
+					if(res == ER_NoError)
+						res = CTRL_ControlResult(&ControlOpResult, &ControlResult);
+
 					if(res == ER_NoError)
 					{
 						pSlaveNode NodeData = COMM_GetSlaveDevicePointer(NAME_DCCurrent);
@@ -149,8 +156,12 @@ void ONSTATE_HandleMeasurement()
 						if(NodeData->OpResult == OPRESULT_OK)
 						{
 							DataTable[REG_OP_RESULT] = OPRESULT_OK;
+
 							DT_Write32(REG_RESULT_ON_VOLTAGE, REG_RESULT_ON_VOLTAGE_32, Settings->Result.Voltage);
 							DT_Write32(REG_RESULT_ON_CURRENT, REG_RESULT_ON_CURRENT_32, Settings->Result.Current);
+
+							DT_Write32(REG_RESULT_CONTROL_VOLTAGE, REG_RESULT_CONTROL_VOLTAGE_32, ControlResult.Voltage);
+							DT_Write32(REG_RESULT_CONTROL_CURRENT, REG_RESULT_CONTROL_CURRENT_32, ControlResult.Current);
 						}
 						else
 							DataTable[REG_OP_RESULT] = OPRESULT_FAIL;
