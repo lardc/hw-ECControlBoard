@@ -6,14 +6,15 @@
 #define ACV_ACT_STOP_PROCESS				101	// Остановка процесса формирования напряяжения
 
 // Регистры
-#define ACV_REG_OUTPUT_LINE					128	// Линия подачи выходного напряжения
-#define ACV_REG_CURRENT_SETPOINT			129	// Значение задания тока
-#define ACV_REG_VOLTAGE_SETPOINT			130	// Значение задания напряжения
+#define ACV_REG_VOLTAGE_SETPOINT			128	// Значение задания напряжения (в В)
+#define ACV_REG_CURRENT_SETPOINT			129	// Значение задания тока (в мкА)
+#define ACV_REG_CURRENT_SETPOINT_32			130
+#define ACV_REG_OUTPUT_LINE					131	// Линия подачи выходного напряжения
 
-#define ACV_REG_CURRENT_RESULT				200	// Значение измерения тока
-#define ACV_REG_VOLTAGE_RESULT				201	// Значение измерения напряжения
-
-#define ACV_REG_VOLTAGE_READY				202	// Флаг выхода на уставку напряжения
+#define ACV_REG_VOLTAGE_RESULT				200	// Значение измерения напряжения (в В)
+#define ACV_REG_CURRENT_RESULT				201	// Значение измерения тока (в мкА)
+#define ACV_REG_CURRENT_RESULT_32			202
+#define ACV_REG_VOLTAGE_READY				203	// Флаг выхода на уставку напряжения
 
 typedef enum __ACV_OutputLine
 {
