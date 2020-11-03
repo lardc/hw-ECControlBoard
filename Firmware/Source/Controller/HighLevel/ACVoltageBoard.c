@@ -55,16 +55,18 @@ ExecutionResult ACV_ReadResult(NodeName Name)
 	{
 		if(!NodeData->Emulation)
 		{
-			uint16_t CurrentLow = 0, VoltageLow = 0;
+			uint16_t CurrentLow = 0, CurrentHigh = 0, VoltageLow = 0;
 			uint16_t NodeID = NodeData->NodeID;
 
-			if(BHL_ReadRegister(NodeID, ACV_REG_CURRENT_RESULT, &CurrentLow))
-				if(BHL_ReadRegister(NodeID, ACV_REG_VOLTAGE_RESULT, &VoltageLow))
-				{
-					Settings->Result.Current = CurrentLow;
-					Settings->Result.Voltage = VoltageLow;
-					return ER_NoError;
-				}
+			if(BHL_ReadRegister(NodeID, ACV_REG_VOLTAGE_RESULT, &VoltageLow))
+				if(BHL_ReadRegister(NodeID, ACV_REG_CURRENT_RESULT, &CurrentLow))
+					if(BHL_ReadRegister(NodeID, ACV_REG_CURRENT_RESULT_32, &CurrentHigh))
+					{
+						Settings->Result.Voltage = (uint32_t)VoltageLow * 1000;
+						Settings->Result.Current = CurrentLow;
+						Settings->Result.Current |= (uint32_t)CurrentHigh << 16;
+						return ER_NoError;
+					}
 		}
 		else
 		{
