@@ -36,8 +36,8 @@ const TableItemConstraint NVConstraint[DATA_TABLE_NV_SIZE] = {
 		{0, 0, 0},																	// 19
 		{TIMEOUT_MIN, TIMEOUT_MAX, TIMEOUT_DEF},									// 20
 		{TIMEOUT_MIN, TIMEOUT_MAX, TIMEOUT_DEF},									// 21
-		{0, 0, 0},																	// 22
-		{0, 0, 0},																	// 23
+		{FAN_TIME_MIN, FAN_TIME_MAX, FAN_TIME_DEF},									// 22
+		{FAN_TIME_MIN, FAN_TIME_MAX, FAN_TIME_DEF},									// 23
 		{0, 0, 0},																	// 24
 		{0, 0, 0},																	// 25
 		{0, 0, 0},																	// 26

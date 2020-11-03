@@ -57,6 +57,8 @@
 // 18 - 19
 #define REG_POWER_ENABLE_TIMEOUT		20	// Таймаут ожидания включения питания (в сек.)
 #define REG_GENERAL_LOGIC_TIMEOUT		21	// Таймаут основных быстрых логических операций (в сек.)
+#define REG_FAN_OPERATE_PERIOD			22	// Период активации вентилятора по простою (в сек.)
+#define REG_FAN_OPERATE_MIN_TIME		23	// Минимальное время работы вентилятора (в сек.)
 
 // Несохраняемы регистры чтения-записи
 #define REG_MEASUREMENT_TYPE			128	// Тип выполняемого измерения

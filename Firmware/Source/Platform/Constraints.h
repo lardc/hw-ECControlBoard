@@ -13,13 +13,20 @@
 #define NODE_ID_MIN					1
 #define NODE_ID_MAX					255
 
+// в мс
 #define TIMEOUT_MIN					1000
 #define TIMEOUT_MAX					60000
 #define TIMEOUT_DEF					5000
 
+// в мс
 #define CTRL_PULSE_LENGH_MIN		5
 #define CTRL_PULSE_LENGH_MAX		500
 #define CTRL_PULSE_LENGH_DEF		10
+
+// в сек.
+#define FAN_TIME_MIN				10
+#define FAN_TIME_MAX				600
+#define FAN_TIME_DEF				30
 
 // Types
 typedef struct __TableItemConstraint

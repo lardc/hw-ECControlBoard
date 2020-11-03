@@ -38,6 +38,7 @@ void CONTROL_UpdateWatchDog();
 void CONTROL_ResetToDefaultState();
 void CONTROL_ResetOutputRegisters();
 void CONTROL_ClearFault();
+void CONTROL_HandleFanLogic();
 
 // Functions
 //
@@ -107,6 +108,7 @@ void CONTROL_Idle()
 {
 	DEVPROFILE_ProcessRequests();
 	CONTROL_UpdateWatchDog();
+	CONTROL_HandleFanLogic();
 
 	LOGIC_HandleStateUpdate();
 	LOGIC_HandlePowerOn();
@@ -326,3 +328,19 @@ void CONTROL_UpdateWatchDog()
 		IWDG_Refresh();
 }
 //------------------------------------------
+
+void CONTROL_HandleFanLogic()
+{
+	static Int64U FANOnNextTime = 0;
+	static Int64U FANOffTime = 0;
+
+	if(CONTROL_State == DS_InProcess || CONTROL_TimeCounter > FANOnNextTime)
+	{
+		FANOnNextTime = CONTROL_TimeCounter + (Int32U)DataTable[REG_FAN_OPERATE_PERIOD] * 1000;
+		FANOffTime = CONTROL_TimeCounter + (Int32U)DataTable[REG_FAN_OPERATE_MIN_TIME] * 1000;
+		LL_SetStateFan(true);
+	}
+	else if(CONTROL_TimeCounter > FANOffTime)
+		LL_SetStateFan(false);
+}
+// ----------------------------------------
