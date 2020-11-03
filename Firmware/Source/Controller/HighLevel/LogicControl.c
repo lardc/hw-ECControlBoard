@@ -4,7 +4,6 @@
 // Includes
 #include "Logic.h"
 #include "Controller.h"
-#include "Common.h"
 #include "CommonDictionary.h"
 #include "DataTable.h"
 #include "DeviceObjectDictionary.h"
@@ -12,9 +11,6 @@
 #include "Multiplexer.h"
 #include "DCVoltageBoard.h"
 #include "ACVoltageBoard.h"
-
-// Forward functions
-ExecutionResult CTRL_ControlResult(uint16_t *OpResult, pVIPair Result);
 
 // Functions
 void CTRL_HandleMeasurement()
