@@ -334,7 +334,7 @@ void CONTROL_HandleFanLogic()
 	static Int64U FANOnNextTime = 0;
 	static Int64U FANOffTime = 0;
 
-	if(CONTROL_State == DS_InProcess || CONTROL_TimeCounter > FANOnNextTime)
+	if(CONTROL_State == DS_InProcess || CONTROL_TimeCounter > FANOnNextTime || FANOnNextTime == 0 || FANOffTime == 0)
 	{
 		FANOnNextTime = CONTROL_TimeCounter + (Int32U)DataTable[REG_FAN_OPERATE_PERIOD] * 1000;
 		FANOffTime = CONTROL_TimeCounter + (Int32U)DataTable[REG_FAN_OPERATE_MIN_TIME] * 1000;
