@@ -197,8 +197,8 @@ void LOGIC_CacheCurrentBoardSettings()
 void LOGIC_CacheControlSettings(DCV_OutputMode Mode)
 {
 	VIPair Setpoint;
-	Setpoint.Voltage = DataTable[REG_CONTROL_VOLTAGE];
-	Setpoint.Current = DataTable[REG_CONTROL_CURRENT];
+	Setpoint.Voltage = DT_Read32(REG_CONTROL_VOLTAGE, REG_CONTROL_VOLTAGE_32);
+	Setpoint.Current = DT_Read32(REG_CONTROL_CURRENT, REG_CONTROL_CURRENT_32);
 
 	if(LOGIC_IsDCControl())
 	{
