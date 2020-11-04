@@ -2,7 +2,7 @@
 #define __LOGIC_LEAKAGE_H
 
 // Include
-#include "stdinc.h"
+#include "Common.h"
 
 // Functions
 void LEAK_HandleMeasurement();

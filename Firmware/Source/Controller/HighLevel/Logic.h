@@ -31,6 +31,12 @@ ExecutionResult LOGIC_StopControl();
 ExecutionResult LOGIC_IsControlVoltageReady(bool *IsReady);
 ExecutionResult LOGIC_ControlReadResult(uint16_t *OpResult, pVIPair Result);
 
+void LOGIC_HandleLeakageExecResult(ExecutionResult Result);
+ExecutionResult LOGIC_StartLeakage();
+ExecutionResult LOGIC_StopLeakage();
+ExecutionResult LOGIC_IsLeakageVoltageReady(bool *IsReady);
+ExecutionResult LOGIC_LeakageReadResult(uint16_t *OpResult, pVIPair Result);
+
 bool LOGIC_IsControlInProblem();
 bool LOGIC_IsLeakagelInProblem();
 bool LOGIC_IsPowerSupply1InProblem();

@@ -309,6 +309,58 @@ ExecutionResult LOGIC_ControlReadResult(uint16_t *OpResult, pVIPair Result)
 }
 //-----------------------------
 
+void LOGIC_HandleLeakageExecResult(ExecutionResult Result)
+{
+	CONTROL_SwitchToFault(Result,
+		LOGIC_IsDCLeakage() ? FAULT_EXT_GR_DC_HV : FAULT_EXT_GR_AC_VOLTAGE2);
+}
+//-----------------------------
+
+ExecutionResult LOGIC_StartLeakage()
+{
+	return LOGIC_IsDCLeakage() ? DCHV_Execute() : ACV_Execute(LeakageACNode);
+}
+//-----------------------------
+
+ExecutionResult LOGIC_StopLeakage()
+{
+	return LOGIC_IsDCLeakage() ? DCHV_Stop() : ACV_Stop(LeakageACNode);
+}
+//-----------------------------
+
+ExecutionResult LOGIC_IsLeakageVoltageReady(bool *IsReady)
+{
+	return LOGIC_IsDCLeakage() ? DCHV_IsVoltageReady(IsReady) : ACV_IsVoltageReady(LeakageACNode, IsReady);
+}
+//-----------------------------
+
+ExecutionResult LOGIC_LeakageReadResult(uint16_t *OpResult, pVIPair Result)
+{
+	ExecutionResult res;
+	pSlaveNode NodeData;
+
+	if(LOGIC_IsDCLeakage())
+	{
+		NodeData = COMM_GetSlaveDevicePointer(LeakageDCNode);
+		pDCHVoltageBoardObject Settings = (pDCHVoltageBoardObject)NodeData->Settings;
+
+		res = DCHV_ReadResult();
+		*Result = Settings->Result;
+	}
+	else
+	{
+		NodeData = COMM_GetSlaveDevicePointer(LeakageACNode);
+		pACVoltageBoardObject Settings = (pACVoltageBoardObject)NodeData->Settings;
+
+		res = ACV_ReadResult(LeakageACNode);
+		*Result = Settings->Result;
+	}
+
+	*OpResult = NodeData->OpResult;
+	return res;
+}
+//-----------------------------
+
 bool LOGIC_IsNodeInProblem(NodeName Name)
 {
 	return (COMM_GetSlaveOpResult(Name) == COMM_OPRESULT_FAIL)
