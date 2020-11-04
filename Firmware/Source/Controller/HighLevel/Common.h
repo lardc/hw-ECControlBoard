@@ -25,7 +25,13 @@ typedef enum __MeasurementType
 	MT_LeakageCurrent = 1,
 	MT_OnVoltage = 2,
 	MT_InputVoltageCurrent = 3,
-	MT_InhibitVoltage = 4
+	MT_InhibitVoltage = 4,
+
+	MT_CAL_LeakageCurrent = 5,
+	MT_CAL_Control = 6,
+	MT_CAL_HighCurrent = 7,
+	MT_CAL_PowerSupply1 = 8,
+	MT_CAL_PowerSupply2 = 9
 } MeasurementType;
 
 typedef enum __ExecutionResult

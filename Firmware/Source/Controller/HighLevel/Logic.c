@@ -22,6 +22,8 @@ static volatile DCHVoltageBoardObject DCHighVoltageBoard;
 
 static const NodeName ControlDCNode = NAME_DCVoltage1;
 static const NodeName ControlACNode = NAME_ACVoltage1;
+static const NodeName PowerSupply1Node = NAME_DCVoltage2;
+static const NodeName PowerSupply2Node = NAME_DCVoltage3;
 
 // Forward functions
 void LOGIC_AttachSettings(NodeName Name, void *SettingsPointer);

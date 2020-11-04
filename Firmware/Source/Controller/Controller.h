@@ -28,13 +28,17 @@ typedef enum __DeviceSubState
 
 	DSS_Leakage_StartTest = 100,
 	DSS_Leakage_Commutate,
+	DSS_Leakage_WaitCommutation,
 	DSS_Leakage_StartControl,
 	DSS_Leakage_WaitControlReady,
 	DSS_Leakage_StartOutVoltage,
 	DSS_Leakage_WaitOutVoltageReady,
 	DSS_Leakage_StopOutVoltage,
+	DSS_Leakage_WaitStopOutVoltage,
 	DSS_Leakage_StopControl,
+	DSS_Leakage_WaitStopControl,
 	DSS_Leakage_UnCommutate,
+	DSS_Leakage_WaitUnCommutate,
 	DSS_Leakage_ReadResult,
 
 	DSS_OnVoltage_StartTest = 200,
@@ -62,7 +66,18 @@ typedef enum __DeviceSubState
 	DSS_Control_ReadResult,
 
 	DSS_Inhibit_StartTest = 400,
-	DSS_Inhibit_ReadResult
+	DSS_Inhibit_ReadResult,
+
+	DSS_CalLeakage_StartTest = 500,
+	DSS_CalLeakage_Commutate,
+	DSS_CalLeakage_WaitCommutation,
+	DSS_CalLeakage_StartOutVoltage,
+	DSS_CalLeakage_WaitOutVoltageReady,
+	DSS_CalLeakage_StopOutVoltage,
+	DSS_CalLeakage_WaitStopOutVoltage,
+	DSS_CalLeakage_UnCommutate,
+	DSS_CalLeakage_WaitUnCommutate,
+	DSS_CalLeakage_ReadResult
 } DeviceSubState;
 
 // Variables
