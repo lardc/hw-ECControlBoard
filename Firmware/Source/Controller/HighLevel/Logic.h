@@ -29,6 +29,8 @@ void LOGIC_HandleControlExecResult(ExecutionResult Result);
 ExecutionResult LOGIC_StartControl();
 ExecutionResult LOGIC_StopControl();
 ExecutionResult LOGIC_IsControlVoltageReady(bool *IsReady);
+ExecutionResult LOGIC_ControlReadResult(uint16_t *OpResult, pVIPair Result);
+
 bool LOGIC_IsControlInProblem();
 bool LOGIC_IsLeakagelInProblem();
 bool LOGIC_IsPowerSupply1InProblem();

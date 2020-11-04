@@ -282,6 +282,33 @@ ExecutionResult LOGIC_IsControlVoltageReady(bool *IsReady)
 }
 //-----------------------------
 
+ExecutionResult LOGIC_ControlReadResult(uint16_t *OpResult, pVIPair Result)
+{
+	ExecutionResult res;
+	pSlaveNode NodeData;
+
+	if(LOGIC_IsDCControl())
+	{
+		NodeData = COMM_GetSlaveDevicePointer(ControlDCNode);
+		pDCVoltageBoardObject Settings = (pDCVoltageBoardObject)NodeData->Settings;
+
+		res = DCV_ReadResult(ControlDCNode);
+		*Result = Settings->Result;
+	}
+	else
+	{
+		NodeData = COMM_GetSlaveDevicePointer(ControlACNode);
+		pACVoltageBoardObject Settings = (pACVoltageBoardObject)NodeData->Settings;
+
+		res = ACV_ReadResult(ControlACNode);
+		*Result = Settings->Result;
+	}
+
+	*OpResult = NodeData->OpResult;
+	return res;
+}
+//-----------------------------
+
 bool LOGIC_IsNodeInProblem(NodeName Name)
 {
 	return (COMM_GetSlaveOpResult(Name) == COMM_OPRESULT_FAIL)

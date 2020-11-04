@@ -3,7 +3,6 @@
 
 // Includes
 #include "Logic.h"
-#include "LogicControl.h"
 #include "Controller.h"
 #include "Common.h"
 #include "CommonDictionary.h"
@@ -156,7 +155,7 @@ void ONSTATE_HandleMeasurement()
 
 						res = CURR_ReadResult();
 						if(res == ER_NoError)
-							res = CTRL_ControlResult(&ControlOpResult, &ControlResult);
+							res = LOGIC_ControlReadResult(&ControlOpResult, &ControlResult);
 
 						if(res == ER_NoError)
 						{

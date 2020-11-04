@@ -120,7 +120,7 @@ void CTRL_HandleMeasurement()
 				{
 					VIPair Result;
 					uint16_t OpResult;
-					res = CTRL_ControlResult(&OpResult, &Result);
+					res = LOGIC_ControlReadResult(&OpResult, &Result);
 
 					if(res == ER_NoError)
 					{
@@ -147,32 +147,5 @@ void CTRL_HandleMeasurement()
 				break;
 		}
 	}
-}
-//-----------------------------
-
-ExecutionResult CTRL_ControlResult(uint16_t *OpResult, pVIPair Result)
-{
-	ExecutionResult res;
-	pSlaveNode NodeData;
-
-	if(LOGIC_IsDCControl())
-	{
-		NodeData = COMM_GetSlaveDevicePointer(NAME_DCVoltage1);
-		pDCVoltageBoardObject Settings = (pDCVoltageBoardObject)NodeData->Settings;
-
-		res = DCV_ReadResult(NAME_DCVoltage1);
-		*Result = Settings->Result;
-	}
-	else
-	{
-		NodeData = COMM_GetSlaveDevicePointer(NAME_ACVoltage1);
-		pACVoltageBoardObject Settings = (pACVoltageBoardObject)NodeData->Settings;
-
-		res = ACV_ReadResult(NAME_ACVoltage1);
-		*Result = Settings->Result;
-	}
-
-	*OpResult = NodeData->OpResult;
-	return res;
 }
 //-----------------------------
