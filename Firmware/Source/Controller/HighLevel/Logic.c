@@ -22,8 +22,12 @@ static volatile DCHVoltageBoardObject DCHighVoltageBoard;
 
 static const NodeName ControlDCNode = NAME_DCVoltage1;
 static const NodeName ControlACNode = NAME_ACVoltage1;
+
 static const NodeName PowerSupply1Node = NAME_DCVoltage2;
 static const NodeName PowerSupply2Node = NAME_DCVoltage3;
+
+static const NodeName LeakageDCNode = NAME_DCHighVoltage;
+static const NodeName LeakageACNode = NAME_ACVoltage2;
 
 // Forward functions
 void LOGIC_AttachSettings(NodeName Name, void *SettingsPointer);
@@ -31,6 +35,7 @@ LogicConfigError LOGIC_CacheMuxSettings();
 void LOGIC_CacheCurrentBoardSettings();
 void LOGIC_CacheControlSettings(DCV_OutputMode Mode);
 void LOGIC_CacheLeakageSettings();
+bool LOGIC_IsNodeInProblem(NodeName Name);
 
 // Functions
 void LOGIC_InitEntities()
@@ -277,13 +282,33 @@ ExecutionResult LOGIC_IsControlVoltageReady(bool *IsReady)
 }
 //-----------------------------
 
+bool LOGIC_IsNodeInProblem(NodeName Name)
+{
+	return (COMM_GetSlaveOpResult(Name) == COMM_OPRESULT_FAIL)
+			&& COMM_IsSlaveInStateX(Name, CDS_Ready);
+}
+//-----------------------------
+
 bool LOGIC_IsControlInProblem()
 {
-	if(LOGIC_IsDCControl())
-		return (COMM_GetSlaveOpResult(ControlDCNode) == COMM_OPRESULT_FAIL)
-				&& COMM_IsSlaveInStateX(ControlDCNode, CDS_Ready);
-	else
-		return (COMM_GetSlaveOpResult(ControlACNode) == COMM_OPRESULT_FAIL)
-				&& COMM_IsSlaveInStateX(ControlACNode, CDS_Ready);
+	return LOGIC_IsNodeInProblem(LOGIC_IsDCControl() ? ControlDCNode : ControlACNode);
+}
+//-----------------------------
+
+bool LOGIC_IsLeakagelInProblem()
+{
+	return LOGIC_IsNodeInProblem(LOGIC_IsDCLeakage() ? LeakageDCNode : LeakageACNode);
+}
+//-----------------------------
+
+bool LOGIC_IsPowerSupply1InProblem()
+{
+	return LOGIC_IsNodeInProblem(PowerSupply1Node);
+}
+//-----------------------------
+
+bool LOGIC_IsPowerSupply2InProblem()
+{
+	return LOGIC_IsNodeInProblem(PowerSupply2Node);
 }
 //-----------------------------

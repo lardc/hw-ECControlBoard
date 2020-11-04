@@ -30,6 +30,9 @@ ExecutionResult LOGIC_StartControl();
 ExecutionResult LOGIC_StopControl();
 ExecutionResult LOGIC_IsControlVoltageReady(bool *IsReady);
 bool LOGIC_IsControlInProblem();
+bool LOGIC_IsLeakagelInProblem();
+bool LOGIC_IsPowerSupply1InProblem();
+bool LOGIC_IsPowerSupply2InProblem();
 
 void LOGIC_HandleMeasurementOnState();
 
