@@ -74,6 +74,8 @@ void CTRL_HandleMeasurement()
 							CONTROL_SetDeviceState(DS_InProcess, DSS_Control_StopControl);
 						else if(CONTROL_TimeCounter > Timeout)
 							LOGIC_HandleControlExecResult(ER_ChangeStateTimeout);
+						else if(LOGIC_IsControlInProblem())
+							CONTROL_SetDeviceState(DS_InProcess, DSS_Control_UnCommutate);
 					}
 					else
 						LOGIC_HandleControlExecResult(res);
@@ -129,7 +131,10 @@ void CTRL_HandleMeasurement()
 							DT_Write32(REG_RESULT_CONTROL_CURRENT, REG_RESULT_CONTROL_CURRENT_32, Result.Current);
 						}
 						else
+						{
 							DataTable[REG_OP_RESULT] = OPRESULT_FAIL;
+							DataTable[REG_PROBLEM] = PROBLEM_CONTROL_NODE;
+						}
 
 						CONTROL_SetDeviceState(DS_Ready, DSS_None);
 					}
