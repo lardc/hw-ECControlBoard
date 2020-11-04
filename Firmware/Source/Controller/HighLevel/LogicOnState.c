@@ -19,6 +19,7 @@
 void ONSTATE_HandleMeasurement()
 {
 	static Int64U Timeout;
+	static uint16_t Problem = PROBLEM_NONE;
 
 	if(CONTROL_State == DS_InProcess)
 	{
@@ -30,6 +31,8 @@ void ONSTATE_HandleMeasurement()
 		{
 			case DSS_OnVoltage_StartTest:
 				{
+					Problem = PROBLEM_NONE;
+
 					if(COMM_AreSlavesInStateX(CDS_Ready))
 						CONTROL_SetDeviceState(DS_InProcess, DSS_OnVoltage_Commutate);
 					else
@@ -77,6 +80,11 @@ void ONSTATE_HandleMeasurement()
 							CONTROL_SetDeviceState(DS_InProcess, DSS_OnVoltage_PulseCurrent);
 						else if(CONTROL_TimeCounter > Timeout)
 							LOGIC_HandleControlExecResult(ER_ChangeStateTimeout);
+						else if(LOGIC_IsControlInProblem())
+						{
+							Problem = PROBLEM_CONTROL_NODE;
+							CONTROL_SetDeviceState(DS_InProcess, DSS_OnVoltage_UnCommutate);
+						}
 					}
 					else
 						LOGIC_HandleControlExecResult(res);
@@ -141,35 +149,46 @@ void ONSTATE_HandleMeasurement()
 
 			case DSS_OnVoltage_ReadResult:
 				{
-					VIPair ControlResult;
-					uint16_t ControlOpResult;
-
-					res = CURR_ReadResult();
-					if(res == ER_NoError)
-						res = CTRL_ControlResult(&ControlOpResult, &ControlResult);
-
-					if(res == ER_NoError)
+					if(Problem == PROBLEM_NONE)
 					{
-						pSlaveNode NodeData = COMM_GetSlaveDevicePointer(NAME_DCCurrent);
-						pCurrentBoardObject Settings = (pCurrentBoardObject)NodeData->Settings;
+						VIPair ControlResult;
+						uint16_t ControlOpResult;
 
-						if(NodeData->OpResult == OPRESULT_OK)
+						res = CURR_ReadResult();
+						if(res == ER_NoError)
+							res = CTRL_ControlResult(&ControlOpResult, &ControlResult);
+
+						if(res == ER_NoError)
 						{
-							DataTable[REG_OP_RESULT] = OPRESULT_OK;
+							pSlaveNode NodeData = COMM_GetSlaveDevicePointer(NAME_DCCurrent);
+							pCurrentBoardObject Settings = (pCurrentBoardObject)NodeData->Settings;
 
-							DT_Write32(REG_RESULT_ON_VOLTAGE, REG_RESULT_ON_VOLTAGE_32, Settings->Result.Voltage);
-							DT_Write32(REG_RESULT_ON_CURRENT, REG_RESULT_ON_CURRENT_32, Settings->Result.Current);
+							if(NodeData->OpResult == OPRESULT_OK)
+							{
+								DataTable[REG_OP_RESULT] = OPRESULT_OK;
 
-							DT_Write32(REG_RESULT_CONTROL_VOLTAGE, REG_RESULT_CONTROL_VOLTAGE_32, ControlResult.Voltage);
-							DT_Write32(REG_RESULT_CONTROL_CURRENT, REG_RESULT_CONTROL_CURRENT_32, ControlResult.Current);
+								DT_Write32(REG_RESULT_ON_VOLTAGE, REG_RESULT_ON_VOLTAGE_32, Settings->Result.Voltage);
+								DT_Write32(REG_RESULT_ON_CURRENT, REG_RESULT_ON_CURRENT_32, Settings->Result.Current);
+
+								DT_Write32(REG_RESULT_CONTROL_VOLTAGE, REG_RESULT_CONTROL_VOLTAGE_32, ControlResult.Voltage);
+								DT_Write32(REG_RESULT_CONTROL_CURRENT, REG_RESULT_CONTROL_CURRENT_32, ControlResult.Current);
+							}
+							else
+							{
+								DataTable[REG_OP_RESULT] = OPRESULT_FAIL;
+								DataTable[REG_PROBLEM] = PROBLEM_CURRENT_NODE;
+							}
+
+							CONTROL_SetDeviceState(DS_Ready, DSS_None);
 						}
 						else
-							DataTable[REG_OP_RESULT] = OPRESULT_FAIL;
-
-						CONTROL_SetDeviceState(DS_Ready, DSS_None);
+							CONTROL_SwitchToFault(res, FAULT_EXT_GR_DC_CURRENT);
 					}
 					else
-						CONTROL_SwitchToFault(res, FAULT_EXT_GR_DC_CURRENT);
+					{
+						DataTable[REG_OP_RESULT] = OPRESULT_FAIL;
+						DataTable[REG_PROBLEM] = Problem;
+					}
 				}
 				break;
 

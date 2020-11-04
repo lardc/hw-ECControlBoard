@@ -177,6 +177,7 @@
 // Problem
 #define PROBLEM_NONE					0
 #define PROBLEM_CONTROL_NODE			1	// Problem узла формирования сигнала управления
+#define PROBLEM_CURRENT_NODE			2	// Problem узла формирования тока
 
 //  Warning
 #define WARNING_NONE					0
