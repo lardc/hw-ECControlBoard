@@ -130,6 +130,12 @@ bool COMM_IsSlaveInStateX(NodeName Name, uint16_t State)
 }
 //-----------------------------
 
+uint16_t COMM_GetSlaveOpResult(NodeName Name)
+{
+	return NodeArray[Name].OpResult;
+}
+//-----------------------------
+
 bool COMM_IsSlaveInFaultOrDisabled()
 {
 	for(uint8_t i = 0; i < MAX_SLAVE_NODES; ++i)
