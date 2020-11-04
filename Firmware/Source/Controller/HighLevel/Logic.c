@@ -20,6 +20,9 @@ static volatile DCVoltageBoardObject DCVoltageBoard1, DCVoltageBoard2, DCVoltage
 static volatile ACVoltageBoardObject ACVoltageBoard1, ACVoltageBoard2;
 static volatile DCHVoltageBoardObject DCHighVoltageBoard;
 
+static const NodeName ControlDCNode = NAME_DCVoltage1;
+static const NodeName ControlACNode = NAME_ACVoltage1;
+
 // Forward functions
 void LOGIC_AttachSettings(NodeName Name, void *SettingsPointer);
 LogicConfigError LOGIC_CacheMuxSettings();
@@ -255,19 +258,30 @@ void LOGIC_HandleControlExecResult(ExecutionResult Result)
 
 ExecutionResult LOGIC_StartControl()
 {
-	return LOGIC_IsDCControl() ? DCV_Execute(NAME_DCVoltage1) : ACV_Execute(NAME_ACVoltage1);
+	return LOGIC_IsDCControl() ? DCV_Execute(ControlDCNode) : ACV_Execute(ControlACNode);
 }
 //-----------------------------
 
 ExecutionResult LOGIC_StopControl()
 {
-	return LOGIC_IsDCControl() ? DCV_Stop(NAME_DCVoltage1) : ACV_Stop(NAME_ACVoltage1);
+	return LOGIC_IsDCControl() ? DCV_Stop(ControlDCNode) : ACV_Stop(ControlACNode);
 }
 //-----------------------------
 
 ExecutionResult LOGIC_IsControlVoltageReady(bool *IsReady)
 {
-	return LOGIC_IsDCControl() ? DCV_IsVoltageReady(NAME_DCVoltage1, IsReady) :
-		ACV_IsVoltageReady(NAME_ACVoltage1, IsReady);
+	return LOGIC_IsDCControl() ? DCV_IsVoltageReady(ControlDCNode, IsReady) :
+		ACV_IsVoltageReady(ControlACNode, IsReady);
+}
+//-----------------------------
+
+bool LOGIC_IsControlInProblem()
+{
+	if(LOGIC_IsDCControl())
+		return (COMM_GetSlaveOpResult(ControlDCNode) == COMM_OPRESULT_FAIL)
+				&& COMM_IsSlaveInStateX(ControlDCNode, CDS_Ready);
+	else
+		return (COMM_GetSlaveOpResult(ControlACNode) == COMM_OPRESULT_FAIL)
+				&& COMM_IsSlaveInStateX(ControlACNode, CDS_Ready);
 }
 //-----------------------------

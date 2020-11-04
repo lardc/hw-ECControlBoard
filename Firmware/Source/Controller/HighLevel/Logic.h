@@ -29,6 +29,7 @@ void LOGIC_HandleControlExecResult(ExecutionResult Result);
 ExecutionResult LOGIC_StartControl();
 ExecutionResult LOGIC_StopControl();
 ExecutionResult LOGIC_IsControlVoltageReady(bool *IsReady);
+bool LOGIC_IsControlInProblem();
 
 void LOGIC_HandleMeasurementOnState();
 
