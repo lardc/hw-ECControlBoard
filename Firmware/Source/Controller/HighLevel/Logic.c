@@ -330,7 +330,13 @@ ExecutionResult LOGIC_StopLeakage()
 
 ExecutionResult LOGIC_IsLeakageVoltageReady(bool *IsReady)
 {
-	return LOGIC_IsDCLeakage() ? DCHV_IsVoltageReady(IsReady) : ACV_IsVoltageReady(LeakageACNode, IsReady);
+	if(LOGIC_IsDCLeakage())
+	{
+		*IsReady = COMM_IsSlaveInStateX(LeakageDCNode, CDS_Ready);
+		return ER_NoError;
+	}
+	else
+		return ACV_IsVoltageReady(LeakageACNode, IsReady);
 }
 //-----------------------------
 
