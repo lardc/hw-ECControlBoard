@@ -361,6 +361,12 @@ ExecutionResult LOGIC_LeakageReadResult(uint16_t *OpResult, pVIPair Result)
 }
 //-----------------------------
 
+bool IsLeakageNodeReady()
+{
+	return COMM_IsSlaveInStateX(LOGIC_IsDCLeakage() ? LeakageDCNode : LeakageACNode, CDS_Ready);
+}
+//-----------------------------
+
 bool LOGIC_IsNodeInProblem(NodeName Name)
 {
 	return (COMM_GetSlaveOpResult(Name) == COMM_OPRESULT_FAIL)

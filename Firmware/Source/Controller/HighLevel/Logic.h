@@ -36,6 +36,7 @@ ExecutionResult LOGIC_StartLeakage();
 ExecutionResult LOGIC_StopLeakage();
 ExecutionResult LOGIC_IsLeakageVoltageReady(bool *IsReady);
 ExecutionResult LOGIC_LeakageReadResult(uint16_t *OpResult, pVIPair Result);
+bool IsLeakageNodeReady();
 
 bool LOGIC_IsControlInProblem();
 bool LOGIC_IsLeakagelInProblem();
