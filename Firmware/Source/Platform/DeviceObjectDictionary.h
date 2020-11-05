@@ -95,6 +95,11 @@
 #define REG_AUX_PS2_VOLTAGE_32			156	// Напряжение вспомогательного источника питания 2
 #define REG_AUX_PS2_CURRENT_32			157	// Ток вспомогательного источника питания 2
 
+#define REG_CALIBRATION_NODE			160	// Калибруемый узел
+#define REG_CALIBRATION_TYPE			161	// Тип калибровки
+#define REG_CALIBRATION_SETPOINT		162	// Уставка калибровки
+#define REG_CALIBRATION_SETPOINT_32		163
+
 #define REG_DIAG_NID					185	// CAN: регистр NodeID для доступа к slave-устройствам
 #define REG_DIAG_IN_1					186	// CAN: входной отладочный регистр 1
 #define REG_DIAG_IN_2					187	// CAN: входной отладочный регистр 2
@@ -126,13 +131,13 @@
 #define REG_DEV_SUB_STATE				220	// Регистр вспомогательного состояния
 #define REG_CONFIG_ERR					221	// Регистр хранения кода ошибки конфигурирования
 
+#define REG_DIAG_OUT_1					222	// CAN: отладочный выходной регистр 1
+#define REG_DIAG_OUT_2					223	// CAN: отладочный выходной регистр 2
+
 #define REG_BHL_ERROR_CODE				225	// Ошибка интерфейса ВУ: код ошибки
 #define REG_BHL_DEVICE					226	// Ошибка интерфейса ВУ: NID устройства
 #define REG_BHL_FUNCTION				227	// Ошибка интерфейса ВУ: код функции
 #define REG_BHL_EXT_DATA				228	// Ошибка интерфейса ВУ: расширенная информация
-
-#define REG_DIAG_OUT_1					230	// CAN: отладочный выходной регистр 1
-#define REG_DIAG_OUT_2					231	// CAN: отладочный выходной регистр 2
 
 // Старшие слова 32битных чисел результатов
 #define REG_RESULT_LEAKAGE_CURRENT_32	230	// Ток утечки на выходе
@@ -143,6 +148,11 @@
 #define REG_RESULT_AUX_CURRENT1_32		235	// Ток вспомогательного источника 1
 #define REG_RESULT_AUX_CURRENT2_32		236	// Ток вспомогательного источника 2
 #define REG_RESULT_OUTPUT_RES_32		237	// Выходное сопротивление
+
+#define REG_CALIBRATION_GENERATED		240	// Калибровка: сформированное значение
+#define REG_CALIBRATION_GENERATED_32	241
+#define REG_CALIBRATION_MEASURED		242	// Калибровка: измеренное значение
+#define REG_CALIBRATION_MEASURED_32		243
 
 #define REG_DBG_INT_SYNC1				251	// Регистр состояния внутреннейи линии SYNC1
 #define REG_DBG_INT_SYNC2				252	// Регистр состояния внутреннейи линии SYNC2
