@@ -18,20 +18,22 @@ ExecutionResult ACV_Execute(NodeName Name)
 	{
 		if(!NodeData->Emulation)
 		{
-			uint16_t VoltageLow = (uint16_t)((Settings->Setpoint.Voltage / 1000) & 0xFFFF);
+			uint16_t VoltageLow = (uint16_t)(Settings->Setpoint.Voltage & 0xFFFF);
+			uint16_t VoltageHigh = (uint16_t)(Settings->Setpoint.Voltage >> 16);
 			uint16_t CurrentLow = (uint16_t)(Settings->Setpoint.Current & 0xFFFF);
 			uint16_t CurrentHigh = (uint16_t)(Settings->Setpoint.Current >> 16);
 			uint16_t NodeID = NodeData->NodeID;
 
 			if(BHL_WriteRegister(NodeID, ACV_REG_OUTPUT_LINE, Settings->OutputLine))
 				if(BHL_WriteRegister(NodeID, ACV_REG_VOLTAGE_SETPOINT, VoltageLow))
-					if(BHL_WriteRegister(NodeID, ACV_REG_CURRENT_SETPOINT, CurrentLow))
-						if(BHL_WriteRegister(NodeID, ACV_REG_CURRENT_SETPOINT_32, CurrentHigh))
-							if(BHL_Call(NodeID, ACV_ACT_START_PROCESS))
-							{
-								NodeData->StateIsUpToDate = false;
-								return ER_NoError;
-							}
+					if(BHL_WriteRegister(NodeID, ACV_REG_VOLTAGE_SETPOINT_32, VoltageHigh))
+						if(BHL_WriteRegister(NodeID, ACV_REG_CURRENT_SETPOINT, CurrentLow))
+							if(BHL_WriteRegister(NodeID, ACV_REG_CURRENT_SETPOINT_32, CurrentHigh))
+								if(BHL_Call(NodeID, ACV_ACT_START_PROCESS))
+								{
+									NodeData->StateIsUpToDate = false;
+									return ER_NoError;
+								}
 		}
 		else
 			return ER_NoError;
@@ -55,18 +57,20 @@ ExecutionResult ACV_ReadResult(NodeName Name)
 	{
 		if(!NodeData->Emulation)
 		{
-			uint16_t CurrentLow = 0, CurrentHigh = 0, VoltageLow = 0;
+			uint16_t CurrentLow = 0, CurrentHigh = 0, VoltageLow = 0, VoltageHigh = 0;
 			uint16_t NodeID = NodeData->NodeID;
 
 			if(BHL_ReadRegister(NodeID, ACV_REG_VOLTAGE_RESULT, &VoltageLow))
-				if(BHL_ReadRegister(NodeID, ACV_REG_CURRENT_RESULT, &CurrentLow))
-					if(BHL_ReadRegister(NodeID, ACV_REG_CURRENT_RESULT_32, &CurrentHigh))
-					{
-						Settings->Result.Voltage = (uint32_t)VoltageLow * 1000;
-						Settings->Result.Current = CurrentLow;
-						Settings->Result.Current |= (uint32_t)CurrentHigh << 16;
-						return ER_NoError;
-					}
+				if(BHL_ReadRegister(NodeID, ACV_REG_VOLTAGE_RESULT_32, &VoltageHigh))
+					if(BHL_ReadRegister(NodeID, ACV_REG_CURRENT_RESULT, &CurrentLow))
+						if(BHL_ReadRegister(NodeID, ACV_REG_CURRENT_RESULT_32, &CurrentHigh))
+						{
+							Settings->Result.Voltage = VoltageLow;
+							Settings->Result.Voltage |= (uint32_t)VoltageHigh << 16;
+							Settings->Result.Current = CurrentLow;
+							Settings->Result.Current |= (uint32_t)CurrentHigh << 16;
+							return ER_NoError;
+						}
 		}
 		else
 		{
