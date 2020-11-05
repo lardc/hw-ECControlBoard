@@ -17,6 +17,7 @@
 void LEAK_HandleMeasurement()
 {
 	static Int64U Timeout;
+	static uint16_t Problem = PROBLEM_NONE;
 
 	if(CONTROL_State == DS_InProcess)
 	{
@@ -37,9 +38,16 @@ void LEAK_HandleMeasurement()
 				{
 					res = MUX_Connect();
 					if(res == ER_NoError)
-						CONTROL_SetDeviceState(DS_InProcess, DSS_Leakage_StartControl);
+						CONTROL_SetDeviceState(DS_InProcess, DSS_Leakage_WaitCommutation);
 					else
 						CONTROL_SwitchToFault(res, FAULT_EXT_GR_MUX);
+				}
+				break;
+
+			case DSS_Leakage_WaitCommutation:
+				{
+					if(COMM_AreSlavesInStateX(CDS_Ready))
+						CONTROL_SetDeviceState(DS_InProcess, DSS_Leakage_StartControl);
 				}
 				break;
 
@@ -66,6 +74,11 @@ void LEAK_HandleMeasurement()
 							CONTROL_SetDeviceState(DS_InProcess, DSS_Leakage_StartOutVoltage);
 						else if(CONTROL_TimeCounter > Timeout)
 							LOGIC_HandleControlExecResult(ER_ChangeStateTimeout);
+						else if(LOGIC_IsControlInProblem())
+						{
+							Problem = PROBLEM_CONTROL_NODE;
+							CONTROL_SetDeviceState(DS_InProcess, DSS_Leakage_UnCommutate);
+						}
 					}
 					else
 						LOGIC_HandleControlExecResult(res);
@@ -95,6 +108,11 @@ void LEAK_HandleMeasurement()
 							CONTROL_SetDeviceState(DS_InProcess, DSS_Leakage_StopOutVoltage);
 						else if(CONTROL_TimeCounter > Timeout)
 							LOGIC_HandleLeakageExecResult(ER_ChangeStateTimeout);
+						else if(LOGIC_IsLeakagelInProblem())
+						{
+							Problem = PROBLEM_LEAKAGE_NODE;
+							CONTROL_SetDeviceState(DS_InProcess, DSS_Leakage_UnCommutate);
+						}
 					}
 					else
 						LOGIC_HandleLeakageExecResult(res);
@@ -105,9 +123,16 @@ void LEAK_HandleMeasurement()
 				{
 					res = LOGIC_StopLeakage();
 					if(res == ER_NoError)
-						CONTROL_SetDeviceState(DS_InProcess, DSS_Leakage_StopControl);
+						CONTROL_SetDeviceState(DS_InProcess, DSS_Leakage_WaitStopOutVoltage);
 					else
 						LOGIC_HandleLeakageExecResult(res);
+				}
+				break;
+
+			case DSS_Leakage_WaitStopOutVoltage:
+				{
+					if(IsLeakageNodeReady())
+						CONTROL_SetDeviceState(DS_InProcess, DSS_Leakage_StopControl);
 				}
 				break;
 
@@ -115,9 +140,16 @@ void LEAK_HandleMeasurement()
 				{
 					res = LOGIC_StopControl();
 					if(res == ER_NoError)
-						CONTROL_SetDeviceState(DS_InProcess, DSS_Leakage_UnCommutate);
+						CONTROL_SetDeviceState(DS_InProcess, DSS_Leakage_WaitStopControl);
 					else
 						LOGIC_HandleControlExecResult(res);
+				}
+				break;
+
+			case DSS_Leakage_WaitStopControl:
+				{
+					if(COMM_AreSlavesInStateX(CDS_Ready))
+						CONTROL_SetDeviceState(DS_InProcess, DSS_Leakage_UnCommutate);
 				}
 				break;
 
@@ -125,32 +157,48 @@ void LEAK_HandleMeasurement()
 				{
 					res = MUX_Disconnect();
 					if(res == ER_NoError)
-						CONTROL_SetDeviceState(DS_InProcess, DSS_Leakage_ReadResult);
+						CONTROL_SetDeviceState(DS_InProcess, DSS_Leakage_WaitUnCommutate);
 					else
 						CONTROL_SwitchToFault(res, FAULT_EXT_GR_MUX);
 				}
 				break;
 
+			case DSS_Leakage_WaitUnCommutate:
+				{
+					if(COMM_AreSlavesInStateX(CDS_Ready))
+						CONTROL_SetDeviceState(DS_InProcess, DSS_Leakage_ReadResult);
+				}
+				break;
+
 			case DSS_Leakage_ReadResult:
 				{
-					VIPair Result;
-					uint16_t OpResult;
-					res = LOGIC_LeakageReadResult(&OpResult, &Result);
-
-					if(res == ER_NoError)
+					if(Problem == PROBLEM_NONE)
 					{
-						if(OpResult == OPRESULT_OK)
+						VIPair Result;
+						uint16_t OpResult;
+						res = LOGIC_LeakageReadResult(&OpResult, &Result);
+
+						if(res == ER_NoError)
 						{
-							DataTable[REG_OP_RESULT] = OPRESULT_OK;
-							DataTable[REG_RESULT_LEAKAGE_CURRENT] = Result.Current;
+							if(OpResult == OPRESULT_OK)
+							{
+								DataTable[REG_OP_RESULT] = OPRESULT_OK;
+								DataTable[REG_RESULT_LEAKAGE_CURRENT] = Result.Current;
+							}
+							else
+								DataTable[REG_OP_RESULT] = OPRESULT_FAIL;
+
+							CONTROL_SetDeviceState(DS_Ready, DSS_None);
 						}
 						else
-							DataTable[REG_OP_RESULT] = OPRESULT_FAIL;
-
-						CONTROL_SetDeviceState(DS_Ready, DSS_None);
+							LOGIC_HandleLeakageExecResult(res);
 					}
 					else
-						LOGIC_HandleLeakageExecResult(res);
+					{
+						DataTable[REG_OP_RESULT] = OPRESULT_FAIL;
+						DataTable[REG_PROBLEM] = Problem;
+						CONTROL_SetDeviceState(DS_Ready, DSS_None);
+					}
 				}
 				break;
 
