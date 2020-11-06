@@ -24,11 +24,22 @@ ExecutionResult MUX_Connect()
 						if(BHL_WriteRegister(NodeID, MUX_REG_TYPE_SIGNAL_CTRL, InputVoltageSupply))
 							if(BHL_WriteRegister(NodeID, MUX_REG_TYPE_LEAKAGE, Settings->LeakageType))
 								if(BHL_WriteRegister(NodeID, MUX_REG_TYPE_POLARITY, Settings->Polarity))
+								{
 									if(BHL_Call(NodeID, MUX_ACT_SET_RELAY_GROUP))
 									{
 										NodeData->StateIsUpToDate = false;
 										return ER_NoError;
 									}
+									else
+									{
+										BHLError err = BHL_GetError();
+										if(err.Func == FUNCTION_CALL && err.ErrorCode == ERR_USER &&
+												err.ExtData == MUX_ACT_SET_RELAY_GROUP && err.Details == COMM_ERR_BAD_CONFIG)
+										{
+											return ER_BadHighLevelConfig;
+										}
+									}
+								}
 		}
 		else
 			return ER_NoError;

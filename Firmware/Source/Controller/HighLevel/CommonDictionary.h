@@ -20,6 +20,14 @@
 #define COMM_OPRESULT_OK					1	// Operation was successful
 #define COMM_OPRESULT_FAIL					2	// Operation failed
 
+//  User Errors
+#define COMM_ERR_NONE						0
+#define COMM_ERR_CONFIGURATION_LOCKED		1	//  Устройство защищено от записи
+#define COMM_ERR_OPERATION_BLOCKED			2	//  Операция не может быть выполнена в текущем состоянии устройства
+#define COMM_ERR_DEVICE_NOT_READY			3	//  Устройство не готово для смены состояния
+#define COMM_ERR_WRONG_PWD					4	//  Неправильный ключ
+#define COMM_ERR_BAD_CONFIG					5	//  Попытка запуска измерения с неверной конфигурацией
+
 // States
 typedef enum __CommonDeviceState
 {
