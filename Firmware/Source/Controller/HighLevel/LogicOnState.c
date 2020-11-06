@@ -22,20 +22,15 @@ void ONSTATE_HandleMeasurement()
 
 	if(CONTROL_State == DS_InProcess)
 	{
-		if(COMM_IsSlaveInFaultOrDisabled())
-			CONTROL_SwitchToFault(ER_WrongState, FAULT_EXT_GR_COMMON);
-
 		ExecutionResult res;
+		LOGIC_Wrapper_FaultControl();
+
 		switch(CONTROL_SubState)
 		{
 			case DSS_OnVoltage_StartTest:
 				{
 					Problem = PROBLEM_NONE;
-
-					if(COMM_AreSlavesInStateX(CDS_Ready))
-						CONTROL_SetDeviceState(DS_InProcess, DSS_OnVoltage_Commutate);
-					else
-						CONTROL_SwitchToFault(ER_WrongState, FAULT_EXT_GR_COMMON);
+					LOGIC_Wrapper_Start(DSS_OnVoltage_Commutate);
 				}
 				break;
 

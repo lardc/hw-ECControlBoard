@@ -2,7 +2,6 @@
 #include "Logic.h"
 
 // Includes
-#include "Controller.h"
 #include "CommonDictionary.h"
 #include "DataTable.h"
 #include "DeviceObjectDictionary.h"
@@ -401,5 +400,21 @@ bool LOGIC_IsPowerSupply1InProblem()
 bool LOGIC_IsPowerSupply2InProblem()
 {
 	return LOGIC_IsNodeInProblem(PowerSupply2Node);
+}
+//-----------------------------
+
+void LOGIC_Wrapper_FaultControl()
+{
+	if(COMM_IsSlaveInFaultOrDisabled())
+		CONTROL_SwitchToFault(ER_WrongState, FAULT_EXT_GR_COMMON);
+}
+//-----------------------------
+
+void LOGIC_Wrapper_Start(DeviceSubState NextState)
+{
+	if(COMM_AreSlavesInStateX(CDS_Ready))
+		CONTROL_SetDeviceState(DS_InProcess, NextState);
+	else
+		CONTROL_SwitchToFault(ER_WrongState, FAULT_EXT_GR_COMMON);
 }
 //-----------------------------

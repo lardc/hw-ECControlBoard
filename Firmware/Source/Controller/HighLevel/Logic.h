@@ -5,6 +5,7 @@
 #include "stdinc.h"
 #include "Common.h"
 #include "BCCIMHighLevel.h"
+#include "Controller.h"
 
 // Types
 typedef enum __LogicConfigError
@@ -44,5 +45,8 @@ bool LOGIC_IsControlInProblem();
 bool LOGIC_IsLeakagelInProblem();
 bool LOGIC_IsPowerSupply1InProblem();
 bool LOGIC_IsPowerSupply2InProblem();
+
+void LOGIC_Wrapper_FaultControl();
+void LOGIC_Wrapper_Start(DeviceSubState NextState);
 
 #endif // __LOGIC_H
