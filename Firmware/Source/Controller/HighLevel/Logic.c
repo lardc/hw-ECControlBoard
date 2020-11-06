@@ -229,8 +229,8 @@ void LOGIC_CacheControlSettings(DCV_OutputMode Mode)
 void LOGIC_CacheLeakageSettings()
 {
 	VIPair Setpoint;
-	Setpoint.Voltage = DataTable[REG_COMM_VOLTAGE];
-	Setpoint.Current = DataTable[REG_COMM_CURRENT];
+	Setpoint.Voltage = DT_Read32(REG_COMM_VOLTAGE, REG_COMM_VOLTAGE_32);
+	Setpoint.Current = DT_Read32(REG_COMM_CURRENT, REG_COMM_CURRENT_32);
 
 	if(LOGIC_IsDCLeakage())
 	{
