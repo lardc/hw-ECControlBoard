@@ -22,6 +22,8 @@ void LOGIC_HandleStateUpdate();
 void LOGIC_HandlePowerOn();
 void LOGIC_HandlePowerOff();
 
+LogicConfigError LOGIC_PrepareMeasurement();
+
 bool LOGIC_IsDCControl();
 bool LOGIC_IsDCLeakage();
 
@@ -42,9 +44,5 @@ bool LOGIC_IsControlInProblem();
 bool LOGIC_IsLeakagelInProblem();
 bool LOGIC_IsPowerSupply1InProblem();
 bool LOGIC_IsPowerSupply2InProblem();
-
-void LOGIC_HandleMeasurementOnState();
-
-LogicConfigError LOGIC_PrepareMeasurement();
 
 #endif // __LOGIC_H
