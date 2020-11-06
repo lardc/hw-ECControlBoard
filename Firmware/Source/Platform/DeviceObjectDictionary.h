@@ -138,6 +138,7 @@
 #define REG_BHL_DEVICE					226	// Ошибка интерфейса ВУ: NID устройства
 #define REG_BHL_FUNCTION				227	// Ошибка интерфейса ВУ: код функции
 #define REG_BHL_EXT_DATA				228	// Ошибка интерфейса ВУ: расширенная информация
+#define REG_BHL_DETAILS					229	// Ошибка интерфейса ВУ: детали
 
 // Старшие слова 32битных чисел результатов
 #define REG_RESULT_LEAKAGE_CURRENT_32	230	// Ток утечки на выходе
@@ -186,9 +187,10 @@
 
 // Problem
 #define PROBLEM_NONE					0
-#define PROBLEM_CONTROL_NODE			1	// Problem узла формирования сигнала управления
-#define PROBLEM_CURRENT_NODE			2	// Problem узла формирования тока
-#define PROBLEM_LEAKAGE_NODE			3	// Problem узла измерения утечки
+#define PROBLEM_CONTROL_NODE			1	// Проблема формирования сигнала управления
+#define PROBLEM_CURRENT_NODE			2	// Проблема формирования силового тока
+#define PROBLEM_LEAKAGE_NODE			3	// Проблема формирования напряжения измерения утечки
+#define PROBLEM_MUX_CONFIG				4	// Некорректная конфигурация мультиплексора
 
 //  Warning
 #define WARNING_NONE					0

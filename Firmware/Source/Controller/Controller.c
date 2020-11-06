@@ -285,6 +285,7 @@ void CONTROL_SwitchToFault(ExecutionResult Result, Int16U Group)
 			DataTable[REG_BHL_DEVICE] = Error.Device;
 			DataTable[REG_BHL_FUNCTION] = Error.Func;
 			DataTable[REG_BHL_EXT_DATA] = Error.ExtData;
+			DataTable[REG_BHL_DETAILS] = Error.Details;
 		}
 
 		DeviceSubState SavedSubState = CONTROL_SubState;
@@ -306,6 +307,7 @@ void CONTROL_ClearFault()
 	DataTable[REG_BHL_DEVICE] = 0;
 	DataTable[REG_BHL_FUNCTION] = 0;
 	DataTable[REG_BHL_EXT_DATA] = 0;
+	DataTable[REG_BHL_DETAILS] = 0;
 }
 //------------------------------------------
 
