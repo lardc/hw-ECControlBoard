@@ -48,5 +48,7 @@ bool LOGIC_IsPowerSupply2InProblem();
 
 void LOGIC_Wrapper_FaultControl();
 void LOGIC_Wrapper_Start(DeviceSubState NextState);
+void LOGIC_Wrapper_Commutate(DeviceSubState NextState);
+void LOGIC_Wrapper_WaitAllNodesReady(DeviceSubState NextState);
 
 #endif // __LOGIC_H

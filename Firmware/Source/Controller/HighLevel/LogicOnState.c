@@ -28,27 +28,16 @@ void ONSTATE_HandleMeasurement()
 		switch(CONTROL_SubState)
 		{
 			case DSS_OnVoltage_StartTest:
-				{
-					Problem = PROBLEM_NONE;
-					LOGIC_Wrapper_Start(DSS_OnVoltage_Commutate);
-				}
+				Problem = PROBLEM_NONE;
+				LOGIC_Wrapper_Start(DSS_OnVoltage_Commutate);
 				break;
 
 			case DSS_OnVoltage_Commutate:
-				{
-					res = MUX_Connect();
-					if(res == ER_NoError)
-						CONTROL_SetDeviceState(DS_InProcess, DSS_OnVoltage_WaitCommutation);
-					else
-						CONTROL_SwitchToFault(res, FAULT_EXT_GR_MUX);
-				}
+				LOGIC_Wrapper_Commutate(DSS_OnVoltage_WaitCommutation);
 				break;
 
 			case DSS_OnVoltage_WaitCommutation:
-				{
-					if(COMM_AreSlavesInStateX(CDS_Ready))
-						CONTROL_SetDeviceState(DS_InProcess, DSS_OnVoltage_StartControl);
-				}
+				LOGIC_Wrapper_WaitAllNodesReady(DSS_OnVoltage_StartControl);
 				break;
 
 			case DSS_OnVoltage_StartControl:

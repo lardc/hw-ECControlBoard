@@ -418,3 +418,35 @@ void LOGIC_Wrapper_Start(DeviceSubState NextState)
 		CONTROL_SwitchToFault(ER_WrongState, FAULT_EXT_GR_COMMON);
 }
 //-----------------------------
+
+void LOGIC_Wrapper_Commutate(DeviceSubState NextState)
+{
+	ExecutionResult res = MUX_Connect();
+
+	switch(res)
+	{
+		case ER_NoError:
+			CONTROL_SetDeviceState(DS_InProcess, NextState);
+			break;
+
+		case ER_BadHighLevelConfig:
+			{
+				DataTable[REG_OP_RESULT] = OPRESULT_FAIL;
+				DataTable[REG_PROBLEM] = PROBLEM_MUX_CONFIG;
+				CONTROL_SetDeviceState(DS_Ready, DSS_None);
+			}
+			break;
+
+		default:
+			CONTROL_SwitchToFault(res, FAULT_EXT_GR_MUX);
+			break;
+	}
+}
+//-----------------------------
+
+void LOGIC_Wrapper_WaitAllNodesReady(DeviceSubState NextState)
+{
+	if(COMM_AreSlavesInStateX(CDS_Ready))
+		CONTROL_SetDeviceState(DS_InProcess, NextState);
+}
+//-----------------------------
