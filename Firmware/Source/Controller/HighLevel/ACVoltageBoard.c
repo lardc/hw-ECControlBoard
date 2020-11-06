@@ -29,11 +29,22 @@ ExecutionResult ACV_Execute(NodeName Name)
 					if(BHL_WriteRegister(NodeID, ACV_REG_VOLTAGE_SETPOINT_32, VoltageHigh))
 						if(BHL_WriteRegister(NodeID, ACV_REG_CURRENT_SETPOINT, CurrentLow))
 							if(BHL_WriteRegister(NodeID, ACV_REG_CURRENT_SETPOINT_32, CurrentHigh))
+							{
 								if(BHL_Call(NodeID, ACV_ACT_START_PROCESS))
 								{
 									NodeData->StateIsUpToDate = false;
 									return ER_NoError;
 								}
+								else
+								{
+									BHLError err = BHL_GetError();
+									if(err.Func == FUNCTION_CALL && err.ErrorCode == ERR_USER &&
+											err.ExtData == ACV_ACT_START_PROCESS && err.Details == COMM_ERR_BAD_CONFIG)
+									{
+										return ER_BadHighLevelConfig;
+									}
+								}
+							}
 		}
 		else
 			return ER_NoError;
