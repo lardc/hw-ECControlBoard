@@ -55,6 +55,14 @@ void LOGIC_Wrapper_ControlSetDelay(DeviceSubState NextState, DeviceSubState Next
 // Обёртки формирователя тока
 void LOGIC_Wrapper_PulseCurrent(DeviceSubState NextState, DeviceSubState StopState,
 		uint64_t *Timeout, uint16_t *Problem);
-void LOGIC_Wrapper_WaitCurrentReady(DeviceSubState NextState, uint64_t Timeout);
+void LOGIC_Wrapper_WaitCurrentFinished(DeviceSubState NextState, uint64_t Timeout);
+
+// Обёртки утечки
+void LOGIC_Wrapper_StartLeakage(DeviceSubState NextState, DeviceSubState StopState,
+		uint64_t *Timeout, uint16_t *Problem);
+void LOGIC_Wrapper_IsLeakageReady(DeviceSubState NextState, DeviceSubState StopState,
+		uint64_t *Timeout, uint16_t *Problem);
+void LOGIC_Wrapper_StopLeakage(DeviceSubState NextState);
+void LOGIC_Wrapper_WaitLeakageFinished(DeviceSubState NextState, uint64_t Timeout);
 
 #endif // __LOGIC_H

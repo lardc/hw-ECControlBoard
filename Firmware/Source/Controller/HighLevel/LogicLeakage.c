@@ -60,106 +60,63 @@ void LEAK_HandleMeasurement()
 				LOGIC_Wrapper_IsControlReady(DSS_Leakage_StartOutVoltage, DSS_Leakage_StopControl,
 						NULL, &Problem);
 				break;
-			/*
+
 			case DSS_Leakage_StartOutVoltage:
-				{
-					res = LOGIC_StartLeakage();
-					if(res == ER_NoError)
-					{
-						Timeout = DataTable[REG_GENERAL_LOGIC_TIMEOUT] + CONTROL_TimeCounter;
-						CONTROL_SetDeviceState(DS_InProcess, DSS_Leakage_WaitOutVoltageReady);
-					}
-					else
-						LOGIC_HandleLeakageExecResult(res);
-				}
+				LOGIC_Wrapper_StartLeakage(DSS_Leakage_WaitOutVoltageReady, DSS_Leakage_StopControl,
+						&Timeout, &Problem);
 				break;
 
 			case DSS_Leakage_WaitOutVoltageReady:
-				{
-					bool IsVoltageReady;
-					res = LOGIC_IsLeakageVoltageReady(&IsVoltageReady);
-					if(res == ER_NoError)
-					{
-						if(IsVoltageReady)
-							CONTROL_SetDeviceState(DS_InProcess, DSS_Leakage_StopOutVoltage);
-						else if(CONTROL_TimeCounter > Timeout)
-							LOGIC_HandleLeakageExecResult(ER_ChangeStateTimeout);
-						else if(LOGIC_IsLeakagelInProblem())
-						{
-							Problem = PROBLEM_LEAKAGE_NODE;
-							CONTROL_SetDeviceState(DS_InProcess, DSS_Leakage_UnCommutate);
-						}
-					}
-					else
-						LOGIC_HandleLeakageExecResult(res);
-				}
+				LOGIC_Wrapper_IsLeakageReady(DSS_Leakage_StopOutVoltage, DSS_Leakage_StopOutVoltage,
+						&Timeout, &Problem);
 				break;
 
 			case DSS_Leakage_StopOutVoltage:
-				{
-					res = LOGIC_StopLeakage();
-					if(res == ER_NoError)
-						CONTROL_SetDeviceState(DS_InProcess, DSS_Leakage_WaitStopOutVoltage);
-					else
-						LOGIC_HandleLeakageExecResult(res);
-				}
+				LOGIC_Wrapper_StopLeakage(DSS_Leakage_WaitStopOutVoltage);
 				break;
 
 			case DSS_Leakage_WaitStopOutVoltage:
-				{
-					if(IsLeakageNodeReady())
-						CONTROL_SetDeviceState(DS_InProcess, DSS_Leakage_StopControl);
-				}
+				LOGIC_Wrapper_WaitLeakageFinished(DSS_Leakage_StopControl, Timeout);
 				break;
 
 			case DSS_Leakage_StopControl:
-				{
-					res = LOGIC_StopControl();
-					if(res == ER_NoError)
-						CONTROL_SetDeviceState(DS_InProcess, DSS_Leakage_WaitStopControl);
-					else
-						LOGIC_HandleControlExecResult(res);
-				}
+				LOGIC_Wrapper_StopControl(DSS_Leakage_WaitStopControl);
 				break;
 
 			case DSS_Leakage_WaitStopControl:
-				{
-					if(COMM_AreSlavesInStateX(CDS_Ready))
-						CONTROL_SetDeviceState(DS_InProcess, DSS_Leakage_UnCommutate);
-				}
+				LOGIC_Wrapper_WaitAllNodesReady(DSS_Leakage_UnCommutate);
 				break;
 
 			case DSS_Leakage_UnCommutate:
-				{
-					res = MUX_Disconnect();
-					if(res == ER_NoError)
-						CONTROL_SetDeviceState(DS_InProcess, DSS_Leakage_WaitUnCommutate);
-					else
-						CONTROL_SwitchToFault(res, FAULT_EXT_GR_MUX);
-				}
+				LOGIC_Wrapper_UnCommutate(DSS_Leakage_WaitUnCommutate);
 				break;
 
 			case DSS_Leakage_WaitUnCommutate:
-				{
-					if(COMM_AreSlavesInStateX(CDS_Ready))
-						CONTROL_SetDeviceState(DS_InProcess, DSS_Leakage_ReadResult);
-				}
+				LOGIC_Wrapper_WaitAllNodesReady(DSS_Leakage_ReadResult);
 				break;
 
 			case DSS_Leakage_ReadResult:
 				{
 					if(Problem == PROBLEM_NONE)
 					{
-						VIPair Result;
-						uint16_t OpResult;
-						res = LOGIC_LeakageReadResult(&OpResult, &Result);
+						VIPair Result, ControlResult;
+						uint16_t OpResult, ControlOpResult;
+
+						ExecutionResult res = LOGIC_LeakageReadResult(&OpResult, &Result);
+						if(res == ER_NoError)
+							res = LOGIC_ControlReadResult(&ControlOpResult, &ControlResult);
 
 						if(res == ER_NoError)
 						{
 							if(OpResult == OPRESULT_OK)
 							{
 								DataTable[REG_OP_RESULT] = OPRESULT_OK;
-								DataTable[REG_RESULT_LEAKAGE_CURRENT] = Result.Current;
+
+								DT_Write32(REG_RESULT_LEAKAGE_VOLTAGE, REG_RESULT_LEAKAGE_VOLTAGE_32, Result.Voltage);
+								DT_Write32(REG_RESULT_LEAKAGE_CURRENT, REG_RESULT_LEAKAGE_CURRENT_32, Result.Current);
+
+								DT_Write32(REG_RESULT_CONTROL_VOLTAGE, REG_RESULT_CONTROL_VOLTAGE_32, ControlResult.Voltage);
+								DT_Write32(REG_RESULT_CONTROL_CURRENT, REG_RESULT_CONTROL_CURRENT_32, ControlResult.Current);
 							}
 							else
 								DataTable[REG_OP_RESULT] = OPRESULT_FAIL;
@@ -177,7 +134,7 @@ void LEAK_HandleMeasurement()
 					}
 				}
 				break;
-			*/
+
 			default:
 				break;
 		}

@@ -68,7 +68,7 @@ void ONSTATE_HandleMeasurement()
 				break;
 
 			case DSS_OnVoltage_WaitCurrentReady:
-				LOGIC_Wrapper_WaitCurrentReady(DSS_OnVoltage_StopControl, Timeout);
+				LOGIC_Wrapper_WaitCurrentFinished(DSS_OnVoltage_StopControl, Timeout);
 				break;
 
 			case DSS_OnVoltage_StopControl:

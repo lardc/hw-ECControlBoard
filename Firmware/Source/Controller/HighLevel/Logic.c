@@ -14,6 +14,7 @@
 
 // Types
 typedef ExecutionResult (*xExecFunction)();
+typedef ExecutionResult (*xIsReadyFunction)(bool *Result);
 typedef void (*xHandleFaultFunction)(ExecutionResult Result);
 
 // Variables
@@ -38,6 +39,9 @@ void LOGIC_AttachSettings(NodeName Name, void *SettingsPointer);
 bool LOGIC_IsNodeInProblem(NodeName Name);
 void LOGIC_Wrapper_ExecuteX(DeviceSubState NextState, DeviceSubState StopState, uint64_t *Timeout, uint16_t *Problem,
 		xExecFunction MainEventFunc, uint16_t BadConfigProblem, xHandleFaultFunction FaultFunc);
+void LOGIC_Wrapper_IsReadyX(DeviceSubState NextState, DeviceSubState StopState,
+		uint64_t *Timeout, uint16_t *Problem, xIsReadyFunction MainReadyFunc,
+		uint16_t ReadyProblem, uint16_t TimeoutProblem, xHandleFaultFunction FaultFunc);
 
 LogicConfigError LOGIC_CacheMuxSettings();
 void LOGIC_CacheCurrentBoardSettings();
@@ -618,11 +622,12 @@ void LOGIC_Wrapper_StopControl(DeviceSubState NextState)
 }
 //-----------------------------
 
-void LOGIC_Wrapper_IsControlReady(DeviceSubState NextState, DeviceSubState StopState,
-		uint64_t *Timeout, uint16_t *Problem)
+void LOGIC_Wrapper_IsReadyX(DeviceSubState NextState, DeviceSubState StopState,
+		uint64_t *Timeout, uint16_t *Problem, xIsReadyFunction MainReadyFunc,
+		uint16_t ReadyProblem, uint16_t TimeoutProblem, xHandleFaultFunction FaultFunc)
 {
 	bool IsVoltageReady;
-	ExecutionResult res = LOGIC_IsControlVoltageReady(&IsVoltageReady);
+	ExecutionResult res = MainReadyFunc(&IsVoltageReady);
 
 	if(res == ER_NoError)
 	{
@@ -630,20 +635,28 @@ void LOGIC_Wrapper_IsControlReady(DeviceSubState NextState, DeviceSubState StopS
 			CONTROL_SetDeviceState(DS_InProcess, NextState);
 		else if(LOGIC_IsControlInProblem())
 		{
-			*Problem = PROBLEM_CONTROL_IN_PROBLEM;
+			*Problem = ReadyProblem;
 			CONTROL_SetDeviceState(DS_InProcess, StopState);
 		}
 		else if(Timeout)
 		{
 			if(CONTROL_TimeCounter > *Timeout)
 			{
-				*Problem = PROBLEM_CONTROL_READY_TIMEOUT;
+				*Problem = TimeoutProblem;
 				CONTROL_SetDeviceState(DS_InProcess, StopState);
 			}
 		}
 	}
 	else
-		LOGIC_HandleControlExecResult(res);
+		FaultFunc(res);
+}
+//-----------------------------
+
+void LOGIC_Wrapper_IsControlReady(DeviceSubState NextState, DeviceSubState StopState,
+		uint64_t *Timeout, uint16_t *Problem)
+{
+	LOGIC_Wrapper_IsReadyX(NextState, StopState, Timeout, Problem, &LOGIC_IsControlVoltageReady,
+			PROBLEM_CONTROL_IN_PROBLEM, PROBLEM_CONTROL_READY_TIMEOUT, &LOGIC_HandleControlExecResult);
 }
 //-----------------------------
 
@@ -667,7 +680,7 @@ void LOGIC_Wrapper_PulseCurrent(DeviceSubState NextState, DeviceSubState StopSta
 }
 //-----------------------------
 
-void LOGIC_Wrapper_WaitCurrentReady(DeviceSubState NextState, uint64_t Timeout)
+void LOGIC_Wrapper_WaitCurrentFinished(DeviceSubState NextState, uint64_t Timeout)
 {
 	if(COMM_IsSlaveInStateX(NAME_DCCurrent, CDS_Ready))
 		CONTROL_SetDeviceState(DS_InProcess, NextState);
@@ -681,5 +694,32 @@ void LOGIC_Wrapper_StartLeakage(DeviceSubState NextState, DeviceSubState StopSta
 {
 	LOGIC_Wrapper_ExecuteX(NextState, StopState, Timeout, Problem,
 			&LOGIC_StartLeakage, PROBLEM_LEAKAGE_CONFIG, &LOGIC_HandleLeakageExecResult);
+}
+//-----------------------------
+
+void LOGIC_Wrapper_IsLeakageReady(DeviceSubState NextState, DeviceSubState StopState,
+		uint64_t *Timeout, uint16_t *Problem)
+{
+	LOGIC_Wrapper_IsReadyX(NextState, StopState, Timeout, Problem, &LOGIC_IsLeakageVoltageReady,
+			PROBLEM_LEAKAGE_IN_PROBLEM, PROBLEM_LEAKAGE_READY_TIMEOUT, &LOGIC_HandleLeakageExecResult);
+}
+//-----------------------------
+
+void LOGIC_Wrapper_StopLeakage(DeviceSubState NextState)
+{
+	ExecutionResult res = LOGIC_StopLeakage();
+	if(res == ER_NoError)
+		CONTROL_SetDeviceState(DS_InProcess, NextState);
+	else
+		LOGIC_HandleLeakageExecResult(res);
+}
+//-----------------------------
+
+void LOGIC_Wrapper_WaitLeakageFinished(DeviceSubState NextState, uint64_t Timeout)
+{
+	if(IsLeakageNodeReady())
+		CONTROL_SetDeviceState(DS_InProcess, NextState);
+	else if(CONTROL_TimeCounter > Timeout)
+		LOGIC_HandleLeakageExecResult(ER_ChangeStateTimeout);
 }
 //-----------------------------
