@@ -25,11 +25,22 @@ ExecutionResult CURR_Execute()
 				if(BHL_WriteRegister(NodeID, CURR_REG_CURRENT_SETPOINT_32, CurrentHigh))
 					if(BHL_WriteRegister(NodeID, CURR_REG_VOLTAGE_DUT_LIM, VoltageLow))
 						if(BHL_WriteRegister(NodeID, CURR_REG_VOLTAGE_DUT_LIM_32, VoltageHigh))
+						{
 							if(BHL_Call(NodeID, CURR_ACT_START_PROCESS))
 							{
 								NodeData->StateIsUpToDate = false;
 								return ER_NoError;
 							}
+							else
+							{
+								BHLError err = BHL_GetError();
+								if(err.Func == FUNCTION_CALL && err.ErrorCode == ERR_USER &&
+										err.ExtData == CURR_ACT_START_PROCESS && err.Details == COMM_ERR_BAD_CONFIG)
+								{
+									return ER_BadHighLevelConfig;
+								}
+							}
+						}
 		}
 		else
 			return ER_NoError;
