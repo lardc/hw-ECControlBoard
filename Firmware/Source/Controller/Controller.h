@@ -26,6 +26,15 @@ typedef enum __DeviceSubState
 	DSS_PowerWaitReady = 2,
 	DSS_PowerOff = 3,
 
+	DSS_Fault_Request = 10,
+	DSS_Fault_StopDCCurrent,
+	DSS_Fault_StopHV,
+	DSS_Fault_StopDC1,
+	DSS_Fault_StopDC2,
+	DSS_Fault_StopDC3,
+	DSS_Fault_StopAC1,
+	DSS_Fault_StopAC2,
+
 	DSS_Leakage_StartTest = 100,
 	DSS_Leakage_Commutate,
 	DSS_Leakage_WaitCommutation,

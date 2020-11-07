@@ -17,12 +17,12 @@
 // Functions
 void ONSTATE_HandleMeasurement()
 {
-	static Int64U Timeout;
+	static Int64U Timeout = 0;
 	static uint16_t Problem = PROBLEM_NONE;
+	ExecutionResult res;
 
 	if(CONTROL_State == DS_InProcess)
 	{
-		ExecutionResult res;
 		LOGIC_Wrapper_FaultControl();
 
 		switch(CONTROL_SubState)
@@ -41,37 +41,13 @@ void ONSTATE_HandleMeasurement()
 				break;
 
 			case DSS_OnVoltage_StartControl:
-				{
-					res = LOGIC_StartControl();
-					if(res == ER_NoError)
-					{
-						Timeout = DataTable[REG_GENERAL_LOGIC_TIMEOUT] + CONTROL_TimeCounter;
-						CONTROL_SetDeviceState(DS_InProcess, DSS_OnVoltage_WaitControlReady);
-					}
-					else
-						LOGIC_HandleControlExecResult(res);
-				}
+				LOGIC_Wrapper_StartControl(DSS_OnVoltage_WaitControlReady, DSS_OnVoltage_UnCommutate,
+						&Timeout, &Problem);
 				break;
 
 			case DSS_OnVoltage_WaitControlReady:
-				{
-					bool IsVoltageReady;
-					res = LOGIC_IsControlVoltageReady(&IsVoltageReady);
-					if(res == ER_NoError)
-					{
-						if(IsVoltageReady)
-							CONTROL_SetDeviceState(DS_InProcess, DSS_OnVoltage_PulseCurrent);
-						else if(CONTROL_TimeCounter > Timeout)
-							LOGIC_HandleControlExecResult(ER_ChangeStateTimeout);
-						else if(LOGIC_IsControlInProblem())
-						{
-							Problem = PROBLEM_CONTROL_NODE;
-							CONTROL_SetDeviceState(DS_InProcess, DSS_OnVoltage_UnCommutate);
-						}
-					}
-					else
-						LOGIC_HandleControlExecResult(res);
-				}
+				LOGIC_Wrapper_IsControlReady(DSS_OnVoltage_PulseCurrent, DSS_OnVoltage_StopControl,
+						&Timeout, &Problem);
 				break;
 
 			case DSS_OnVoltage_PulseCurrent:

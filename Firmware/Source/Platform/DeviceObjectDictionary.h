@@ -129,10 +129,11 @@
 #define REG_RESULT_ON_CURRENT_32		209
 
 #define REG_DEV_SUB_STATE				220	// Регистр вспомогательного состояния
-#define REG_CONFIG_ERR					221	// Регистр хранения кода ошибки конфигурирования
+#define REG_FAILED_DEV_SUB_STATE		221	// Регистр зафейленного вспомогательного состояния
+#define REG_CONFIG_ERR					222	// Регистр хранения кода ошибки конфигурирования
 
-#define REG_DIAG_OUT_1					222	// CAN: отладочный выходной регистр 1
-#define REG_DIAG_OUT_2					223	// CAN: отладочный выходной регистр 2
+#define REG_DIAG_OUT_1					223	// CAN: отладочный выходной регистр 1
+#define REG_DIAG_OUT_2					224	// CAN: отладочный выходной регистр 2
 
 #define REG_BHL_ERROR_CODE				225	// Ошибка интерфейса ВУ: код ошибки
 #define REG_BHL_DEVICE					226	// Ошибка интерфейса ВУ: NID устройства
@@ -191,6 +192,9 @@
 #define PROBLEM_CURRENT_NODE			2	// Проблема формирования силового тока
 #define PROBLEM_LEAKAGE_NODE			3	// Проблема формирования напряжения измерения утечки
 #define PROBLEM_MUX_CONFIG				4	// Некорректная конфигурация мультиплексора
+#define PROBLEM_CONTROL_CONFIG			5	// Некорректная конфигурация цепи управления
+#define PROBLEM_CONTROL_READY_TIMEOUT	6	// Отсутствие сигнала готовности управления
+#define PROBLEM_CONTROL_IN_PROBLEM		7	// Источник сигнала управления в проблеме
 
 //  Warning
 #define WARNING_NONE					0

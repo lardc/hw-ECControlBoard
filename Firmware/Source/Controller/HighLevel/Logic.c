@@ -126,6 +126,79 @@ void LOGIC_HandlePowerOff()
 }
 //-----------------------------
 
+void LOGIC_HandleFault()
+{
+	if(CONTROL_State == DS_InProcess)
+	{
+		switch(CONTROL_SubState)
+		{
+			case DSS_Fault_Request:
+				CONTROL_SetDeviceState(DS_InProcess, DSS_Fault_StopDCCurrent);
+				break;
+
+			case DSS_Fault_StopDCCurrent:
+				{
+					if(COMM_IsSlaveInStateX(NAME_DCCurrent, CDS_InProcess))
+						CURR_Stop();
+					CONTROL_SetDeviceState(DS_InProcess, DSS_Fault_StopHV);
+				}
+				break;
+
+			case DSS_Fault_StopHV:
+				{
+					if(COMM_IsSlaveInStateX(NAME_DCHighVoltage, CDS_InProcess))
+						DCHV_Stop();
+					CONTROL_SetDeviceState(DS_InProcess, DSS_Fault_StopDC1);
+				}
+				break;
+
+			case DSS_Fault_StopDC1:
+				{
+					if(COMM_IsSlaveInStateX(NAME_DCVoltage1, CDS_InProcess))
+						DCV_Stop(NAME_DCVoltage1);
+					CONTROL_SetDeviceState(DS_InProcess, DSS_Fault_StopDC2);
+				}
+				break;
+
+			case DSS_Fault_StopDC2:
+				{
+					if(COMM_IsSlaveInStateX(NAME_DCVoltage2, CDS_InProcess))
+						DCV_Stop(NAME_DCVoltage2);
+					CONTROL_SetDeviceState(DS_InProcess, DSS_Fault_StopDC3);
+				}
+				break;
+
+			case DSS_Fault_StopDC3:
+				{
+					if(COMM_IsSlaveInStateX(NAME_DCVoltage3, CDS_InProcess))
+						DCV_Stop(NAME_DCVoltage3);
+					CONTROL_SetDeviceState(DS_InProcess, DSS_Fault_StopAC1);
+				}
+				break;
+
+			case DSS_Fault_StopAC1:
+				{
+					if(COMM_IsSlaveInStateX(NAME_ACVoltage1, CDS_InProcess))
+						ACV_Stop(NAME_ACVoltage1);
+					CONTROL_SetDeviceState(DS_InProcess, DSS_Fault_StopAC2);
+				}
+				break;
+
+			case DSS_Fault_StopAC2:
+				{
+					if(COMM_IsSlaveInStateX(NAME_ACVoltage2, CDS_InProcess))
+						ACV_Stop(NAME_ACVoltage2);
+					CONTROL_SetDeviceState(DS_Fault, DSS_None);
+				}
+				break;
+
+			default:
+				break;
+		}
+	}
+}
+//-----------------------------
+
 LogicConfigError LOGIC_PrepareMeasurement()
 {
 	LogicConfigError err = LOGIC_CacheMuxSettings();
@@ -448,5 +521,59 @@ void LOGIC_Wrapper_WaitAllNodesReady(DeviceSubState NextState)
 {
 	if(COMM_AreSlavesInStateX(CDS_Ready))
 		CONTROL_SetDeviceState(DS_InProcess, NextState);
+}
+//-----------------------------
+
+void LOGIC_Wrapper_StartControl(DeviceSubState NextState, DeviceSubState StopState,
+		uint64_t *Timeout, uint16_t *Problem)
+{
+	ExecutionResult res = LOGIC_StartControl();
+
+	switch(res)
+	{
+		case ER_NoError:
+			{
+				*Timeout = DataTable[REG_GENERAL_LOGIC_TIMEOUT] + CONTROL_TimeCounter;
+				CONTROL_SetDeviceState(DS_InProcess, NextState);
+			}
+			break;
+
+		case ER_BadHighLevelConfig:
+			{
+				*Problem = PROBLEM_CONTROL_CONFIG;
+				CONTROL_SetDeviceState(DS_InProcess, StopState);
+			}
+			break;
+
+		default:
+			LOGIC_HandleControlExecResult(res);
+			break;
+	}
+}
+//-----------------------------
+
+void LOGIC_Wrapper_IsControlReady(DeviceSubState NextState, DeviceSubState StopState,
+		uint64_t *Timeout, uint16_t *Problem)
+{
+	bool IsVoltageReady;
+	ExecutionResult res = LOGIC_IsControlVoltageReady(&IsVoltageReady);
+
+	if(res == ER_NoError)
+	{
+		if(IsVoltageReady)
+			CONTROL_SetDeviceState(DS_InProcess, NextState);
+		else if(CONTROL_TimeCounter > *Timeout)
+		{
+			*Problem = PROBLEM_CONTROL_READY_TIMEOUT;
+			CONTROL_SetDeviceState(DS_InProcess, StopState);
+		}
+		else if(LOGIC_IsControlInProblem())
+		{
+			*Problem = PROBLEM_CONTROL_IN_PROBLEM;
+			CONTROL_SetDeviceState(DS_InProcess, StopState);
+		}
+	}
+	else
+		LOGIC_HandleControlExecResult(res);
 }
 //-----------------------------

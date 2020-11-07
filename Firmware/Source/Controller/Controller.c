@@ -74,6 +74,7 @@ void CONTROL_ResetOutputRegisters()
 	DataTable[REG_WARNING] = WARNING_NONE;
 	DataTable[REG_PROBLEM] = PROBLEM_NONE;
 	DataTable[REG_OP_RESULT] = OPRESULT_NONE;
+	DataTable[REG_FAILED_DEV_SUB_STATE] = 0;
 	DataTable[REG_CONFIG_ERR] = LCE_None;
 	
 	DataTable[REG_RESULT_LEAKAGE_CURRENT] = 0;
@@ -288,11 +289,10 @@ void CONTROL_SwitchToFault(ExecutionResult Result, Int16U Group)
 			DataTable[REG_BHL_DETAILS] = Error.Details;
 		}
 
-		DeviceSubState SavedSubState = CONTROL_SubState;
-		CONTROL_SetDeviceState(DS_Fault, DSS_None);
-
-		DataTable[REG_DEV_SUB_STATE] = SavedSubState;
+		DataTable[REG_FAILED_DEV_SUB_STATE] = CONTROL_SubState;
 		DataTable[REG_FAULT_REASON] = Result + Group;
+
+		CONTROL_SetDeviceState(DS_InProcess, DSS_Fault_Request);
 	}
 }
 //------------------------------------------
@@ -301,6 +301,7 @@ void CONTROL_ClearFault()
 {
 	CONTROL_SetDeviceState(DS_None, DSS_None);
 	DataTable[REG_FAULT_REASON] = 0;
+	DataTable[REG_FAILED_DEV_SUB_STATE] = 0;
 
 	BHL_ResetError();
 	DataTable[REG_BHL_ERROR_CODE] = 0;

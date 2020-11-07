@@ -22,6 +22,7 @@ void LOGIC_InitEntities();
 void LOGIC_HandleStateUpdate();
 void LOGIC_HandlePowerOn();
 void LOGIC_HandlePowerOff();
+void LOGIC_HandleFault();
 
 LogicConfigError LOGIC_PrepareMeasurement();
 
@@ -50,5 +51,9 @@ void LOGIC_Wrapper_FaultControl();
 void LOGIC_Wrapper_Start(DeviceSubState NextState);
 void LOGIC_Wrapper_Commutate(DeviceSubState NextState);
 void LOGIC_Wrapper_WaitAllNodesReady(DeviceSubState NextState);
+void LOGIC_Wrapper_StartControl(DeviceSubState NextState, DeviceSubState StopState,
+		uint64_t *Timeout, uint16_t *Problem);
+void LOGIC_Wrapper_IsControlReady(DeviceSubState NextState, DeviceSubState StopState,
+		uint64_t *Timeout, uint16_t *Problem);
 
 #endif // __LOGIC_H
