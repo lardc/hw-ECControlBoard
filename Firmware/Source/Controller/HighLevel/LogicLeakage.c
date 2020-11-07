@@ -21,68 +21,45 @@ void LEAK_HandleMeasurement()
 
 	if(CONTROL_State == DS_InProcess)
 	{
-		if(COMM_IsSlaveInFaultOrDisabled())
-			CONTROL_SwitchToFault(ER_WrongState, FAULT_EXT_GR_COMMON);
+		LOGIC_Wrapper_FaultControl();
 
 		ExecutionResult res;
 		switch(CONTROL_SubState)
 		{
 			case DSS_Leakage_StartTest:
-				if(COMM_AreSlavesInStateX(CDS_Ready))
-					CONTROL_SetDeviceState(DS_InProcess, DSS_Leakage_Commutate);
-				else
-					CONTROL_SwitchToFault(ER_WrongState, FAULT_EXT_GR_COMMON);
+				Problem = PROBLEM_NONE;
+				LOGIC_Wrapper_Start(DSS_Leakage_Commutate);
 				break;
 
 			case DSS_Leakage_Commutate:
-				{
-					res = MUX_Connect();
-					if(res == ER_NoError)
-						CONTROL_SetDeviceState(DS_InProcess, DSS_Leakage_WaitCommutation);
-					else
-						CONTROL_SwitchToFault(res, FAULT_EXT_GR_MUX);
-				}
+				LOGIC_Wrapper_Commutate(DSS_Leakage_WaitCommutation);
 				break;
 
 			case DSS_Leakage_WaitCommutation:
-				{
-					if(COMM_AreSlavesInStateX(CDS_Ready))
-						CONTROL_SetDeviceState(DS_InProcess, DSS_Leakage_StartControl);
-				}
+				LOGIC_Wrapper_WaitAllNodesReady(DSS_Leakage_StartControl);
 				break;
 
 			case DSS_Leakage_StartControl:
-				{
-					res = LOGIC_StartControl();
-					if(res == ER_NoError)
-					{
-						Timeout = DataTable[REG_GENERAL_LOGIC_TIMEOUT] + CONTROL_TimeCounter;
-						CONTROL_SetDeviceState(DS_InProcess, DSS_Leakage_WaitControlReady);
-					}
-					else
-						LOGIC_HandleControlExecResult(res);
-				}
+				LOGIC_Wrapper_StartControl(DSS_Leakage_WaitControlReady, DSS_Leakage_UnCommutate,
+						&Timeout, &Problem);
 				break;
 
 			case DSS_Leakage_WaitControlReady:
-				{
-					bool IsVoltageReady;
-					res = LOGIC_IsControlVoltageReady(&IsVoltageReady);
-					if(res == ER_NoError)
-					{
-						if(IsVoltageReady)
-							CONTROL_SetDeviceState(DS_InProcess, DSS_Leakage_StartOutVoltage);
-						else if(CONTROL_TimeCounter > Timeout)
-							LOGIC_HandleControlExecResult(ER_ChangeStateTimeout);
-						else if(LOGIC_IsControlInProblem())
-						{
-							Problem = PROBLEM_CONTROL_NODE;
-							CONTROL_SetDeviceState(DS_InProcess, DSS_Leakage_UnCommutate);
-						}
-					}
-					else
-						LOGIC_HandleControlExecResult(res);
-				}
+				LOGIC_Wrapper_IsControlReady(DSS_Leakage_SetControlDelay, DSS_Leakage_StopControl,
+						&Timeout, &Problem);
+				break;
+
+			case DSS_Leakage_SetControlDelay:
+				LOGIC_Wrapper_ControlSetDelay(DSS_Leakage_WaitControlDelay, DSS_Leakage_StartOutVoltage, &Timeout);
+				break;
+
+			case DSS_Leakage_WaitControlDelay:
+				LOGIC_Wrapper_SetStateAfterDelay(DSS_Leakage_CheckReadyAfterDelay, Timeout);
+				break;
+
+			case DSS_Leakage_CheckReadyAfterDelay:
+				LOGIC_Wrapper_IsControlReady(DSS_Leakage_StartOutVoltage, DSS_Leakage_StopControl,
+						NULL, &Problem);
 				break;
 
 			case DSS_Leakage_StartOutVoltage:
