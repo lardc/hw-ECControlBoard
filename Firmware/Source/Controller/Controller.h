@@ -34,6 +34,7 @@ typedef enum __DeviceSubState
 	DSS_Fault_StopDC3,
 	DSS_Fault_StopAC1,
 	DSS_Fault_StopAC2,
+	DSS_Fault_StopMux,
 
 	DSS_Leakage_StartTest = 100,
 	DSS_Leakage_Commutate,

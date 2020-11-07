@@ -188,6 +188,13 @@ void LOGIC_HandleFault()
 				{
 					if(COMM_IsSlaveInStateX(NAME_ACVoltage2, CDS_InProcess))
 						ACV_Stop(NAME_ACVoltage2);
+					CONTROL_SetDeviceState(DS_InProcess, DSS_Fault_StopMux);
+				}
+				break;
+
+			case DSS_Fault_StopMux:
+				{
+					MUX_Disconnect();
 					CONTROL_SetDeviceState(DS_Fault, DSS_None);
 				}
 				break;
