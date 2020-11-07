@@ -51,6 +51,7 @@ bool LOGIC_IsPowerSupply2InProblem();
 void LOGIC_Wrapper_FaultControl();
 void LOGIC_Wrapper_Start(DeviceSubState NextState);
 void LOGIC_Wrapper_WaitAllNodesReady(DeviceSubState NextState);
+void LOGIC_Wrapper_SetStateAfterDelay(DeviceSubState NextState, uint64_t Timeout);
 
 // Обёртки коммутации
 void LOGIC_Wrapper_Commutate(DeviceSubState NextState);
@@ -62,6 +63,7 @@ void LOGIC_Wrapper_StartControl(DeviceSubState NextState, DeviceSubState StopSta
 void LOGIC_Wrapper_IsControlReady(DeviceSubState NextState, DeviceSubState StopState,
 		uint64_t *Timeout, uint16_t *Problem);
 void LOGIC_Wrapper_StopControl(DeviceSubState NextState);
+void LOGIC_Wrapper_ControlSetDelay(DeviceSubState NextState, DeviceSubState NextStateNoDelay, uint64_t *Timeout);
 
 // Обёртки формирователя тока
 void LOGIC_Wrapper_PulseCurrent(DeviceSubState NextState, DeviceSubState StopState,

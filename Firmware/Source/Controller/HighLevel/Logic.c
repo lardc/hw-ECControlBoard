@@ -18,7 +18,7 @@ static volatile CurrentBoardObject CurrentBoard;
 static volatile DCVoltageBoardObject DCVoltageBoard1, DCVoltageBoard2, DCVoltageBoard3;
 static volatile ACVoltageBoardObject ACVoltageBoard1, ACVoltageBoard2;
 static volatile DCHVoltageBoardObject DCHighVoltageBoard;
-static uint16_t GeneralLogicTimeout;
+static uint16_t GeneralLogicTimeout, ControlWaitDelay;
 
 static const NodeName ControlDCNode = NAME_DCVoltage1;
 static const NodeName ControlACNode = NAME_ACVoltage1;
@@ -212,6 +212,7 @@ LogicConfigError LOGIC_PrepareMeasurement()
 	LogicConfigError err = LOGIC_CacheMuxSettings();
 
 	GeneralLogicTimeout = DataTable[REG_GENERAL_LOGIC_TIMEOUT];
+	ControlWaitDelay = DataTable[REG_CTRL_HOLD_DELAY];
 
 	if(err == LCE_None)
 	{
@@ -545,6 +546,13 @@ void LOGIC_Wrapper_WaitAllNodesReady(DeviceSubState NextState)
 }
 //-----------------------------
 
+void LOGIC_Wrapper_SetStateAfterDelay(DeviceSubState NextState, uint64_t Timeout)
+{
+	if(CONTROL_TimeCounter > Timeout)
+		CONTROL_SetDeviceState(DS_InProcess, NextState);
+}
+//-----------------------------
+
 void LOGIC_Wrapper_StartControl(DeviceSubState NextState, DeviceSubState StopState,
 		uint64_t *Timeout, uint16_t *Problem)
 {
@@ -609,6 +617,18 @@ void LOGIC_Wrapper_IsControlReady(DeviceSubState NextState, DeviceSubState StopS
 	}
 	else
 		LOGIC_HandleControlExecResult(res);
+}
+//-----------------------------
+
+void LOGIC_Wrapper_ControlSetDelay(DeviceSubState NextState, DeviceSubState NextStateNoDelay, uint64_t *Timeout)
+{
+	if(ControlWaitDelay)
+	{
+		*Timeout = CONTROL_TimeCounter + ControlWaitDelay;
+		CONTROL_SetDeviceState(DS_InProcess, NextState);
+	}
+	else
+		CONTROL_SetDeviceState(DS_InProcess, NextStateNoDelay);
 }
 //-----------------------------
 

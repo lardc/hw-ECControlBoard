@@ -23,6 +23,11 @@
 #define CTRL_PULSE_LENGH_MAX		500
 #define CTRL_PULSE_LENGH_DEF		10
 
+// в мс
+#define CTRL_DELAY_MIN				0
+#define CTRL_DELAY_MAX				5000
+#define CTRL_DELAY_DEF				0
+
 // в сек.
 #define FAN_TIME_MIN				10
 #define FAN_TIME_MAX				600
