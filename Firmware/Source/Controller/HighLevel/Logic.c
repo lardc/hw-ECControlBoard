@@ -668,3 +668,31 @@ void LOGIC_Wrapper_WaitCurrentReady(DeviceSubState NextState, uint64_t Timeout)
 		CONTROL_SwitchToFault(ER_ChangeStateTimeout, FAULT_EXT_GR_DC_CURRENT);
 }
 //-----------------------------
+
+void LOGIC_Wrapper_StartLeakage(DeviceSubState NextState, DeviceSubState StopState,
+		uint64_t *Timeout, uint16_t *Problem)
+{
+	ExecutionResult res = LOGIC_StartLeakage();
+
+	switch(res)
+	{
+		case ER_NoError:
+			{
+				*Timeout = GeneralLogicTimeout + CONTROL_TimeCounter;
+				CONTROL_SetDeviceState(DS_InProcess, NextState);
+			}
+			break;
+
+		case ER_BadHighLevelConfig:
+			{
+				*Problem = PROBLEM_LEAKAGE_CONFIG;
+				CONTROL_SetDeviceState(DS_InProcess, StopState);
+			}
+			break;
+
+		default:
+			LOGIC_HandleLeakageExecResult(res);
+			break;
+	}
+}
+//-----------------------------
