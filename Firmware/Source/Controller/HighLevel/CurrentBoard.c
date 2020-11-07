@@ -79,3 +79,9 @@ ExecutionResult CURR_ReadResult()
 		return ER_SettingsError;
 }
 //-----------------------------
+
+ExecutionResult CURR_Stop()
+{
+	return COMM_NodeCall(NAME_DCCurrent, CURR_ACT_STOP_PROCESS);
+}
+//-----------------------------

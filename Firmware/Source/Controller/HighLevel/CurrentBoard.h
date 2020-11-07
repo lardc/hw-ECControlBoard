@@ -21,5 +21,6 @@ typedef struct __CurrentBoardObject
 //
 ExecutionResult CURR_Execute();
 ExecutionResult CURR_ReadResult();
+ExecutionResult CURR_Stop();
 
 #endif // __CURRENT_BOARD_H
