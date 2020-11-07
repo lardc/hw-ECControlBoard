@@ -589,15 +589,18 @@ void LOGIC_Wrapper_IsControlReady(DeviceSubState NextState, DeviceSubState StopS
 	{
 		if(IsVoltageReady)
 			CONTROL_SetDeviceState(DS_InProcess, NextState);
-		else if(CONTROL_TimeCounter > *Timeout)
-		{
-			*Problem = PROBLEM_CONTROL_READY_TIMEOUT;
-			CONTROL_SetDeviceState(DS_InProcess, StopState);
-		}
 		else if(LOGIC_IsControlInProblem())
 		{
 			*Problem = PROBLEM_CONTROL_IN_PROBLEM;
 			CONTROL_SetDeviceState(DS_InProcess, StopState);
+		}
+		else if(Timeout)
+		{
+			if(CONTROL_TimeCounter > *Timeout)
+			{
+				*Problem = PROBLEM_CONTROL_READY_TIMEOUT;
+				CONTROL_SetDeviceState(DS_InProcess, StopState);
+			}
 		}
 	}
 	else
