@@ -571,7 +571,8 @@ void LOGIC_Wrapper_ExecuteX(DeviceSubState NextState, DeviceSubState StopState, 
 
 void LOGIC_Wrapper_Commutate(DeviceSubState NextState, DeviceSubState StopState, uint16_t *Problem)
 {
-	LOGIC_Wrapper_ExecuteX(NextState, StopState, NULL, Problem, &MUX_Connect, PROBLEM_MUX_CONFIG, &LOGIC_HandleMuxExecResult);
+	LOGIC_Wrapper_ExecuteX(NextState, StopState, NULL, Problem,
+			&MUX_Connect, PROBLEM_MUX_CONFIG, &LOGIC_HandleMuxExecResult);
 }
 //-----------------------------
 
@@ -602,28 +603,8 @@ void LOGIC_Wrapper_SetStateAfterDelay(DeviceSubState NextState, uint64_t Timeout
 void LOGIC_Wrapper_StartControl(DeviceSubState NextState, DeviceSubState StopState,
 		uint64_t *Timeout, uint16_t *Problem)
 {
-	ExecutionResult res = LOGIC_StartControl();
-
-	switch(res)
-	{
-		case ER_NoError:
-			{
-				*Timeout = GeneralLogicTimeout + CONTROL_TimeCounter;
-				CONTROL_SetDeviceState(DS_InProcess, NextState);
-			}
-			break;
-
-		case ER_BadHighLevelConfig:
-			{
-				*Problem = PROBLEM_CONTROL_CONFIG;
-				CONTROL_SetDeviceState(DS_InProcess, StopState);
-			}
-			break;
-
-		default:
-			LOGIC_HandleControlExecResult(res);
-			break;
-	}
+	LOGIC_Wrapper_ExecuteX(NextState, StopState, Timeout, Problem,
+			&LOGIC_StartControl, PROBLEM_CONTROL_CONFIG, &LOGIC_HandleControlExecResult);
 }
 //-----------------------------
 
@@ -681,28 +662,8 @@ void LOGIC_Wrapper_ControlSetDelay(DeviceSubState NextState, DeviceSubState Next
 void LOGIC_Wrapper_PulseCurrent(DeviceSubState NextState, DeviceSubState StopState,
 		uint64_t *Timeout, uint16_t *Problem)
 {
-	ExecutionResult res = CURR_Execute();
-
-	switch(res)
-	{
-		case ER_NoError:
-			{
-				*Timeout = GeneralLogicTimeout + CONTROL_TimeCounter;
-				CONTROL_SetDeviceState(DS_InProcess, NextState);
-			}
-			break;
-
-		case ER_BadHighLevelConfig:
-			{
-				*Problem = PROBLEM_CURRENT_CONFIG;
-				CONTROL_SetDeviceState(DS_InProcess, StopState);
-			}
-			break;
-
-		default:
-			CONTROL_SwitchToFault(res, FAULT_EXT_GR_DC_CURRENT);
-			break;
-	}
+	LOGIC_Wrapper_ExecuteX(NextState, StopState, Timeout, Problem,
+			&CURR_Execute, PROBLEM_CURRENT_CONFIG, &LOGIC_HandleCurrentExecResult);
 }
 //-----------------------------
 
@@ -718,27 +679,7 @@ void LOGIC_Wrapper_WaitCurrentReady(DeviceSubState NextState, uint64_t Timeout)
 void LOGIC_Wrapper_StartLeakage(DeviceSubState NextState, DeviceSubState StopState,
 		uint64_t *Timeout, uint16_t *Problem)
 {
-	ExecutionResult res = LOGIC_StartLeakage();
-
-	switch(res)
-	{
-		case ER_NoError:
-			{
-				*Timeout = GeneralLogicTimeout + CONTROL_TimeCounter;
-				CONTROL_SetDeviceState(DS_InProcess, NextState);
-			}
-			break;
-
-		case ER_BadHighLevelConfig:
-			{
-				*Problem = PROBLEM_LEAKAGE_CONFIG;
-				CONTROL_SetDeviceState(DS_InProcess, StopState);
-			}
-			break;
-
-		default:
-			LOGIC_HandleLeakageExecResult(res);
-			break;
-	}
+	LOGIC_Wrapper_ExecuteX(NextState, StopState, Timeout, Problem,
+			&LOGIC_StartLeakage, PROBLEM_LEAKAGE_CONFIG, &LOGIC_HandleLeakageExecResult);
 }
 //-----------------------------
