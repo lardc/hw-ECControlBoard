@@ -19,7 +19,6 @@ void ONSTATE_HandleMeasurement()
 {
 	static Int64U Timeout = 0;
 	static uint16_t Problem = PROBLEM_NONE;
-	ExecutionResult res;
 
 	if(CONTROL_State == DS_InProcess)
 	{
@@ -82,7 +81,7 @@ void ONSTATE_HandleMeasurement()
 						VIPair ControlResult;
 						uint16_t ControlOpResult;
 
-						res = CURR_ReadResult();
+						ExecutionResult res = CURR_ReadResult();
 						if(res == ER_NoError)
 							res = LOGIC_ControlReadResult(&ControlOpResult, &ControlResult);
 

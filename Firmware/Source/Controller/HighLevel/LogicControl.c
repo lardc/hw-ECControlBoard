@@ -16,130 +16,86 @@
 void CTRL_HandleMeasurement()
 {
 	static Int64U Timeout;
+	static uint16_t Problem = PROBLEM_NONE;
 
 	if(CONTROL_State == DS_InProcess)
 	{
-		if(COMM_IsSlaveInFaultOrDisabled())
-			CONTROL_SwitchToFault(ER_WrongState, FAULT_EXT_GR_COMMON);
+		LOGIC_Wrapper_FaultControl();
 
-		ExecutionResult res;
 		switch(CONTROL_SubState)
 		{
 			case DSS_Control_StartTest:
-				{
-					if(COMM_AreSlavesInStateX(CDS_Ready))
-						CONTROL_SetDeviceState(DS_InProcess, DSS_Control_Commutate);
-					else
-						CONTROL_SwitchToFault(ER_WrongState, FAULT_EXT_GR_COMMON);
-				}
+				Problem = PROBLEM_NONE;
+				LOGIC_Wrapper_Start(DSS_Control_Commutate);
 				break;
 
 			case DSS_Control_Commutate:
-				{
-					res = MUX_Connect();
-					if(res == ER_NoError)
-						CONTROL_SetDeviceState(DS_InProcess, DSS_Control_WaitCommutation);
-					else
-						CONTROL_SwitchToFault(res, FAULT_EXT_GR_MUX);
-				}
+				LOGIC_Wrapper_Commutate(DSS_Control_WaitCommutation);
 				break;
 
 			case DSS_Control_WaitCommutation:
-				{
-					if(COMM_AreSlavesInStateX(CDS_Ready))
-						CONTROL_SetDeviceState(DS_InProcess, DSS_Control_StartControl);
-				}
+				LOGIC_Wrapper_WaitAllNodesReady(DSS_Control_StartControl);
 				break;
 
 			case DSS_Control_StartControl:
-				{
-					res = LOGIC_StartControl();
-					if(res == ER_NoError)
-					{
-						Timeout = DataTable[REG_GENERAL_LOGIC_TIMEOUT] + CONTROL_TimeCounter;
-						CONTROL_SetDeviceState(DS_InProcess, DSS_Control_WaitControlReady);
-					}
-					else
-						LOGIC_HandleControlExecResult(res);
-				}
+				LOGIC_Wrapper_StartControl(DSS_Control_WaitControlReady, DSS_Control_UnCommutate,
+						&Timeout, &Problem);
 				break;
 
 			case DSS_Control_WaitControlReady:
-				{
-					bool IsVoltageReady;
-					res = LOGIC_IsControlVoltageReady(&IsVoltageReady);
-					if(res == ER_NoError)
-					{
-						if(IsVoltageReady)
-							CONTROL_SetDeviceState(DS_InProcess, DSS_Control_StopControl);
-						else if(CONTROL_TimeCounter > Timeout)
-							LOGIC_HandleControlExecResult(ER_ChangeStateTimeout);
-						else if(LOGIC_IsControlInProblem())
-							CONTROL_SetDeviceState(DS_InProcess, DSS_Control_UnCommutate);
-					}
-					else
-						LOGIC_HandleControlExecResult(res);
-				}
+				LOGIC_Wrapper_IsControlReady(DSS_Control_StopControl, DSS_Control_StopControl,
+						&Timeout, &Problem);
 				break;
 
 			case DSS_Control_StopControl:
-				{
-					res = LOGIC_StopControl();
-					if(res == ER_NoError)
-						CONTROL_SetDeviceState(DS_InProcess, DSS_Control_WaitStopControl);
-					else
-						LOGIC_HandleControlExecResult(res);
-				}
+				LOGIC_Wrapper_StopControl(DSS_Control_WaitStopControl);
 				break;
 
 			case DSS_Control_WaitStopControl:
-				{
-					if(COMM_AreSlavesInStateX(CDS_Ready))
-						CONTROL_SetDeviceState(DS_InProcess, DSS_Control_UnCommutate);
-				}
+				LOGIC_Wrapper_WaitAllNodesReady(DSS_Control_UnCommutate);
 				break;
 
 			case DSS_Control_UnCommutate:
-				{
-					res = MUX_Disconnect();
-					if(res == ER_NoError)
-						CONTROL_SetDeviceState(DS_InProcess, DSS_Control_WaitUnCommutate);
-					else
-						CONTROL_SwitchToFault(res, FAULT_EXT_GR_MUX);
-				}
+				LOGIC_Wrapper_UnCommutate(DSS_Control_WaitUnCommutate);
 				break;
 
 			case DSS_Control_WaitUnCommutate:
-				{
-					if(COMM_AreSlavesInStateX(CDS_Ready))
-						CONTROL_SetDeviceState(DS_InProcess, DSS_Control_ReadResult);
-				}
+				LOGIC_Wrapper_WaitAllNodesReady(DSS_Control_ReadResult);
 				break;
 
 			case DSS_Control_ReadResult:
 				{
-					VIPair Result;
-					uint16_t OpResult;
-					res = LOGIC_ControlReadResult(&OpResult, &Result);
-
-					if(res == ER_NoError)
+					if(Problem == PROBLEM_NONE)
 					{
-						if(OpResult == OPRESULT_OK)
+						VIPair Result;
+						uint16_t OpResult;
+						ExecutionResult res = LOGIC_ControlReadResult(&OpResult, &Result);
+
+						if(res == ER_NoError)
 						{
-							DataTable[REG_OP_RESULT] = OPRESULT_OK;
-							DT_Write32(REG_RESULT_CONTROL_VOLTAGE, REG_RESULT_CONTROL_VOLTAGE_32, Result.Voltage);
-							DT_Write32(REG_RESULT_CONTROL_CURRENT, REG_RESULT_CONTROL_CURRENT_32, Result.Current);
+							if(OpResult == OPRESULT_OK)
+							{
+								DataTable[REG_OP_RESULT] = OPRESULT_OK;
+								DT_Write32(REG_RESULT_CONTROL_VOLTAGE, REG_RESULT_CONTROL_VOLTAGE_32, Result.Voltage);
+								DT_Write32(REG_RESULT_CONTROL_CURRENT, REG_RESULT_CONTROL_CURRENT_32, Result.Current);
+							}
+							else
+							{
+								DataTable[REG_OP_RESULT] = OPRESULT_FAIL;
+								DataTable[REG_PROBLEM] = PROBLEM_CONTROL_NODE;
+							}
+
+							CONTROL_SetDeviceState(DS_Ready, DSS_None);
 						}
 						else
-						{
-							DataTable[REG_OP_RESULT] = OPRESULT_FAIL;
-							DataTable[REG_PROBLEM] = PROBLEM_CONTROL_NODE;
-						}
-
-						CONTROL_SetDeviceState(DS_Ready, DSS_None);
+							LOGIC_HandleControlExecResult(res);
 					}
 					else
-						LOGIC_HandleControlExecResult(res);
+					{
+						DataTable[REG_OP_RESULT] = OPRESULT_FAIL;
+						DataTable[REG_PROBLEM] = Problem;
+						CONTROL_SetDeviceState(DS_Ready, DSS_None);
+					}
 				}
 				break;
 
