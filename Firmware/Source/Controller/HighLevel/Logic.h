@@ -47,13 +47,25 @@ bool LOGIC_IsLeakagelInProblem();
 bool LOGIC_IsPowerSupply1InProblem();
 bool LOGIC_IsPowerSupply2InProblem();
 
+// Общие обёртки
 void LOGIC_Wrapper_FaultControl();
 void LOGIC_Wrapper_Start(DeviceSubState NextState);
-void LOGIC_Wrapper_Commutate(DeviceSubState NextState);
 void LOGIC_Wrapper_WaitAllNodesReady(DeviceSubState NextState);
+
+// Обёртки коммутации
+void LOGIC_Wrapper_Commutate(DeviceSubState NextState);
+void LOGIC_Wrapper_UnCommutate(DeviceSubState NextState);
+
+// Обёртки управления
 void LOGIC_Wrapper_StartControl(DeviceSubState NextState, DeviceSubState StopState,
 		uint64_t *Timeout, uint16_t *Problem);
 void LOGIC_Wrapper_IsControlReady(DeviceSubState NextState, DeviceSubState StopState,
 		uint64_t *Timeout, uint16_t *Problem);
+void LOGIC_Wrapper_StopControl(DeviceSubState NextState);
+
+// Обёртки формирователя тока
+void LOGIC_Wrapper_PulseCurrent(DeviceSubState NextState, DeviceSubState StopState,
+		uint64_t *Timeout, uint16_t *Problem);
+void LOGIC_Wrapper_WaitCurrentReady(DeviceSubState NextState, uint64_t Timeout);
 
 #endif // __LOGIC_H

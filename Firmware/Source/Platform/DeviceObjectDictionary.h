@@ -195,6 +195,7 @@
 #define PROBLEM_CONTROL_CONFIG			5	// Некорректная конфигурация цепи управления
 #define PROBLEM_CONTROL_READY_TIMEOUT	6	// Отсутствие сигнала готовности управления
 #define PROBLEM_CONTROL_IN_PROBLEM		7	// Источник сигнала управления в проблеме
+#define PROBLEM_CURRENT_CONFIG			8	// Некорректная конфигурация источника тока
 
 //  Warning
 #define WARNING_NONE					0

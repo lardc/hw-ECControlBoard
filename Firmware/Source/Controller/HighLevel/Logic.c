@@ -517,6 +517,16 @@ void LOGIC_Wrapper_Commutate(DeviceSubState NextState)
 }
 //-----------------------------
 
+void LOGIC_Wrapper_UnCommutate(DeviceSubState NextState)
+{
+	ExecutionResult res = MUX_Disconnect();
+	if(res == ER_NoError)
+		CONTROL_SetDeviceState(DS_InProcess, NextState);
+	else
+		CONTROL_SwitchToFault(res, FAULT_EXT_GR_MUX);
+}
+//-----------------------------
+
 void LOGIC_Wrapper_WaitAllNodesReady(DeviceSubState NextState)
 {
 	if(COMM_AreSlavesInStateX(CDS_Ready))
@@ -552,6 +562,16 @@ void LOGIC_Wrapper_StartControl(DeviceSubState NextState, DeviceSubState StopSta
 }
 //-----------------------------
 
+void LOGIC_Wrapper_StopControl(DeviceSubState NextState)
+{
+	ExecutionResult res = LOGIC_StopControl();
+	if(res == ER_NoError)
+		CONTROL_SetDeviceState(DS_InProcess, NextState);
+	else
+		LOGIC_HandleControlExecResult(res);
+}
+//-----------------------------
+
 void LOGIC_Wrapper_IsControlReady(DeviceSubState NextState, DeviceSubState StopState,
 		uint64_t *Timeout, uint16_t *Problem)
 {
@@ -575,5 +595,42 @@ void LOGIC_Wrapper_IsControlReady(DeviceSubState NextState, DeviceSubState StopS
 	}
 	else
 		LOGIC_HandleControlExecResult(res);
+}
+//-----------------------------
+
+void LOGIC_Wrapper_PulseCurrent(DeviceSubState NextState, DeviceSubState StopState,
+		uint64_t *Timeout, uint16_t *Problem)
+{
+	ExecutionResult res = CURR_Execute();
+
+	switch(res)
+	{
+		case ER_NoError:
+			{
+				*Timeout = DataTable[REG_GENERAL_LOGIC_TIMEOUT] + CONTROL_TimeCounter;
+				CONTROL_SetDeviceState(DS_InProcess, NextState);
+			}
+			break;
+
+		case ER_BadHighLevelConfig:
+			{
+				*Problem = PROBLEM_CURRENT_CONFIG;
+				CONTROL_SetDeviceState(DS_InProcess, StopState);
+			}
+			break;
+
+		default:
+			CONTROL_SwitchToFault(res, FAULT_EXT_GR_DC_CURRENT);
+			break;
+	}
+}
+//-----------------------------
+
+void LOGIC_Wrapper_WaitCurrentReady(DeviceSubState NextState, uint64_t Timeout)
+{
+	if(COMM_IsSlaveInStateX(NAME_DCCurrent, CDS_Ready))
+		CONTROL_SetDeviceState(DS_InProcess, NextState);
+	else if(CONTROL_TimeCounter > Timeout)
+		CONTROL_SwitchToFault(ER_ChangeStateTimeout, FAULT_EXT_GR_DC_CURRENT);
 }
 //-----------------------------

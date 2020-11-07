@@ -51,59 +51,28 @@ void ONSTATE_HandleMeasurement()
 				break;
 
 			case DSS_OnVoltage_PulseCurrent:
-				{
-					res = CURR_Execute();
-					if(res == ER_NoError)
-					{
-						Timeout = DataTable[REG_GENERAL_LOGIC_TIMEOUT] + CONTROL_TimeCounter;
-						CONTROL_SetDeviceState(DS_InProcess, DSS_OnVoltage_WaitCurrentReady);
-					}
-					else
-						CONTROL_SwitchToFault(res, FAULT_EXT_GR_DC_CURRENT);
-				}
+				LOGIC_Wrapper_PulseCurrent(DSS_OnVoltage_WaitCurrentReady, DSS_OnVoltage_StopControl,
+						&Timeout, &Problem);
 				break;
 
 			case DSS_OnVoltage_WaitCurrentReady:
-				{
-					if(COMM_IsSlaveInStateX(NAME_DCCurrent, CDS_Ready))
-						CONTROL_SetDeviceState(DS_InProcess, DSS_OnVoltage_StopControl);
-					else if(CONTROL_TimeCounter > Timeout)
-						CONTROL_SwitchToFault(ER_ChangeStateTimeout, FAULT_EXT_GR_DC_CURRENT);
-				}
+				LOGIC_Wrapper_WaitCurrentReady(DSS_OnVoltage_StopControl, Timeout);
 				break;
 
 			case DSS_OnVoltage_StopControl:
-				{
-					res = LOGIC_StopControl();
-					if(res == ER_NoError)
-						CONTROL_SetDeviceState(DS_InProcess, DSS_OnVoltage_WaitStopControl);
-					else
-						LOGIC_HandleControlExecResult(res);
-				}
+				LOGIC_Wrapper_StopControl(DSS_OnVoltage_WaitStopControl);
 				break;
 
 			case DSS_OnVoltage_WaitStopControl:
-				{
-					if(COMM_AreSlavesInStateX(CDS_Ready))
-						CONTROL_SetDeviceState(DS_InProcess, DSS_OnVoltage_UnCommutate);
-				}
+				LOGIC_Wrapper_WaitAllNodesReady(DSS_OnVoltage_UnCommutate);
 				break;
 
 			case DSS_OnVoltage_UnCommutate:
-				{
-					res = MUX_Disconnect();
-					if(res == ER_NoError)
-						CONTROL_SetDeviceState(DS_InProcess, DSS_OnVoltage_WaitUnCommutate);
-					else
-						CONTROL_SwitchToFault(res, FAULT_EXT_GR_MUX);
-				}
+				LOGIC_Wrapper_UnCommutate(DSS_OnVoltage_WaitUnCommutate);
 				break;
 
 			case DSS_OnVoltage_WaitUnCommutate:
-				{
-					if(COMM_AreSlavesInStateX(CDS_Ready))
-						CONTROL_SetDeviceState(DS_InProcess, DSS_OnVoltage_ReadResult);
-				}
+				LOGIC_Wrapper_WaitAllNodesReady(DSS_OnVoltage_ReadResult);
 				break;
 
 			case DSS_OnVoltage_ReadResult:
