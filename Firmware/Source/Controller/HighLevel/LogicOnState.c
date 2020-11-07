@@ -32,7 +32,7 @@ void ONSTATE_HandleMeasurement()
 				break;
 
 			case DSS_OnVoltage_Commutate:
-				LOGIC_Wrapper_Commutate(DSS_OnVoltage_WaitCommutation);
+				LOGIC_Wrapper_Commutate(DSS_OnVoltage_WaitCommutation, DSS_OnVoltage_ReadResult, &Problem);
 				break;
 
 			case DSS_OnVoltage_WaitCommutation:
@@ -122,7 +122,7 @@ void ONSTATE_HandleMeasurement()
 							CONTROL_SetDeviceState(DS_Ready, DSS_None);
 						}
 						else
-							CONTROL_SwitchToFault(res, FAULT_EXT_GR_DC_CURRENT);
+							LOGIC_HandleCurrentExecResult(res);
 					}
 					else
 					{

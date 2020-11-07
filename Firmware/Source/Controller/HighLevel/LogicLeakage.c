@@ -23,7 +23,6 @@ void LEAK_HandleMeasurement()
 	{
 		LOGIC_Wrapper_FaultControl();
 
-		ExecutionResult res;
 		switch(CONTROL_SubState)
 		{
 			case DSS_Leakage_StartTest:
@@ -32,7 +31,7 @@ void LEAK_HandleMeasurement()
 				break;
 
 			case DSS_Leakage_Commutate:
-				LOGIC_Wrapper_Commutate(DSS_Leakage_WaitCommutation);
+				LOGIC_Wrapper_Commutate(DSS_Leakage_WaitCommutation, DSS_Leakage_ReadResult, &Problem);
 				break;
 
 			case DSS_Leakage_WaitCommutation:
@@ -61,7 +60,7 @@ void LEAK_HandleMeasurement()
 				LOGIC_Wrapper_IsControlReady(DSS_Leakage_StartOutVoltage, DSS_Leakage_StopControl,
 						NULL, &Problem);
 				break;
-
+			/*
 			case DSS_Leakage_StartOutVoltage:
 				{
 					res = LOGIC_StartLeakage();
@@ -178,7 +177,7 @@ void LEAK_HandleMeasurement()
 					}
 				}
 				break;
-
+			*/
 			default:
 				break;
 		}

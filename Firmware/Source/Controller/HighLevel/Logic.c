@@ -12,6 +12,10 @@
 #include "ACVoltageBoard.h"
 #include "DCHighVoltageBoard.h"
 
+// Types
+typedef ExecutionResult (*xExecFunction)();
+typedef void (*xHandleFaultFunction)(ExecutionResult Result);
+
 // Variables
 static volatile MuxObject Multiplexer;
 static volatile CurrentBoardObject CurrentBoard;
@@ -31,11 +35,31 @@ static const NodeName LeakageACNode = NAME_ACVoltage2;
 
 // Forward functions
 void LOGIC_AttachSettings(NodeName Name, void *SettingsPointer);
+bool LOGIC_IsNodeInProblem(NodeName Name);
+void LOGIC_Wrapper_ExecuteX(DeviceSubState NextState, DeviceSubState StopState, uint64_t *Timeout, uint16_t *Problem,
+		xExecFunction MainEventFunc, uint16_t BadConfigProblem, xHandleFaultFunction FaultFunc);
+
 LogicConfigError LOGIC_CacheMuxSettings();
 void LOGIC_CacheCurrentBoardSettings();
 void LOGIC_CacheControlSettings(DCV_OutputMode Mode);
 void LOGIC_CacheLeakageSettings();
-bool LOGIC_IsNodeInProblem(NodeName Name);
+
+bool LOGIC_IsDCControl();
+bool LOGIC_IsDCLeakage();
+
+ExecutionResult LOGIC_StartControl();
+ExecutionResult LOGIC_StopControl();
+ExecutionResult LOGIC_IsControlVoltageReady(bool *IsReady);
+
+ExecutionResult LOGIC_StartLeakage();
+ExecutionResult LOGIC_StopLeakage();
+ExecutionResult LOGIC_IsLeakageVoltageReady(bool *IsReady);
+bool IsLeakageNodeReady();
+
+bool LOGIC_IsControlInProblem();
+bool LOGIC_IsLeakagelInProblem();
+bool LOGIC_IsPowerSupply1InProblem();
+bool LOGIC_IsPowerSupply2InProblem();
 
 // Functions
 void LOGIC_InitEntities()
@@ -340,6 +364,18 @@ bool LOGIC_IsDCLeakage()
 }
 //-----------------------------
 
+void LOGIC_HandleMuxExecResult(ExecutionResult Result)
+{
+	CONTROL_SwitchToFault(Result, FAULT_EXT_GR_MUX);
+}
+//-----------------------------
+
+void LOGIC_HandleCurrentExecResult(ExecutionResult Result)
+{
+	CONTROL_SwitchToFault(Result, FAULT_EXT_GR_DC_CURRENT);
+}
+//-----------------------------
+
 void LOGIC_HandleControlExecResult(ExecutionResult Result)
 {
 	CONTROL_SwitchToFault(Result,
@@ -504,28 +540,38 @@ void LOGIC_Wrapper_Start(DeviceSubState NextState)
 }
 //-----------------------------
 
-void LOGIC_Wrapper_Commutate(DeviceSubState NextState)
+void LOGIC_Wrapper_ExecuteX(DeviceSubState NextState, DeviceSubState StopState, uint64_t *Timeout, uint16_t *Problem,
+		xExecFunction MainEventFunc, uint16_t BadConfigProblem, xHandleFaultFunction FaultFunc)
 {
-	ExecutionResult res = MUX_Connect();
+	ExecutionResult res = MainEventFunc();
 
 	switch(res)
 	{
 		case ER_NoError:
-			CONTROL_SetDeviceState(DS_InProcess, NextState);
+			{
+				if(Timeout)
+					*Timeout = GeneralLogicTimeout + CONTROL_TimeCounter;
+				CONTROL_SetDeviceState(DS_InProcess, NextState);
+			}
 			break;
 
 		case ER_BadHighLevelConfig:
 			{
-				DataTable[REG_OP_RESULT] = OPRESULT_FAIL;
-				DataTable[REG_PROBLEM] = PROBLEM_MUX_CONFIG;
-				CONTROL_SetDeviceState(DS_Ready, DSS_None);
+				*Problem = BadConfigProblem;
+				CONTROL_SetDeviceState(DS_InProcess, StopState);
 			}
 			break;
 
 		default:
-			CONTROL_SwitchToFault(res, FAULT_EXT_GR_MUX);
+			FaultFunc(res);
 			break;
 	}
+}
+//-----------------------------
+
+void LOGIC_Wrapper_Commutate(DeviceSubState NextState, DeviceSubState StopState, uint16_t *Problem)
+{
+	LOGIC_Wrapper_ExecuteX(NextState, StopState, NULL, Problem, &MUX_Connect, PROBLEM_MUX_CONFIG, &LOGIC_HandleMuxExecResult);
 }
 //-----------------------------
 
@@ -535,7 +581,7 @@ void LOGIC_Wrapper_UnCommutate(DeviceSubState NextState)
 	if(res == ER_NoError)
 		CONTROL_SetDeviceState(DS_InProcess, NextState);
 	else
-		CONTROL_SwitchToFault(res, FAULT_EXT_GR_MUX);
+		LOGIC_HandleMuxExecResult(res);
 }
 //-----------------------------
 
@@ -665,7 +711,7 @@ void LOGIC_Wrapper_WaitCurrentReady(DeviceSubState NextState, uint64_t Timeout)
 	if(COMM_IsSlaveInStateX(NAME_DCCurrent, CDS_Ready))
 		CONTROL_SetDeviceState(DS_InProcess, NextState);
 	else if(CONTROL_TimeCounter > Timeout)
-		CONTROL_SwitchToFault(ER_ChangeStateTimeout, FAULT_EXT_GR_DC_CURRENT);
+		LOGIC_HandleCurrentExecResult(ER_ChangeStateTimeout);
 }
 //-----------------------------
 

@@ -30,7 +30,7 @@ void CTRL_HandleMeasurement()
 				break;
 
 			case DSS_Control_Commutate:
-				LOGIC_Wrapper_Commutate(DSS_Control_WaitCommutation);
+				LOGIC_Wrapper_Commutate(DSS_Control_WaitCommutation, DSS_Control_ReadResult, &Problem);
 				break;
 
 			case DSS_Control_WaitCommutation:

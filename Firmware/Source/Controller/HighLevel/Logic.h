@@ -26,26 +26,13 @@ void LOGIC_HandleFault();
 
 LogicConfigError LOGIC_PrepareMeasurement();
 
-bool LOGIC_IsDCControl();
-bool LOGIC_IsDCLeakage();
-
-void LOGIC_HandleControlExecResult(ExecutionResult Result);
-ExecutionResult LOGIC_StartControl();
-ExecutionResult LOGIC_StopControl();
-ExecutionResult LOGIC_IsControlVoltageReady(bool *IsReady);
 ExecutionResult LOGIC_ControlReadResult(uint16_t *OpResult, pVIPair Result);
-
-void LOGIC_HandleLeakageExecResult(ExecutionResult Result);
-ExecutionResult LOGIC_StartLeakage();
-ExecutionResult LOGIC_StopLeakage();
-ExecutionResult LOGIC_IsLeakageVoltageReady(bool *IsReady);
 ExecutionResult LOGIC_LeakageReadResult(uint16_t *OpResult, pVIPair Result);
-bool IsLeakageNodeReady();
 
-bool LOGIC_IsControlInProblem();
-bool LOGIC_IsLeakagelInProblem();
-bool LOGIC_IsPowerSupply1InProblem();
-bool LOGIC_IsPowerSupply2InProblem();
+void LOGIC_HandleMuxExecResult(ExecutionResult Result);
+void LOGIC_HandleControlExecResult(ExecutionResult Result);
+void LOGIC_HandleLeakageExecResult(ExecutionResult Result);
+void LOGIC_HandleCurrentExecResult(ExecutionResult Result);
 
 // Общие обёртки
 void LOGIC_Wrapper_FaultControl();
@@ -54,7 +41,7 @@ void LOGIC_Wrapper_WaitAllNodesReady(DeviceSubState NextState);
 void LOGIC_Wrapper_SetStateAfterDelay(DeviceSubState NextState, uint64_t Timeout);
 
 // Обёртки коммутации
-void LOGIC_Wrapper_Commutate(DeviceSubState NextState);
+void LOGIC_Wrapper_Commutate(DeviceSubState NextState, DeviceSubState StopState, uint16_t *Problem);
 void LOGIC_Wrapper_UnCommutate(DeviceSubState NextState);
 
 // Обёртки управления
