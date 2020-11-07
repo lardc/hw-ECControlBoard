@@ -197,6 +197,9 @@
 #define PROBLEM_CONTROL_READY_TIMEOUT	6	// Отсутствие сигнала готовности управления
 #define PROBLEM_CONTROL_IN_PROBLEM		7	// Источник сигнала управления в проблеме
 #define PROBLEM_CURRENT_CONFIG			8	// Некорректная конфигурация источника тока
+#define PROBLEM_LEAKAGE_CONFIG			9	// Некорректная конфигурация источника напряжения утечки
+#define PROBLEM_LEAKAGE_READY_TIMEOUT	10	// Отсутствие сигнала готовности утечки
+#define PROBLEM_LEAKAGE_IN_PROBLEM		11	// Источник сигнала утечки в проблеме
 
 //  Warning
 #define WARNING_NONE					0
