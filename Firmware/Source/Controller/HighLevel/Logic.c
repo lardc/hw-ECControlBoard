@@ -18,6 +18,7 @@ static volatile CurrentBoardObject CurrentBoard;
 static volatile DCVoltageBoardObject DCVoltageBoard1, DCVoltageBoard2, DCVoltageBoard3;
 static volatile ACVoltageBoardObject ACVoltageBoard1, ACVoltageBoard2;
 static volatile DCHVoltageBoardObject DCHighVoltageBoard;
+static uint16_t GeneralLogicTimeout;
 
 static const NodeName ControlDCNode = NAME_DCVoltage1;
 static const NodeName ControlACNode = NAME_ACVoltage1;
@@ -209,6 +210,9 @@ void LOGIC_HandleFault()
 LogicConfigError LOGIC_PrepareMeasurement()
 {
 	LogicConfigError err = LOGIC_CacheMuxSettings();
+
+	GeneralLogicTimeout = DataTable[REG_GENERAL_LOGIC_TIMEOUT];
+
 	if(err == LCE_None)
 	{
 		switch(Multiplexer.MeasureType)
@@ -550,7 +554,7 @@ void LOGIC_Wrapper_StartControl(DeviceSubState NextState, DeviceSubState StopSta
 	{
 		case ER_NoError:
 			{
-				*Timeout = DataTable[REG_GENERAL_LOGIC_TIMEOUT] + CONTROL_TimeCounter;
+				*Timeout = GeneralLogicTimeout + CONTROL_TimeCounter;
 				CONTROL_SetDeviceState(DS_InProcess, NextState);
 			}
 			break;
@@ -617,7 +621,7 @@ void LOGIC_Wrapper_PulseCurrent(DeviceSubState NextState, DeviceSubState StopSta
 	{
 		case ER_NoError:
 			{
-				*Timeout = DataTable[REG_GENERAL_LOGIC_TIMEOUT] + CONTROL_TimeCounter;
+				*Timeout = GeneralLogicTimeout + CONTROL_TimeCounter;
 				CONTROL_SetDeviceState(DS_InProcess, NextState);
 			}
 			break;
