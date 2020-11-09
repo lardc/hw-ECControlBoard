@@ -67,8 +67,7 @@ void CALIBRATE_HandleMeasurement()
 					{
 						VIPair Result;
 						uint16_t OpResult;
-
-						ExecutionResult res = LOGIC_LeakageReadResult(&OpResult, &Result);
+						ExecutionResult res = LOGIC_CalibrationReadResult(&OpResult, &Result);
 
 						if(res == ER_NoError)
 						{
@@ -82,7 +81,7 @@ void CALIBRATE_HandleMeasurement()
 							CONTROL_SetDeviceState(DS_Ready, DSS_None);
 						}
 						else
-							LOGIC_HandleLeakageExecResult(res);
+							LOGIC_HandleCalibrationExecResult(res);
 					}
 					else
 					{

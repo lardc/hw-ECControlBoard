@@ -734,6 +734,65 @@ ExecutionResult LOGIC_IsCalibrationReady(bool *IsReady)
 }
 //-----------------------------
 
+ExecutionResult LOGIC_CalibrationReadResult(uint16_t *OpResult, pVIPair Result)
+{
+	if(CachedNode == CN_DC1 || CachedNode == CN_DC2 || CachedNode == CN_DC3)
+	{
+		NodeName Name = NAME_DCVoltage1;
+
+		if(CachedNode == CN_DC2)
+			Name = NAME_DCVoltage2;
+		else if(CachedNode == CN_DC3)
+			Name = NAME_DCVoltage3;
+
+		pSlaveNode NodeData = COMM_GetSlaveDevicePointer(Name);
+		pDCVoltageBoardObject Settings = (pDCVoltageBoardObject)NodeData->Settings;
+
+		ExecutionResult res = DCV_ReadResult(Name);
+		*Result = Settings->Result;
+
+		return res;
+	}
+	else if(CachedNode == CN_AC1 || CachedNode == CN_AC2)
+	{
+		NodeName Name = NAME_ACVoltage1;
+
+		if(CachedNode == CN_AC2)
+			Name = NAME_ACVoltage2;
+
+		pSlaveNode NodeData = COMM_GetSlaveDevicePointer(Name);
+		pACVoltageBoardObject Settings = (pACVoltageBoardObject)NodeData->Settings;
+
+		ExecutionResult res = ACV_ReadResult(Name);
+		*Result = Settings->Result;
+
+		return res;
+	}
+	else if(CachedNode == CN_HVDC)
+	{
+		pSlaveNode NodeData = COMM_GetSlaveDevicePointer(NAME_DCHighVoltage);
+		pDCHVoltageBoardObject Settings = (pDCHVoltageBoardObject)NodeData->Settings;
+
+		ExecutionResult res = DCHV_ReadResult();
+		*Result = Settings->Result;
+
+		return res;
+	}
+	else if(CachedNode == CN_CB)
+	{
+		pSlaveNode NodeData = COMM_GetSlaveDevicePointer(NAME_DCCurrent);
+		pCurrentBoardObject Settings = (pCurrentBoardObject)NodeData->Settings;
+
+		ExecutionResult res = CURR_ReadResult();
+		*Result = Settings->Result;
+
+		return res;
+	}
+
+	return ER_WrongNode;
+}
+//-----------------------------
+
 bool LOGIC_IsNodeInProblem(NodeName Name)
 {
 	return (COMM_GetSlaveOpResult(Name) == COMM_OPRESULT_FAIL)
