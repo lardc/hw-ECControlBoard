@@ -9,9 +9,6 @@
 #include "DataTable.h"
 #include "DeviceObjectDictionary.h"
 #include "Global.h"
-#include "Multiplexer.h"
-#include "ACVoltageBoard.h"
-#include "DCHighVoltageBoard.h"
 
 // Functions
 void CALIBRATE_HandleMeasurement()
@@ -25,7 +22,7 @@ void CALIBRATE_HandleMeasurement()
 
 		switch(CONTROL_SubState)
 		{
-			case DSS_Calibrate_StartTest:
+			case DSS_Calibrate_Start:
 				Problem = PROBLEM_NONE;
 				LOGIC_Wrapper_Start(DSS_Calibrate_Commutate);
 				break;
@@ -35,25 +32,25 @@ void CALIBRATE_HandleMeasurement()
 				break;
 
 			case DSS_Calibrate_WaitCommutation:
-				LOGIC_Wrapper_WaitAllNodesReady(DSS_Calibrate_StartOutVoltage);
+				LOGIC_Wrapper_WaitAllNodesReady(DSS_Calibrate_StartOutput);
 				break;
 
-			case DSS_Calibrate_StartOutVoltage:
-				/*LOGIC_Wrapper_StartLeakage(DSS_Calibrate_WaitOutVoltageReady, DSS_Calibrate_UnCommutate,
-						&Timeout, &Problem);*/
+			case DSS_Calibrate_StartOutput:
+				LOGIC_Wrapper_StartCalibration(DSS_Calibrate_WaitOutputReady, DSS_Calibrate_UnCommutate,
+						&Timeout, &Problem);
 				break;
 
-			case DSS_Calibrate_WaitOutVoltageReady:
-				/*LOGIC_Wrapper_IsLeakageReady(DSS_Calibrate_StopOutVoltage, DSS_Calibrate_StopOutVoltage,
-						&Timeout, &Problem);*/
+			case DSS_Calibrate_WaitOutputReady:
+				LOGIC_Wrapper_IsCalibrationReady(DSS_Calibrate_StopOutput, DSS_Calibrate_StopOutput,
+						&Timeout, &Problem);
 				break;
 
-			case DSS_Calibrate_StopOutVoltage:
-				//LOGIC_Wrapper_StopLeakage(DSS_Calibrate_WaitStopOutVoltage);
+			case DSS_Calibrate_StopOutput:
+				LOGIC_Wrapper_StopCalibration(DSS_Calibrate_WaitStopOutput);
 				break;
 
-			case DSS_Calibrate_WaitStopOutVoltage:
-				//LOGIC_Wrapper_WaitLeakageFinished(DSS_Calibrate_UnCommutate, Timeout);
+			case DSS_Calibrate_WaitStopOutput:
+				LOGIC_Wrapper_WaitAllNodesReady(DSS_Calibrate_UnCommutate);
 				break;
 
 			case DSS_Calibrate_UnCommutate:

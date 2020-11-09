@@ -28,6 +28,7 @@ LogicConfigError LOGIC_PrepareMeasurement(pMeasurementType OverrideMeasurement);
 
 ExecutionResult LOGIC_ControlReadResult(uint16_t *OpResult, pVIPair Result);
 ExecutionResult LOGIC_LeakageReadResult(uint16_t *OpResult, pVIPair Result);
+ExecutionResult LOGIC_CalibrationReadResult(uint16_t *OpResult, pVIPair Result);
 
 void LOGIC_HandleMuxExecResult(ExecutionResult Result);
 void LOGIC_HandleControlExecResult(ExecutionResult Result);

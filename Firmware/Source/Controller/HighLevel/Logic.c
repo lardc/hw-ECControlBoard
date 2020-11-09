@@ -298,7 +298,7 @@ LogicConfigError LOGIC_PrepareMeasurement(pMeasurementType OverrideMeasurement)
 				{
 					CachedNode = DataTable[REG_CALIBRATION_NODE];
 					LOGIC_CacheCalibrationSettings();
-					CONTROL_SetDeviceState(DS_InProcess, DSS_Calibrate_StartTest);
+					CONTROL_SetDeviceState(DS_InProcess, DSS_Calibrate_Start);
 				}
 				break;
 
