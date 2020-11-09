@@ -186,7 +186,7 @@ static Boolean CONTROL_DispatchAction(Int16U ActionID, pInt16U pUserError)
 					LL_SetStateExtLed(true);
 					COMM_UpdateEmulationSettings();
 					CONTROL_ResetOutputRegisters();
-					LogicConfigError err = LOGIC_PrepareMeasurement();
+					LogicConfigError err = LOGIC_PrepareMeasurement(NULL);
 					DataTable[REG_CONFIG_ERR] = err;
 
 					if(err != LCE_None)

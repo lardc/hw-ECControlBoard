@@ -12,6 +12,18 @@
 #include "ACVoltageBoard.h"
 #include "DCHighVoltageBoard.h"
 
+// Definitions
+typedef enum __CalibrateNodeIndex
+{
+	CN_DC1 = 1,
+	CN_DC2 = 2,
+	CN_DC3 = 3,
+	CN_HVDC = 4,
+	CN_AC1 = 5,
+	CN_AC2 = 6,
+	CN_CB = 7
+} CalibrateNodeIndex;
+
 // Types
 typedef ExecutionResult (*xExecFunction)();
 typedef ExecutionResult (*xIsReadyFunction)(bool *Result);
@@ -24,6 +36,7 @@ static volatile DCVoltageBoardObject DCVoltageBoard1, DCVoltageBoard2, DCVoltage
 static volatile ACVoltageBoardObject ACVoltageBoard1, ACVoltageBoard2;
 static volatile DCHVoltageBoardObject DCHighVoltageBoard;
 static uint16_t GeneralLogicTimeout, ControlWaitDelay;
+static CalibrateNodeIndex CachedNode;
 
 static const NodeName ControlDCNode = NAME_DCVoltage1;
 static const NodeName ControlACNode = NAME_ACVoltage1;
@@ -43,10 +56,11 @@ void LOGIC_Wrapper_IsReadyX(DeviceSubState NextState, DeviceSubState StopState,
 		uint64_t *Timeout, uint16_t *Problem, xIsReadyFunction MainReadyFunc,
 		uint16_t ReadyProblem, uint16_t TimeoutProblem, xHandleFaultFunction FaultFunc);
 
-LogicConfigError LOGIC_CacheMuxSettings();
+LogicConfigError LOGIC_CacheMuxSettings(pMeasurementType OverrideMeasurement);
 void LOGIC_CacheCurrentBoardSettings();
 void LOGIC_CacheControlSettings(DCV_OutputMode Mode);
 void LOGIC_CacheLeakageSettings();
+void LOGIC_CacheCalibrationSettings();
 
 bool LOGIC_IsDCControl();
 bool LOGIC_IsDCLeakage();
@@ -59,6 +73,9 @@ ExecutionResult LOGIC_StartLeakage();
 ExecutionResult LOGIC_StopLeakage();
 ExecutionResult LOGIC_IsLeakageVoltageReady(bool *IsReady);
 bool IsLeakageNodeReady();
+
+ExecutionResult LOGIC_StartCalibration();
+ExecutionResult LOGIC_StopCalibration();
 
 bool LOGIC_IsControlInProblem();
 bool LOGIC_IsLeakagelInProblem();
@@ -235,9 +252,9 @@ void LOGIC_HandleFault()
 }
 //-----------------------------
 
-LogicConfigError LOGIC_PrepareMeasurement()
+LogicConfigError LOGIC_PrepareMeasurement(pMeasurementType OverrideMeasurement)
 {
-	LogicConfigError err = LOGIC_CacheMuxSettings();
+	LogicConfigError err = LOGIC_CacheMuxSettings(OverrideMeasurement);
 
 	GeneralLogicTimeout = DataTable[REG_GENERAL_LOGIC_TIMEOUT];
 	ControlWaitDelay = DataTable[REG_CTRL_HOLD_DELAY];
@@ -278,7 +295,8 @@ LogicConfigError LOGIC_PrepareMeasurement()
 
 			case MT_Calibrate:
 				{
-					LOGIC_CacheLeakageSettings();
+					CachedNode = DataTable[REG_CALIBRATION_NODE];
+					LOGIC_CacheCalibrationSettings();
 					CONTROL_SetDeviceState(DS_InProcess, DSS_Calibrate_StartTest);
 				}
 				break;
@@ -291,26 +309,100 @@ LogicConfigError LOGIC_PrepareMeasurement()
 }
 //-----------------------------
 
-LogicConfigError LOGIC_CacheMuxSettings()
+void LOGIC_CacheCalibrationSettings()
 {
-	Multiplexer.MeasureType = DataTable[REG_MEASUREMENT_TYPE];
+	VIPair Setpoint;
+	Setpoint.Voltage = DT_Read32(REG_CALIBRATION_VSET, REG_CALIBRATION_VSET_32);
+	Setpoint.Current = DT_Read32(REG_CALIBRATION_ISET, REG_CALIBRATION_ISET_32);
+
+	switch(CachedNode)
+	{
+		case CN_DC1:
+			{
+				DCVoltageBoard1.Setpoint = Setpoint;
+				DCVoltageBoard1.OutputLine = DCV_CTRL;
+				DCVoltageBoard1.OutputType = (DataTable[REG_CALIBRATION_TYPE] == 1) ? DCV_Current : DCV_Voltage;
+				DCVoltageBoard1.OutputMode = DCV_Continuous;
+			}
+			break;
+
+		case CN_DC2:
+			{
+				DCVoltageBoard2.Setpoint = Setpoint;
+				DCVoltageBoard2.OutputLine = DCV_PS1;
+				DCVoltageBoard2.OutputType = DCV_Voltage;
+				DCVoltageBoard2.OutputMode = DCV_Continuous;
+			}
+			break;
+
+		case CN_DC3:
+			{
+				DCVoltageBoard3.Setpoint = Setpoint;
+				DCVoltageBoard3.OutputLine = DCV_PS2;
+				DCVoltageBoard3.OutputType = DCV_Voltage;
+				DCVoltageBoard3.OutputMode = DCV_Continuous;
+			}
+			break;
+
+		case CN_HVDC:
+			{
+				DCHighVoltageBoard.Setpoint = Setpoint;
+			}
+			break;
+
+		case CN_AC1:
+			{
+				ACVoltageBoard1.Setpoint = Setpoint;
+				ACVoltageBoard1.OutputLine = ACV_CTRL;
+			}
+			break;
+
+		case CN_AC2:
+			{
+				ACVoltageBoard2.Setpoint = Setpoint;
+				ACVoltageBoard2.OutputLine = ACV_BUS_LV;
+			}
+			break;
+
+		case CN_CB:
+			{
+				CurrentBoard.Setpoint = Setpoint;
+			}
+			break;
+
+		default:
+			break;
+	}
+}
+//-----------------------------
+
+LogicConfigError LOGIC_CacheMuxSettings(pMeasurementType OverrideMeasurement)
+{
+	if(OverrideMeasurement)
+		Multiplexer.MeasureType = *OverrideMeasurement;
+	else
+		Multiplexer.MeasureType = DataTable[REG_MEASUREMENT_TYPE];
+
 	Multiplexer.Case = DataTable[REG_DUT_CASE_TYPE];
 	Multiplexer.Position = DataTable[REG_DUT_POSITION_NUMBER];
 	Multiplexer.InputType = DataTable[REG_INPUT_CONTROL_TYPE];
 	Multiplexer.LeakageType = DataTable[REG_COMM_VOLTAGE_TYPE_LEAKAGE];
 	Multiplexer.Polarity = DataTable[REG_COMM_POLARITY];
 
-	const DL_DUTConfiguration* DUTConfig = DUTLIB_ExtractConfiguration(Multiplexer.Case);
-
 	// Валидация конфигурации
-	// Проверка наличия требуемого корпуса
-	if(DUTConfig == NULL)
-		return LCE_UnknownCase;
+	if(Multiplexer.MeasureType != MT_Calibrate)
+	{
+		const DL_DUTConfiguration* DUTConfig = DUTLIB_ExtractConfiguration(Multiplexer.Case);
 
-	// Проверка соответствия номеров позиций
-	if((Multiplexer.Position == MX_Position2 && DUTConfig->OutputPositionsNum == OneOutput) ||
-		(Multiplexer.Position == MX_Position3 && DUTConfig->OutputPositionsNum != ThreeOutputs))
-		return LCE_PositionMissmatch;
+		// Проверка наличия требуемого корпуса
+		if(DUTConfig == NULL)
+			return LCE_UnknownCase;
+
+		// Проверка соответствия номеров позиций
+		if((Multiplexer.Position == MX_Position2 && DUTConfig->OutputPositionsNum == OneOutput) ||
+			(Multiplexer.Position == MX_Position3 && DUTConfig->OutputPositionsNum != ThreeOutputs))
+			return LCE_PositionMissmatch;
+	}
 
 	return LCE_None;
 }
@@ -501,6 +593,143 @@ ExecutionResult LOGIC_LeakageReadResult(uint16_t *OpResult, pVIPair Result)
 bool IsLeakageNodeReady()
 {
 	return COMM_IsSlaveInStateX(LOGIC_IsDCLeakage() ? LeakageDCNode : LeakageACNode, CDS_Ready);
+}
+//-----------------------------
+
+ExecutionResult LOGIC_StartCalibration()
+{
+	switch(CachedNode)
+	{
+		case CN_DC1:
+			return DCV_Execute(NAME_DCVoltage1);
+
+		case CN_DC2:
+			return DCV_Execute(NAME_DCVoltage2);
+
+		case CN_DC3:
+			return DCV_Execute(NAME_DCVoltage3);
+
+		case CN_HVDC:
+			return DCHV_Execute();
+
+		case CN_AC1:
+			return ACV_Execute(NAME_ACVoltage1);
+
+		case CN_AC2:
+			return ACV_Execute(NAME_ACVoltage2);
+
+		case CN_CB:
+			return CURR_Execute();
+
+		default:
+			return ER_WrongNode;
+	}
+}
+//-----------------------------
+
+ExecutionResult LOGIC_StopCalibration()
+{
+	switch(CachedNode)
+	{
+		case CN_DC1:
+			return DCV_Stop(NAME_DCVoltage1);
+
+		case CN_DC2:
+			return DCV_Stop(NAME_DCVoltage2);
+
+		case CN_DC3:
+			return DCV_Stop(NAME_DCVoltage3);
+
+		case CN_HVDC:
+			return DCHV_Stop();
+
+		case CN_AC1:
+			return ACV_Stop(NAME_ACVoltage1);
+
+		case CN_AC2:
+			return ACV_Stop(NAME_ACVoltage2);
+
+		case CN_CB:
+			return CURR_Stop();
+
+		default:
+			return ER_WrongNode;
+	}
+}
+//-----------------------------
+
+void LOGIC_HandleCalibrationExecResult(ExecutionResult Result)
+{
+	uint16_t Group = FAULT_EXT_GR_COMMON;
+
+	switch(CachedNode)
+	{
+		case CN_DC1:
+			Group = FAULT_EXT_GR_DC_VOLTAGE1;
+			break;
+
+		case CN_DC2:
+			Group = FAULT_EXT_GR_DC_VOLTAGE2;
+			break;
+
+		case CN_DC3:
+			Group = FAULT_EXT_GR_DC_VOLTAGE3;
+			break;
+
+		case CN_HVDC:
+			Group = FAULT_EXT_GR_DC_HV;
+			break;
+
+		case CN_AC1:
+			Group = FAULT_EXT_GR_AC_VOLTAGE1;
+			break;
+
+		case CN_AC2:
+			Group = FAULT_EXT_GR_AC_VOLTAGE2;
+			break;
+
+		case CN_CB:
+			Group = FAULT_EXT_GR_DC_CURRENT;
+			break;
+
+		default:
+			break;
+	}
+
+	CONTROL_SwitchToFault(Result, Group);
+}
+//-----------------------------
+
+ExecutionResult LOGIC_IsCalibrationReady(bool *IsReady)
+{
+	switch(CachedNode)
+	{
+		case CN_DC1:
+			return DCV_IsVoltageReady(NAME_DCVoltage1, IsReady);
+
+		case CN_DC2:
+			return DCV_IsVoltageReady(NAME_DCVoltage2, IsReady);
+
+		case CN_DC3:
+			return DCV_IsVoltageReady(NAME_DCVoltage3, IsReady);
+
+		case CN_HVDC:
+			 *IsReady = COMM_IsSlaveInStateX(NAME_DCHighVoltage, CDS_Ready);
+			return ER_NoError;
+
+		case CN_AC1:
+			return ACV_IsVoltageReady(NAME_ACVoltage1, IsReady);
+
+		case CN_AC2:
+			return ACV_IsVoltageReady(NAME_ACVoltage2, IsReady);
+
+		case CN_CB:
+			 *IsReady = COMM_IsSlaveInStateX(NAME_DCCurrent, CDS_Ready);
+			return ER_NoError;
+
+		default:
+			return ER_WrongNode;
+	}
 }
 //-----------------------------
 

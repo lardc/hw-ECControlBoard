@@ -27,7 +27,7 @@ typedef enum __MeasurementType
 	MT_InputVoltageCurrent = 3,
 	MT_InhibitVoltage = 4,
 	MT_Calibrate = 5
-} MeasurementType;
+} MeasurementType, *pMeasurementType;
 
 typedef enum __ExecutionResult
 {

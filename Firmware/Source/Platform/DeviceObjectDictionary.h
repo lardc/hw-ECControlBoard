@@ -98,8 +98,11 @@
 
 #define REG_CALIBRATION_NODE			160	// Калибруемый узел
 #define REG_CALIBRATION_TYPE			161	// Тип калибровки
-#define REG_CALIBRATION_SETPOINT		162	// Уставка калибровки
-#define REG_CALIBRATION_SETPOINT_32		163
+#define REG_CALIBRATION_VSET			162	// Уставка напряжения калибровки
+#define REG_CALIBRATION_VSET_32			163
+#define REG_CALIBRATION_ISET			164	// Уставка тока калибровки
+#define REG_CALIBRATION_ISET_32			165
+
 
 #define REG_DIAG_NID					185	// CAN: регистр NodeID для доступа к slave-устройствам
 #define REG_DIAG_IN_1					186	// CAN: входной отладочный регистр 1
