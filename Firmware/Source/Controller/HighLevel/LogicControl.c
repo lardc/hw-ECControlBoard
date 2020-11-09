@@ -8,9 +8,6 @@
 #include "DataTable.h"
 #include "DeviceObjectDictionary.h"
 #include "Global.h"
-#include "Multiplexer.h"
-#include "DCVoltageBoard.h"
-#include "ACVoltageBoard.h"
 
 // Functions
 void CTRL_HandleMeasurement()

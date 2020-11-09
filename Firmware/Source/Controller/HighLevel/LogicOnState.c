@@ -9,10 +9,7 @@
 #include "DataTable.h"
 #include "DeviceObjectDictionary.h"
 #include "Global.h"
-#include "Multiplexer.h"
 #include "CurrentBoard.h"
-#include "DCVoltageBoard.h"
-#include "ACVoltageBoard.h"
 
 // Functions
 void ONSTATE_HandleMeasurement()
