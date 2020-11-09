@@ -17,7 +17,7 @@
 #include "LogicOnState.h"
 #include "LogicControl.h"
 #include "LogicInhibit.h"
-#include "LogicCalibrateLeakage.h"
+#include "LogicCalibrate.h"
 
 // Types
 //
@@ -124,7 +124,7 @@ void CONTROL_Idle()
 	INHIBIT_HandleMeasurement();
 
 	// Обработка логики калибровки
-	CAL_LEAK_HandleMeasurement();
+	CALIBRATE_HandleMeasurement();
 }
 //------------------------------------------
 

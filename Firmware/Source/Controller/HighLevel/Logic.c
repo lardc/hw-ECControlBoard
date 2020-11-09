@@ -276,10 +276,10 @@ LogicConfigError LOGIC_PrepareMeasurement()
 				}
 				break;
 
-			case MT_CAL_LeakageCurrent:
+			case MT_Calibrate:
 				{
 					LOGIC_CacheLeakageSettings();
-					CONTROL_SetDeviceState(DS_InProcess, DSS_CalLeakage_StartTest);
+					CONTROL_SetDeviceState(DS_InProcess, DSS_Calibrate_StartTest);
 				}
 				break;
 

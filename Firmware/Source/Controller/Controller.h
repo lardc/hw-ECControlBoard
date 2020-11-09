@@ -84,16 +84,16 @@ typedef enum __DeviceSubState
 	DSS_Inhibit_StartTest = 400,
 	DSS_Inhibit_ReadResult,
 
-	DSS_CalLeakage_StartTest = 500,
-	DSS_CalLeakage_Commutate,
-	DSS_CalLeakage_WaitCommutation,
-	DSS_CalLeakage_StartOutVoltage,
-	DSS_CalLeakage_WaitOutVoltageReady,
-	DSS_CalLeakage_StopOutVoltage,
-	DSS_CalLeakage_WaitStopOutVoltage,
-	DSS_CalLeakage_UnCommutate,
-	DSS_CalLeakage_WaitUnCommutate,
-	DSS_CalLeakage_ReadResult
+	DSS_Calibrate_StartTest = 500,
+	DSS_Calibrate_Commutate,
+	DSS_Calibrate_WaitCommutation,
+	DSS_Calibrate_StartOutVoltage,
+	DSS_Calibrate_WaitOutVoltageReady,
+	DSS_Calibrate_StopOutVoltage,
+	DSS_Calibrate_WaitStopOutVoltage,
+	DSS_Calibrate_UnCommutate,
+	DSS_Calibrate_WaitUnCommutate,
+	DSS_Calibrate_ReadResult,
 } DeviceSubState;
 
 // Variables

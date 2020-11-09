@@ -1,5 +1,5 @@
 // Header
-#include "LogicCalibrateLeakage.h"
+#include "LogicCalibrate.h"
 
 // Includes
 #include "Logic.h"
@@ -14,7 +14,7 @@
 #include "DCHighVoltageBoard.h"
 
 // Functions
-void CAL_LEAK_HandleMeasurement()
+void CALIBRATE_HandleMeasurement()
 {
 	static Int64U Timeout;
 	static uint16_t Problem = PROBLEM_NONE;
@@ -25,46 +25,46 @@ void CAL_LEAK_HandleMeasurement()
 
 		switch(CONTROL_SubState)
 		{
-			case DSS_CalLeakage_StartTest:
+			case DSS_Calibrate_StartTest:
 				Problem = PROBLEM_NONE;
-				LOGIC_Wrapper_Start(DSS_CalLeakage_Commutate);
+				LOGIC_Wrapper_Start(DSS_Calibrate_Commutate);
 				break;
 
-			case DSS_CalLeakage_Commutate:
-				LOGIC_Wrapper_Commutate(DSS_CalLeakage_WaitCommutation, DSS_CalLeakage_ReadResult, &Problem);
+			case DSS_Calibrate_Commutate:
+				LOGIC_Wrapper_Commutate(DSS_Calibrate_WaitCommutation, DSS_Calibrate_ReadResult, &Problem);
 				break;
 
-			case DSS_CalLeakage_WaitCommutation:
-				LOGIC_Wrapper_WaitAllNodesReady(DSS_CalLeakage_StartOutVoltage);
+			case DSS_Calibrate_WaitCommutation:
+				LOGIC_Wrapper_WaitAllNodesReady(DSS_Calibrate_StartOutVoltage);
 				break;
 
-			case DSS_CalLeakage_StartOutVoltage:
-				LOGIC_Wrapper_StartLeakage(DSS_CalLeakage_WaitOutVoltageReady, DSS_CalLeakage_UnCommutate,
-						&Timeout, &Problem);
+			case DSS_Calibrate_StartOutVoltage:
+				/*LOGIC_Wrapper_StartLeakage(DSS_Calibrate_WaitOutVoltageReady, DSS_Calibrate_UnCommutate,
+						&Timeout, &Problem);*/
 				break;
 
-			case DSS_CalLeakage_WaitOutVoltageReady:
-				LOGIC_Wrapper_IsLeakageReady(DSS_CalLeakage_StopOutVoltage, DSS_CalLeakage_StopOutVoltage,
-						&Timeout, &Problem);
+			case DSS_Calibrate_WaitOutVoltageReady:
+				/*LOGIC_Wrapper_IsLeakageReady(DSS_Calibrate_StopOutVoltage, DSS_Calibrate_StopOutVoltage,
+						&Timeout, &Problem);*/
 				break;
 
-			case DSS_CalLeakage_StopOutVoltage:
-				LOGIC_Wrapper_StopLeakage(DSS_CalLeakage_WaitStopOutVoltage);
+			case DSS_Calibrate_StopOutVoltage:
+				//LOGIC_Wrapper_StopLeakage(DSS_Calibrate_WaitStopOutVoltage);
 				break;
 
-			case DSS_CalLeakage_WaitStopOutVoltage:
-				LOGIC_Wrapper_WaitLeakageFinished(DSS_CalLeakage_UnCommutate, Timeout);
+			case DSS_Calibrate_WaitStopOutVoltage:
+				//LOGIC_Wrapper_WaitLeakageFinished(DSS_Calibrate_UnCommutate, Timeout);
 				break;
 
-			case DSS_CalLeakage_UnCommutate:
-				LOGIC_Wrapper_UnCommutate(DSS_CalLeakage_WaitUnCommutate);
+			case DSS_Calibrate_UnCommutate:
+				LOGIC_Wrapper_UnCommutate(DSS_Calibrate_WaitUnCommutate);
 				break;
 
-			case DSS_CalLeakage_WaitUnCommutate:
-				LOGIC_Wrapper_WaitAllNodesReady(DSS_CalLeakage_ReadResult);
+			case DSS_Calibrate_WaitUnCommutate:
+				LOGIC_Wrapper_WaitAllNodesReady(DSS_Calibrate_ReadResult);
 				break;
 
-			case DSS_CalLeakage_ReadResult:
+			case DSS_Calibrate_ReadResult:
 				{
 					if(Problem == PROBLEM_NONE)
 					{
