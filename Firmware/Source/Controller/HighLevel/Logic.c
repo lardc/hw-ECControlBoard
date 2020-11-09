@@ -52,6 +52,7 @@ void LOGIC_AttachSettings(NodeName Name, void *SettingsPointer);
 bool LOGIC_IsNodeInProblem(NodeName Name);
 void LOGIC_Wrapper_ExecuteX(DeviceSubState NextState, DeviceSubState StopState, uint64_t *Timeout, uint16_t *Problem,
 		xExecFunction MainEventFunc, uint16_t BadConfigProblem, xHandleFaultFunction FaultFunc);
+void LOGIC_Wrapper_TerminateX(DeviceSubState NextState, xExecFunction TerminateFunc, xHandleFaultFunction FaultFunc);
 void LOGIC_Wrapper_IsReadyX(DeviceSubState NextState, DeviceSubState StopState,
 		uint64_t *Timeout, uint16_t *Problem, xIsReadyFunction MainReadyFunc,
 		uint16_t ReadyProblem, uint16_t TimeoutProblem, xHandleFaultFunction FaultFunc);
@@ -809,6 +810,16 @@ void LOGIC_Wrapper_ExecuteX(DeviceSubState NextState, DeviceSubState StopState, 
 }
 //-----------------------------
 
+void LOGIC_Wrapper_TerminateX(DeviceSubState NextState, xExecFunction TerminateFunc, xHandleFaultFunction FaultFunc)
+{
+	ExecutionResult res = TerminateFunc();
+	if(res == ER_NoError)
+		CONTROL_SetDeviceState(DS_InProcess, NextState);
+	else
+		LOGIC_HandleMuxExecResult(res);
+}
+//-----------------------------
+
 void LOGIC_Wrapper_Commutate(DeviceSubState NextState, DeviceSubState StopState, uint16_t *Problem)
 {
 	LOGIC_Wrapper_ExecuteX(NextState, StopState, NULL, Problem,
@@ -818,11 +829,7 @@ void LOGIC_Wrapper_Commutate(DeviceSubState NextState, DeviceSubState StopState,
 
 void LOGIC_Wrapper_UnCommutate(DeviceSubState NextState)
 {
-	ExecutionResult res = MUX_Disconnect();
-	if(res == ER_NoError)
-		CONTROL_SetDeviceState(DS_InProcess, NextState);
-	else
-		LOGIC_HandleMuxExecResult(res);
+	LOGIC_Wrapper_TerminateX(NextState, &MUX_Disconnect, &LOGIC_HandleMuxExecResult);
 }
 //-----------------------------
 
@@ -850,11 +857,7 @@ void LOGIC_Wrapper_StartControl(DeviceSubState NextState, DeviceSubState StopSta
 
 void LOGIC_Wrapper_StopControl(DeviceSubState NextState)
 {
-	ExecutionResult res = LOGIC_StopControl();
-	if(res == ER_NoError)
-		CONTROL_SetDeviceState(DS_InProcess, NextState);
-	else
-		LOGIC_HandleControlExecResult(res);
+	LOGIC_Wrapper_TerminateX(NextState, &LOGIC_StopControl, &LOGIC_HandleControlExecResult);
 }
 //-----------------------------
 
@@ -943,11 +946,7 @@ void LOGIC_Wrapper_IsLeakageReady(DeviceSubState NextState, DeviceSubState StopS
 
 void LOGIC_Wrapper_StopLeakage(DeviceSubState NextState)
 {
-	ExecutionResult res = LOGIC_StopLeakage();
-	if(res == ER_NoError)
-		CONTROL_SetDeviceState(DS_InProcess, NextState);
-	else
-		LOGIC_HandleLeakageExecResult(res);
+	LOGIC_Wrapper_TerminateX(NextState, &LOGIC_StopLeakage, &LOGIC_HandleLeakageExecResult);
 }
 //-----------------------------
 
@@ -957,5 +956,27 @@ void LOGIC_Wrapper_WaitLeakageFinished(DeviceSubState NextState, uint64_t Timeou
 		CONTROL_SetDeviceState(DS_InProcess, NextState);
 	else if(CONTROL_TimeCounter > Timeout)
 		LOGIC_HandleLeakageExecResult(ER_ChangeStateTimeout);
+}
+//-----------------------------
+
+void LOGIC_Wrapper_StartCalibration(DeviceSubState NextState, DeviceSubState StopState,
+		uint64_t *Timeout, uint16_t *Problem)
+{
+	LOGIC_Wrapper_ExecuteX(NextState, StopState, Timeout, Problem,
+			&LOGIC_StartCalibration, PROBLEM_CAL_CONFIG, &LOGIC_HandleCalibrationExecResult);
+}
+//-----------------------------
+
+void LOGIC_Wrapper_IsCalibrationReady(DeviceSubState NextState, DeviceSubState StopState,
+		uint64_t *Timeout, uint16_t *Problem)
+{
+	LOGIC_Wrapper_IsReadyX(NextState, StopState, Timeout, Problem, &LOGIC_IsCalibrationReady,
+			PROBLEM_CAL_IN_PROBLEM, PROBLEM_CAL_READY_TIMEOUT, &LOGIC_HandleCalibrationExecResult);
+}
+//-----------------------------
+
+void LOGIC_Wrapper_StopCalibration(DeviceSubState NextState)
+{
+	LOGIC_Wrapper_TerminateX(NextState, &LOGIC_StopCalibration, &LOGIC_HandleCalibrationExecResult);
 }
 //-----------------------------

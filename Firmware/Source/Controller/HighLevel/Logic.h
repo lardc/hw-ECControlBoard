@@ -66,4 +66,11 @@ void LOGIC_Wrapper_IsLeakageReady(DeviceSubState NextState, DeviceSubState StopS
 void LOGIC_Wrapper_StopLeakage(DeviceSubState NextState);
 void LOGIC_Wrapper_WaitLeakageFinished(DeviceSubState NextState, uint64_t Timeout);
 
+// Обёртки калибровки
+void LOGIC_Wrapper_StartCalibration(DeviceSubState NextState, DeviceSubState StopState,
+		uint64_t *Timeout, uint16_t *Problem);
+void LOGIC_Wrapper_IsCalibrationReady(DeviceSubState NextState, DeviceSubState StopState,
+		uint64_t *Timeout, uint16_t *Problem);
+void LOGIC_Wrapper_StopCalibration(DeviceSubState NextState);
+
 #endif // __LOGIC_H

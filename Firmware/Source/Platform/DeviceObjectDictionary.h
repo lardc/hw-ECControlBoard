@@ -203,6 +203,9 @@
 #define PROBLEM_LEAKAGE_CONFIG			9	// Некорректная конфигурация источника напряжения утечки
 #define PROBLEM_LEAKAGE_READY_TIMEOUT	10	// Отсутствие сигнала готовности утечки
 #define PROBLEM_LEAKAGE_IN_PROBLEM		11	// Источник сигнала утечки в проблеме
+#define PROBLEM_CAL_CONFIG				12	// Некорректная конфигурация калибруемого узла
+#define PROBLEM_CAL_READY_TIMEOUT		13	// Отсутствие сигнала готовности калибруемого узла
+#define PROBLEM_CAL_IN_PROBLEM			14	// Калибруемый узел в проблеме
 
 //  Warning
 #define WARNING_NONE					0
