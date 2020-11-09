@@ -276,6 +276,13 @@ LogicConfigError LOGIC_PrepareMeasurement()
 				}
 				break;
 
+			case MT_CAL_LeakageCurrent:
+				{
+					LOGIC_CacheLeakageSettings();
+					CONTROL_SetDeviceState(DS_InProcess, DSS_CalLeakage_StartTest);
+				}
+				break;
+
 			default:
 				return LCE_InvalidMeasurement;
 		}

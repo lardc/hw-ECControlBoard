@@ -17,6 +17,7 @@
 #include "LogicOnState.h"
 #include "LogicControl.h"
 #include "LogicInhibit.h"
+#include "LogicCalibrateLeakage.h"
 
 // Types
 //
@@ -111,14 +112,19 @@ void CONTROL_Idle()
 	CONTROL_UpdateWatchDog();
 	CONTROL_HandleFanLogic();
 
+	// Обработка логики общих операция
 	LOGIC_HandleStateUpdate();
 	LOGIC_HandlePowerOn();
 	LOGIC_HandlePowerOff();
 
+	// Обработка логики измерений
 	LEAK_HandleMeasurement();
 	ONSTATE_HandleMeasurement();
 	CTRL_HandleMeasurement();
 	INHIBIT_HandleMeasurement();
+
+	// Обработка логики калибровки
+	CLEAK_HandleMeasurement();
 }
 //------------------------------------------
 
