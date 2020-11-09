@@ -14,7 +14,7 @@
 #include "DCHighVoltageBoard.h"
 
 // Functions
-void CLEAK_HandleMeasurement()
+void CAL_LEAK_HandleMeasurement()
 {
 	static Int64U Timeout;
 	static uint16_t Problem = PROBLEM_NONE;

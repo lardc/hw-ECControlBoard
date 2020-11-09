@@ -124,7 +124,7 @@ void CONTROL_Idle()
 	INHIBIT_HandleMeasurement();
 
 	// Обработка логики калибровки
-	CLEAK_HandleMeasurement();
+	CAL_LEAK_HandleMeasurement();
 }
 //------------------------------------------
 

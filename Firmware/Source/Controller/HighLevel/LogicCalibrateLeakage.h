@@ -5,6 +5,6 @@
 #include "stdinc.h"
 
 // Functions
-void CLEAK_HandleMeasurement();
+void CAL_LEAK_HandleMeasurement();
 
 #endif // __LOGIC_CALIBRATE_LEAKAGE_H
