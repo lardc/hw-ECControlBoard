@@ -149,6 +149,14 @@ bool COMM_IsSlaveInFaultOrDisabled()
 }
 //-----------------------------
 
+void COMM_ForceEmulationByNodeID(uint16_t NodeID)
+{
+	for(uint8_t i = 0; i < MAX_SLAVE_NODES; ++i)
+		if(NodeArray[i].NodeID == NodeID)
+			NodeArray[i].Emulation = true;
+}
+//-----------------------------
+
 bool COMM_SlavesEnablePower()
 {
 	return COMM_SlavesExecute(COMM_ACT_ENABLE_POWER);

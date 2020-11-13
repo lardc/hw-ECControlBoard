@@ -201,6 +201,7 @@ static Boolean CONTROL_DispatchAction(Int16U ActionID, pInt16U pUserError)
 			{
 				if(CONTROL_State == DS_Fault)
 				{
+					COMM_UpdateEmulationSettings();
 					COMM_SlavesClearFault();
 					CONTROL_ClearFault();
 				}
@@ -293,6 +294,9 @@ void CONTROL_SwitchToFault(ExecutionResult Result, Int16U Group)
 			DataTable[REG_BHL_FUNCTION] = Error.Func;
 			DataTable[REG_BHL_EXT_DATA] = Error.ExtData;
 			DataTable[REG_BHL_DETAILS] = Error.Details;
+
+			if(Error.ErrorCode == ERR_TIMEOUT)
+				COMM_ForceEmulationByNodeID(Error.Device);
 		}
 
 		DataTable[REG_FAILED_DEV_SUB_STATE] = CONTROL_SubState;
