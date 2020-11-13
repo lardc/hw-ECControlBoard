@@ -10,6 +10,7 @@
 #include "MultiplexerDictionary.h"
 #include "CurrentBoardDictionary.h"
 #include "Common.h"
+#include "Logic.h"
 
 // Constants
 //
@@ -177,8 +178,8 @@ const TableItemConstraint VConstraint[DATA_TABLE_WP_START - DATA_TABLE_WR_START]
 		{0, INT16U_MAX, 0},															// 157
 		{0, 0, 0},																	// 158
 		{0, 0, 0},																	// 159
-		{0, 0, 0},																	// 160
-		{0, 0, 0},																	// 161
+		{CN_DC1, CN_CB, CN_DC1},													// 160
+		{CT_Current, CT_Voltage, CT_Current},										// 161
 		{0, 0, 0},																	// 162
 		{0, 0, 0},																	// 163
 		{0, 0, 0},																	// 164

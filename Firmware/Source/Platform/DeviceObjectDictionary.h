@@ -27,6 +27,7 @@
 #define ACT_STOP_TEST					101	// Запуск измерения
 #define ACT_SAFETY_SET_ACTIVE			102	// Активация контура безопасности
 #define ACT_SAFETY_SET_INACTIVE			103	// Деактивация контура безопасности
+#define ACT_CALIBRATE					104	// Запуск калибровки
 
 #define ACT_SAVE_TO_ROM					200	// Сохранение пользовательских данных во FLASH процессора
 #define ACT_RESTORE_FROM_ROM			201	// Восстановление данных из FLASH

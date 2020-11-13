@@ -184,6 +184,7 @@ static Boolean CONTROL_DispatchAction(Int16U ActionID, pInt16U pUserError)
 			}
 			break;
 
+		case ACT_CALIBRATE:
 		case ACT_START_TEST:
 			{
 				if(CONTROL_State == DS_Ready)
@@ -191,7 +192,10 @@ static Boolean CONTROL_DispatchAction(Int16U ActionID, pInt16U pUserError)
 					LL_SetStateExtLed(true);
 					COMM_UpdateEmulationSettings();
 					CONTROL_ResetOutputRegisters();
-					LogicConfigError err = LOGIC_PrepareMeasurement(NULL);
+
+					MeasurementType AlternateMeasurementType = MT_Calibrate;
+					LogicConfigError err =
+							LOGIC_PrepareMeasurement((ActionID == ACT_CALIBRATE) ? &AlternateMeasurementType : NULL);
 					DataTable[REG_CONFIG_ERR] = err;
 
 					if(err != LCE_None)

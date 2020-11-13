@@ -12,18 +12,6 @@
 #include "ACVoltageBoard.h"
 #include "DCHighVoltageBoard.h"
 
-// Definitions
-typedef enum __CalibrateNodeIndex
-{
-	CN_DC1 = 1,
-	CN_DC2 = 2,
-	CN_DC3 = 3,
-	CN_HVDC = 4,
-	CN_AC1 = 5,
-	CN_AC2 = 6,
-	CN_CB = 7
-} CalibrateNodeIndex;
-
 // Types
 typedef ExecutionResult (*xExecFunction)();
 typedef ExecutionResult (*xIsReadyFunction)(bool *Result);
@@ -322,7 +310,7 @@ void LOGIC_CacheCalibrationSettings()
 			{
 				DCVoltageBoard1.Setpoint = Setpoint;
 				DCVoltageBoard1.OutputLine = DCV_CTRL;
-				DCVoltageBoard1.OutputType = (DataTable[REG_CALIBRATION_TYPE] == 1) ? DCV_Current : DCV_Voltage;
+				DCVoltageBoard1.OutputType = DataTable[REG_CALIBRATION_TYPE];
 				DCVoltageBoard1.OutputMode = DCV_Continuous;
 			}
 			break;
