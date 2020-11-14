@@ -108,6 +108,7 @@
 #define REG_DIAG_NID					185	// CAN: регистр NodeID для доступа к slave-устройствам
 #define REG_DIAG_IN_1					186	// CAN: входной отладочный регистр 1
 #define REG_DIAG_IN_2					187	// CAN: входной отладочный регистр 2
+#define REG_DIAG_FAN_MUTE				188	// Регистр отключения логики вентилятора
 
 #define REG_DBG_STATE					190	// Регистр режима Отладки
 

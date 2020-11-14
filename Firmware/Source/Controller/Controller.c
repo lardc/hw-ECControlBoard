@@ -356,13 +356,20 @@ void CONTROL_HandleFanLogic()
 	static Int64U FANOnNextTime = 0;
 	static Int64U FANOffTime = 0;
 
-	if(CONTROL_State == DS_InProcess || CONTROL_TimeCounter > FANOnNextTime || FANOnNextTime == 0 || FANOffTime == 0)
+	if(DataTable[REG_DIAG_FAN_MUTE])
 	{
-		FANOnNextTime = CONTROL_TimeCounter + (Int32U)DataTable[REG_FAN_OPERATE_PERIOD] * 1000;
-		FANOffTime = CONTROL_TimeCounter + (Int32U)DataTable[REG_FAN_OPERATE_MIN_TIME] * 1000;
-		LL_SetStateFan(true);
-	}
-	else if(CONTROL_TimeCounter > FANOffTime)
 		LL_SetStateFan(false);
+	}
+	else
+	{
+		if(CONTROL_State == DS_InProcess || CONTROL_TimeCounter > FANOnNextTime || FANOnNextTime == 0 || FANOffTime == 0)
+		{
+			FANOnNextTime = CONTROL_TimeCounter + (Int32U)DataTable[REG_FAN_OPERATE_PERIOD] * 1000;
+			FANOffTime = CONTROL_TimeCounter + (Int32U)DataTable[REG_FAN_OPERATE_MIN_TIME] * 1000;
+			LL_SetStateFan(true);
+		}
+		else if(CONTROL_TimeCounter > FANOffTime)
+			LL_SetStateFan(false);
+	}
 }
 // ----------------------------------------
