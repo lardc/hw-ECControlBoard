@@ -15,6 +15,7 @@ typedef struct __MuxObject
 	MUX_Polarity Polarity;
 	InputType InputType;
 	LeakageType LeakageType;
+	bool SafetyMute;
 } MuxObject, *pMuxObject;
 
 // Functions

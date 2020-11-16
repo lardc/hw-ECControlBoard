@@ -25,6 +25,13 @@ ExecutionResult MUX_Connect()
 							if(BHL_WriteRegister(NodeID, MUX_REG_TYPE_LEAKAGE, Settings->LeakageType))
 								if(BHL_WriteRegister(NodeID, MUX_REG_TYPE_POLARITY, Settings->Polarity))
 								{
+									if(!Settings->SafetyMute)
+									{
+										ExecutionResult res = BHL_Call(NodeID, MUX_ACT_SAFETY_ACTIVATE);
+										if(res != ER_NoError)
+											return res;
+									}
+
 									if(BHL_Call(NodeID, MUX_ACT_SET_RELAY_GROUP))
 									{
 										NodeData->StateIsUpToDate = false;

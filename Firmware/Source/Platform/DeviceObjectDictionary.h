@@ -107,7 +107,8 @@
 #define REG_DIAG_NID					185	// CAN: регистр NodeID для доступа к slave-устройствам
 #define REG_DIAG_IN_1					186	// CAN: входной отладочный регистр 1
 #define REG_DIAG_IN_2					187	// CAN: входной отладочный регистр 2
-#define REG_DIAG_FAN_MUTE				188	// Регистр отключения логики вентилятора
+#define REG_DIAG_FAN_MUTE				188	// Отключение вентилятора
+#define REG_DIAG_SAFETY_MUTE			189	// Отключение контура безопасности
 
 #define REG_DBG_STATE					190	// Регистр режима Отладки
 
@@ -208,6 +209,7 @@
 #define PROBLEM_CAL_READY_TIMEOUT		13	// Отсутствие сигнала готовности калибруемого узла
 #define PROBLEM_CAL_IN_PROBLEM			14	// Калибруемый узел в проблеме
 #define PROBLEM_COMMAND_STOP			15	// Поступил внешний запрос на остановку
+#define PROBLEM_SAFETY_TRIG				16	// Остановка по срабатыванию системы безопасности
 
 //  Warning
 #define WARNING_NONE					0
