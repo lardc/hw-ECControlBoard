@@ -104,7 +104,6 @@
 #define REG_CALIBRATION_ISET			164	// Уставка тока калибровки
 #define REG_CALIBRATION_ISET_32			165
 
-
 #define REG_DIAG_NID					185	// CAN: регистр NodeID для доступа к slave-устройствам
 #define REG_DIAG_IN_1					186	// CAN: входной отладочный регистр 1
 #define REG_DIAG_IN_2					187	// CAN: входной отладочный регистр 2
@@ -208,6 +207,7 @@
 #define PROBLEM_CAL_CONFIG				12	// Некорректная конфигурация калибруемого узла
 #define PROBLEM_CAL_READY_TIMEOUT		13	// Отсутствие сигнала готовности калибруемого узла
 #define PROBLEM_CAL_IN_PROBLEM			14	// Калибруемый узел в проблеме
+#define PROBLEM_COMMAND_STOP			15	// Поступил внешний запрос на остановку
 
 //  Warning
 #define WARNING_NONE					0

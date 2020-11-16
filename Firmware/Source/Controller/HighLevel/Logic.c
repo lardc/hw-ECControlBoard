@@ -163,74 +163,82 @@ void LOGIC_HandlePowerOff()
 
 void LOGIC_HandleFault()
 {
+	static DeviceSubState SavedRequest = DSS_None;
+
 	if(CONTROL_State == DS_InProcess)
 	{
 		switch(CONTROL_SubState)
 		{
 			case DSS_Fault_Request:
-				CONTROL_SetDeviceState(DS_InProcess, DSS_Fault_StopDCCurrent);
+			case DSS_Stop_Request:
+				SavedRequest = CONTROL_SubState;
+				CONTROL_SetDeviceState(DS_InProcess, DSS_FaultStop_StopDCCurrent);
 				break;
 
-			case DSS_Fault_StopDCCurrent:
+			case DSS_FaultStop_StopDCCurrent:
 				{
 					if(COMM_IsSlaveInStateX(NAME_DCCurrent, CDS_InProcess))
 						CURR_Stop();
-					CONTROL_SetDeviceState(DS_InProcess, DSS_Fault_StopHV);
+					CONTROL_SetDeviceState(DS_InProcess, DSS_FaultStop_StopHV);
 				}
 				break;
 
-			case DSS_Fault_StopHV:
+			case DSS_FaultStop_StopHV:
 				{
 					if(COMM_IsSlaveInStateX(NAME_DCHighVoltage, CDS_InProcess))
 						DCHV_Stop();
-					CONTROL_SetDeviceState(DS_InProcess, DSS_Fault_StopDC1);
+					CONTROL_SetDeviceState(DS_InProcess, DSS_FaultStop_StopDC1);
 				}
 				break;
 
-			case DSS_Fault_StopDC1:
+			case DSS_FaultStop_StopDC1:
 				{
 					if(COMM_IsSlaveInStateX(NAME_DCVoltage1, CDS_InProcess))
 						DCV_Stop(NAME_DCVoltage1);
-					CONTROL_SetDeviceState(DS_InProcess, DSS_Fault_StopDC2);
+					CONTROL_SetDeviceState(DS_InProcess, DSS_FaultStop_StopDC2);
 				}
 				break;
 
-			case DSS_Fault_StopDC2:
+			case DSS_FaultStop_StopDC2:
 				{
 					if(COMM_IsSlaveInStateX(NAME_DCVoltage2, CDS_InProcess))
 						DCV_Stop(NAME_DCVoltage2);
-					CONTROL_SetDeviceState(DS_InProcess, DSS_Fault_StopDC3);
+					CONTROL_SetDeviceState(DS_InProcess, DSS_FaultStop_StopDC3);
 				}
 				break;
 
-			case DSS_Fault_StopDC3:
+			case DSS_FaultStop_StopDC3:
 				{
 					if(COMM_IsSlaveInStateX(NAME_DCVoltage3, CDS_InProcess))
 						DCV_Stop(NAME_DCVoltage3);
-					CONTROL_SetDeviceState(DS_InProcess, DSS_Fault_StopAC1);
+					CONTROL_SetDeviceState(DS_InProcess, DSS_FaultStop_StopAC1);
 				}
 				break;
 
-			case DSS_Fault_StopAC1:
+			case DSS_FaultStop_StopAC1:
 				{
 					if(COMM_IsSlaveInStateX(NAME_ACVoltage1, CDS_InProcess))
 						ACV_Stop(NAME_ACVoltage1);
-					CONTROL_SetDeviceState(DS_InProcess, DSS_Fault_StopAC2);
+					CONTROL_SetDeviceState(DS_InProcess, DSS_FaultStop_StopAC2);
 				}
 				break;
 
-			case DSS_Fault_StopAC2:
+			case DSS_FaultStop_StopAC2:
 				{
 					if(COMM_IsSlaveInStateX(NAME_ACVoltage2, CDS_InProcess))
 						ACV_Stop(NAME_ACVoltage2);
-					CONTROL_SetDeviceState(DS_InProcess, DSS_Fault_StopMux);
+					CONTROL_SetDeviceState(DS_InProcess, DSS_FaultStop_StopMux);
 				}
 				break;
 
-			case DSS_Fault_StopMux:
+			case DSS_FaultStop_StopMux:
 				{
 					MUX_Disconnect();
-					CONTROL_SetDeviceState(DS_Fault, DSS_None);
+
+					if(SavedRequest == DSS_Fault_Request)
+						CONTROL_SetDeviceState(DS_Fault, DSS_None);
+					else
+						CONTROL_SetDeviceState(DS_Ready, DSS_None);
 				}
 				break;
 
