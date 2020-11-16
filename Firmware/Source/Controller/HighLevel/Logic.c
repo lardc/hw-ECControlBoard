@@ -161,7 +161,7 @@ void LOGIC_HandlePowerOff()
 }
 //-----------------------------
 
-void LOGIC_HandleFault()
+void LOGIC_HandleFaultAndStop()
 {
 	static DeviceSubState SavedRequest = DSS_None;
 

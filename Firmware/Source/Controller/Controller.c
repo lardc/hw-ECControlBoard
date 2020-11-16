@@ -121,6 +121,7 @@ void CONTROL_Idle()
 	LOGIC_HandleStateUpdate();
 	LOGIC_HandlePowerOn();
 	LOGIC_HandlePowerOff();
+	LOGIC_HandleFaultAndStop();
 
 	// Обработка логики измерений
 	LEAK_HandleMeasurement();

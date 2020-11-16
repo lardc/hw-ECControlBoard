@@ -39,7 +39,7 @@ void LOGIC_InitEntities();
 void LOGIC_HandleStateUpdate();
 void LOGIC_HandlePowerOn();
 void LOGIC_HandlePowerOff();
-void LOGIC_HandleFault();
+void LOGIC_HandleFaultAndStop();
 
 LogicConfigError LOGIC_PrepareMeasurement(bool Calibration);
 
