@@ -24,29 +24,23 @@ ExecutionResult MUX_Connect()
 						if(BHL_WriteRegister(NodeID, MUX_REG_TYPE_SIGNAL_CTRL, InputVoltageSupply))
 							if(BHL_WriteRegister(NodeID, MUX_REG_TYPE_LEAKAGE, Settings->LeakageType))
 								if(BHL_WriteRegister(NodeID, MUX_REG_TYPE_POLARITY, Settings->Polarity))
-								{
-									if(!Settings->SafetyMute)
+									if(BHL_WriteRegister(NodeID, MUX_REG_ENABLE_SAFETY, Settings->SafetyMute ? 0 : 1))
 									{
-										ExecutionResult res = BHL_Call(NodeID, MUX_ACT_SAFETY_ACTIVATE);
-										if(res != ER_NoError)
-											return res;
-									}
-
-									if(BHL_Call(NodeID, MUX_ACT_SET_RELAY_GROUP))
-									{
-										NodeData->StateIsUpToDate = false;
-										return ER_NoError;
-									}
-									else
-									{
-										BHLError err = BHL_GetError();
-										if(err.Func == FUNCTION_CALL && err.ErrorCode == ERR_USER &&
-												err.ExtData == MUX_ACT_SET_RELAY_GROUP && err.Details == COMM_ERR_BAD_CONFIG)
+										if(BHL_Call(NodeID, MUX_ACT_SET_RELAY_GROUP))
 										{
-											return ER_BadHighLevelConfig;
+											NodeData->StateIsUpToDate = false;
+											return ER_NoError;
+										}
+										else
+										{
+											BHLError err = BHL_GetError();
+											if(err.Func == FUNCTION_CALL && err.ErrorCode == ERR_USER &&
+													err.ExtData == MUX_ACT_SET_RELAY_GROUP && err.Details == COMM_ERR_BAD_CONFIG)
+											{
+												return ER_BadHighLevelConfig;
+											}
 										}
 									}
-								}
 		}
 		else
 			return ER_NoError;
@@ -68,11 +62,12 @@ ExecutionResult MUX_Disconnect()
 		if(!NodeData->Emulation)
 		{
 			uint16_t NodeID = NodeData->NodeID;
-			if(BHL_Call(NodeID, MUX_ACT_SET_RELAY_NONE))
-			{
-				NodeData->StateIsUpToDate = false;
-				return ER_NoError;
-			}
+			if(BHL_WriteRegister(NodeID, MUX_REG_ENABLE_SAFETY, 0))
+				if(BHL_Call(NodeID, MUX_ACT_SET_RELAY_NONE))
+				{
+					NodeData->StateIsUpToDate = false;
+					return ER_NoError;
+				}
 		}
 		else
 			return ER_NoError;

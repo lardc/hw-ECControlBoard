@@ -4,7 +4,6 @@
 // Команды
 #define MUX_ACT_SET_RELAY_GROUP				100	// Подключить группу реле (на основании корпуса и т.д.)
 #define MUX_ACT_SET_RELAY_NONE				101	// Отключить все релле
-#define MUX_ACT_SAFETY_ACTIVATE				102	// Включить мониторинг датчиков безопасности
 
 // Регистры
 #define MUX_REG_TYPE_MEASURE				130	// Тип измерения
@@ -13,6 +12,7 @@
 #define MUX_REG_TYPE_SIGNAL_CTRL			133	// Тип управления
 #define MUX_REG_TYPE_LEAKAGE				134	// Тип сигнала при утечке
 #define MUX_REG_TYPE_POLARITY				135	// Полярность подключения
+#define MUX_REG_ENABLE_SAFETY				136	// Разрешение контура безопасности при включённой коммутации
 
 // Дополнительные состояния
 #define MUX_STATE_SAFETY_TRIG				5
