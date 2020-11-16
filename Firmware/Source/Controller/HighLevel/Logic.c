@@ -788,6 +788,7 @@ ExecutionResult LOGIC_CalibrationReadResult(uint16_t *OpResult, pVIPair Result)
 
 		ExecutionResult res = DCV_ReadResult(Name);
 		*Result = Settings->Result;
+		*OpResult = COMM_GetSlaveOpResult(Name);
 
 		return res;
 	}
@@ -803,6 +804,7 @@ ExecutionResult LOGIC_CalibrationReadResult(uint16_t *OpResult, pVIPair Result)
 
 		ExecutionResult res = ACV_ReadResult(Name);
 		*Result = Settings->Result;
+		*OpResult = COMM_GetSlaveOpResult(Name);
 
 		return res;
 	}
@@ -813,6 +815,7 @@ ExecutionResult LOGIC_CalibrationReadResult(uint16_t *OpResult, pVIPair Result)
 
 		ExecutionResult res = DCHV_ReadResult();
 		*Result = Settings->Result;
+		*OpResult = COMM_GetSlaveOpResult(NAME_DCHighVoltage);
 
 		return res;
 	}
@@ -823,6 +826,7 @@ ExecutionResult LOGIC_CalibrationReadResult(uint16_t *OpResult, pVIPair Result)
 
 		ExecutionResult res = CURR_ReadResult();
 		*Result = Settings->Result;
+		*OpResult = COMM_GetSlaveOpResult(NAME_DCCurrent);
 
 		return res;
 	}
