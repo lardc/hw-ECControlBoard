@@ -41,7 +41,7 @@ void LOGIC_HandlePowerOn();
 void LOGIC_HandlePowerOff();
 void LOGIC_HandleFault();
 
-LogicConfigError LOGIC_PrepareMeasurement(pMeasurementType OverrideMeasurement);
+LogicConfigError LOGIC_PrepareMeasurement(bool Calibration);
 
 ExecutionResult LOGIC_ControlReadResult(uint16_t *OpResult, pVIPair Result);
 ExecutionResult LOGIC_LeakageReadResult(uint16_t *OpResult, pVIPair Result);

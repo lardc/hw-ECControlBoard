@@ -193,9 +193,7 @@ static Boolean CONTROL_DispatchAction(Int16U ActionID, pInt16U pUserError)
 					COMM_UpdateEmulationSettings();
 					CONTROL_ResetOutputRegisters();
 
-					MeasurementType AlternateMeasurementType = MT_Calibrate;
-					LogicConfigError err =
-							LOGIC_PrepareMeasurement((ActionID == ACT_CALIBRATE) ? &AlternateMeasurementType : NULL);
+					LogicConfigError err = LOGIC_PrepareMeasurement(ActionID == ACT_CALIBRATE);
 					DataTable[REG_CONFIG_ERR] = err;
 
 					if(err != LCE_None)

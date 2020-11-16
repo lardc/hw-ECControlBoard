@@ -26,7 +26,14 @@ typedef enum __MeasurementType
 	MT_OnVoltage = 2,
 	MT_InputVoltageCurrent = 3,
 	MT_InhibitVoltage = 4,
-	MT_Calibrate = 5
+
+	MT_CalibrateDCControl = 5,
+	MT_CalibratePS1 = 6,
+	MT_CalibratePS2 = 7,
+	MT_CalibrateDCLeakage = 8,
+	MT_CalibrateACLeakage = 9,
+	MT_CalibrateACControl = 10,
+	MT_CalibrateCurrent = 11
 } MeasurementType, *pMeasurementType;
 
 typedef enum __ExecutionResult

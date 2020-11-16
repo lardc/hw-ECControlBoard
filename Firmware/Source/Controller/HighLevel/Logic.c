@@ -45,7 +45,7 @@ void LOGIC_Wrapper_IsReadyX(DeviceSubState NextState, DeviceSubState StopState,
 		uint64_t *Timeout, uint16_t *Problem, xIsReadyFunction MainReadyFunc,
 		uint16_t ReadyProblem, uint16_t TimeoutProblem, xHandleFaultFunction FaultFunc);
 
-LogicConfigError LOGIC_CacheMuxSettings(pMeasurementType OverrideMeasurement);
+LogicConfigError LOGIC_CacheMuxSettings(bool Calibration);
 void LOGIC_CacheCurrentBoardSettings();
 void LOGIC_CacheControlSettings(DCV_OutputMode Mode);
 void LOGIC_CacheLeakageSettings();
@@ -249,9 +249,12 @@ void LOGIC_HandleFault()
 }
 //-----------------------------
 
-LogicConfigError LOGIC_PrepareMeasurement(pMeasurementType OverrideMeasurement)
+LogicConfigError LOGIC_PrepareMeasurement(bool Calibration)
 {
-	LogicConfigError err = LOGIC_CacheMuxSettings(OverrideMeasurement);
+	if(Calibration)
+		CachedNode = DataTable[REG_CALIBRATION_NODE];
+
+	LogicConfigError err = LOGIC_CacheMuxSettings(Calibration);
 
 	GeneralLogicTimeout = DataTable[REG_GENERAL_LOGIC_TIMEOUT];
 	ControlWaitDelay = DataTable[REG_CTRL_HOLD_DELAY];
@@ -290,9 +293,14 @@ LogicConfigError LOGIC_PrepareMeasurement(pMeasurementType OverrideMeasurement)
 				}
 				break;
 
-			case MT_Calibrate:
+			case MT_CalibrateDCControl:
+			case MT_CalibratePS1:
+			case MT_CalibratePS2:
+			case MT_CalibrateDCLeakage:
+			case MT_CalibrateACLeakage:
+			case MT_CalibrateACControl:
+			case MT_CalibrateCurrent:
 				{
-					CachedNode = DataTable[REG_CALIBRATION_NODE];
 					LOGIC_CacheCalibrationSettings();
 					CONTROL_SetDeviceState(DS_InProcess, DSS_Calibrate_Start);
 				}
@@ -373,10 +381,44 @@ void LOGIC_CacheCalibrationSettings()
 }
 //-----------------------------
 
-LogicConfigError LOGIC_CacheMuxSettings(pMeasurementType OverrideMeasurement)
+LogicConfigError LOGIC_CacheMuxSettings(bool Calibration)
 {
-	if(OverrideMeasurement)
-		Multiplexer.MeasureType = *OverrideMeasurement;
+	if(Calibration)
+	{
+		switch(CachedNode)
+		{
+			case CN_DC1:
+				Multiplexer.MeasureType = MT_CalibrateDCControl;
+				break;
+
+			case CN_DC2:
+				Multiplexer.MeasureType = MT_CalibratePS1;
+				break;
+
+			case CN_DC3:
+				Multiplexer.MeasureType = MT_CalibratePS2;
+				break;
+
+			case CN_HVDC:
+				Multiplexer.MeasureType = MT_CalibrateDCLeakage;
+				break;
+
+			case CN_AC1:
+				Multiplexer.MeasureType = MT_CalibrateACControl;
+				break;
+
+			case CN_AC2:
+				Multiplexer.MeasureType = MT_CalibrateACLeakage;
+				break;
+
+			case CN_CB:
+				Multiplexer.MeasureType = MT_CalibrateCurrent;
+				break;
+
+			default:
+				break;
+		}
+	}
 	else
 		Multiplexer.MeasureType = DataTable[REG_MEASUREMENT_TYPE];
 
@@ -387,7 +429,7 @@ LogicConfigError LOGIC_CacheMuxSettings(pMeasurementType OverrideMeasurement)
 	Multiplexer.Polarity = DataTable[REG_COMM_POLARITY];
 
 	// Валидация конфигурации
-	if(Multiplexer.MeasureType != MT_Calibrate)
+	if(!Calibration)
 	{
 		const DL_DUTConfiguration* DUTConfig = DUTLIB_ExtractConfiguration(Multiplexer.Case);
 
