@@ -73,6 +73,9 @@ void CALIBRATE_HandleMeasurement()
 						{
 							if(OpResult == OPRESULT_OK)
 							{
+								DT_Write32(REG_CALIBRATION_VOLTAGE, REG_CALIBRATION_VOLTAGE_32, Result.Voltage);
+								DT_Write32(REG_CALIBRATION_CURRENT, REG_CALIBRATION_CURRENT_32, Result.Current);
+
 								DataTable[REG_OP_RESULT] = OPRESULT_OK;
 							}
 							else

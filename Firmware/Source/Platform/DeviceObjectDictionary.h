@@ -156,10 +156,10 @@
 #define REG_RESULT_AUX_CURRENT2_32		236	// Ток вспомогательного источника 2
 #define REG_RESULT_OUTPUT_RES_32		237	// Выходное сопротивление
 
-#define REG_CALIBRATION_GENERATED		240	// Калибровка: сформированное значение
-#define REG_CALIBRATION_GENERATED_32	241
-#define REG_CALIBRATION_MEASURED		242	// Калибровка: измеренное значение
-#define REG_CALIBRATION_MEASURED_32		243
+#define REG_CALIBRATION_VOLTAGE			240	// Результат калибровки: напряжение
+#define REG_CALIBRATION_VOLTAGE_32		241
+#define REG_CALIBRATION_CURRENT			242	// Результат калибровки: ток
+#define REG_CALIBRATION_CURRENT_32		243
 
 #define REG_DBG_INT_SYNC1				251	// Регистр состояния внутреннейи линии SYNC1
 #define REG_DBG_INT_SYNC2				252	// Регистр состояния внутреннейи линии SYNC2
