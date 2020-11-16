@@ -54,6 +54,7 @@ void LOGIC_HandleCurrentExecResult(ExecutionResult Result);
 void LOGIC_HandleCalibrationExecResult(ExecutionResult Result);
 
 // Общие обёртки
+void LOGIC_Wrapper_SafetyMonitor();
 void LOGIC_Wrapper_FaultControl();
 void LOGIC_Wrapper_Start(DeviceSubState NextState);
 void LOGIC_Wrapper_WaitAllNodesReady(DeviceSubState NextState);

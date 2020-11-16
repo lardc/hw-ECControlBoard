@@ -869,6 +869,18 @@ bool LOGIC_IsPowerSupply2InProblem()
 }
 //-----------------------------
 
+void LOGIC_Wrapper_SafetyMonitor()
+{
+	if(COMM_IsSlaveInStateX(NAME_Multiplexer, MUX_STATE_SAFETY_TRIG))
+	{
+		CONTROL_SetDeviceState(DS_InProcess, DSS_Stop_Request);
+
+		DataTable[REG_PROBLEM] = PROBLEM_SAFETY_TRIG;
+		DataTable[REG_OP_RESULT] = OPRESULT_FAIL;
+	}
+}
+//-----------------------------
+
 void LOGIC_Wrapper_FaultControl()
 {
 	if(COMM_IsSlaveInFaultOrDisabled())
