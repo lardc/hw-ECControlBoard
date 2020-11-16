@@ -338,7 +338,7 @@ void LOGIC_CacheCalibrationSettings()
 				DCVoltageBoard2.OutputLine = DCV_PS1;
 				DCVoltageBoard2.OutputType = DCV_Voltage;
 				DCVoltageBoard2.OutputMode = DCV_Continuous;
-				DCVoltageBoard1.PulseLength = DataTable[REG_CTRL_PULSE_LENGTH];
+				DCVoltageBoard2.PulseLength = DataTable[REG_CTRL_PULSE_LENGTH];
 			}
 			break;
 
@@ -348,7 +348,7 @@ void LOGIC_CacheCalibrationSettings()
 				DCVoltageBoard3.OutputLine = DCV_PS2;
 				DCVoltageBoard3.OutputType = DCV_Voltage;
 				DCVoltageBoard3.OutputMode = DCV_Continuous;
-				DCVoltageBoard1.PulseLength = DataTable[REG_CTRL_PULSE_LENGTH];
+				DCVoltageBoard3.PulseLength = DataTable[REG_CTRL_PULSE_LENGTH];
 			}
 			break;
 
