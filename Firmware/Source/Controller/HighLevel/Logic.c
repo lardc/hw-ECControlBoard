@@ -171,8 +171,10 @@ void LOGIC_HandleFaultAndStop()
 		{
 			case DSS_Fault_Request:
 			case DSS_Stop_Request:
-				SavedRequest = CONTROL_SubState;
-				CONTROL_SetDeviceState(DS_InProcess, DSS_FaultStop_StopDCCurrent);
+				{
+					SavedRequest = CONTROL_SubState;
+					CONTROL_SetDeviceState(DS_InProcess, DSS_FaultStop_StopDCCurrent);
+				}
 				break;
 
 			case DSS_FaultStop_StopDCCurrent:
@@ -874,10 +876,13 @@ void LOGIC_Wrapper_SafetyMonitor()
 {
 	if(COMM_IsSlaveInStateX(NAME_Multiplexer, MUX_STATE_SAFETY_TRIG))
 	{
-		CONTROL_SetDeviceState(DS_InProcess, DSS_Stop_Request);
+		if(CONTROL_SubState >= DSS_InterruptableStatesBegin)
+		{
+			CONTROL_SetDeviceState(DS_InProcess, DSS_Stop_Request);
 
-		DataTable[REG_PROBLEM] = PROBLEM_SAFETY_TRIG;
-		DataTable[REG_OP_RESULT] = OPRESULT_FAIL;
+			DataTable[REG_PROBLEM] = PROBLEM_SAFETY_TRIG;
+			DataTable[REG_OP_RESULT] = OPRESULT_FAIL;
+		}
 	}
 }
 //-----------------------------
