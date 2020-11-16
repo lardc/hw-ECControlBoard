@@ -20,6 +20,7 @@ void ONSTATE_HandleMeasurement()
 	if(CONTROL_State == DS_InProcess)
 	{
 		LOGIC_Wrapper_FaultControl();
+		LOGIC_Wrapper_SafetyMonitor();
 
 		switch(CONTROL_SubState)
 		{
