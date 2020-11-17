@@ -25,6 +25,7 @@ static volatile ACVoltageBoardObject ACVoltageBoard1, ACVoltageBoard2;
 static volatile DCHVoltageBoardObject DCHighVoltageBoard;
 static uint16_t GeneralLogicTimeout, ControlWaitDelay;
 static CalibrateNodeIndex CachedNode;
+static DL_AuxPowerSupply CachedPowerSupply;
 
 static const NodeName ControlDCNode = NAME_DCVoltage1;
 static const NodeName ControlACNode = NAME_ACVoltage1;
@@ -45,10 +46,11 @@ void LOGIC_Wrapper_IsReadyX(DeviceSubState NextState, DeviceSubState StopState,
 		uint64_t *Timeout, uint16_t *Problem, xIsReadyFunction MainReadyFunc,
 		uint16_t ReadyProblem, uint16_t TimeoutProblem, xHandleFaultFunction FaultFunc);
 
-LogicConfigError LOGIC_CacheMuxSettings(bool Calibration);
+LogicConfigError LOGIC_CacheMuxSettings(bool Calibration, pDL_AuxPowerSupply PowerSupply);
 void LOGIC_CacheCurrentBoardSettings();
 void LOGIC_CacheControlSettings(DCV_OutputMode Mode);
 void LOGIC_CacheLeakageSettings();
+void LOGIC_CachePowerSupplySettings(DL_AuxPowerSupply Mode);
 void LOGIC_CacheCalibrationSettings();
 
 bool LOGIC_IsDCControl();
@@ -253,16 +255,18 @@ void LOGIC_HandleFaultAndStop()
 
 LogicConfigError LOGIC_PrepareMeasurement(bool Calibration)
 {
-	if(Calibration)
-		CachedNode = DataTable[REG_CALIBRATION_NODE];
-
-	LogicConfigError err = LOGIC_CacheMuxSettings(Calibration);
-
-	GeneralLogicTimeout = DataTable[REG_GENERAL_LOGIC_TIMEOUT];
-	ControlWaitDelay = DataTable[REG_CTRL_HOLD_DELAY];
+	LogicConfigError err = LOGIC_CacheMuxSettings(Calibration, &CachedPowerSupply);
 
 	if(err == LCE_None)
 	{
+		GeneralLogicTimeout = DataTable[REG_GENERAL_LOGIC_TIMEOUT];
+		ControlWaitDelay = DataTable[REG_CTRL_HOLD_DELAY];
+
+		if(Calibration)
+			CachedNode = DataTable[REG_CALIBRATION_NODE];
+
+		LOGIC_CachePowerSupplySettings(CachedPowerSupply);
+
 		switch(Multiplexer.MeasureType)
 		{
 			case MT_LeakageCurrent:
@@ -312,6 +316,7 @@ LogicConfigError LOGIC_PrepareMeasurement(bool Calibration)
 				return LCE_InvalidMeasurement;
 		}
 	}
+
 	return err;
 }
 //-----------------------------
@@ -386,8 +391,10 @@ void LOGIC_CacheCalibrationSettings()
 }
 //-----------------------------
 
-LogicConfigError LOGIC_CacheMuxSettings(bool Calibration)
+LogicConfigError LOGIC_CacheMuxSettings(bool Calibration, pDL_AuxPowerSupply PowerSupply)
 {
+	*PowerSupply = NoSupply;
+
 	if(Calibration)
 	{
 		switch(CachedNode)
@@ -447,6 +454,9 @@ LogicConfigError LOGIC_CacheMuxSettings(bool Calibration)
 		if((Multiplexer.Position == MX_Position2 && DUTConfig->OutputPositionsNum == OneOutput) ||
 			(Multiplexer.Position == MX_Position3 && DUTConfig->OutputPositionsNum != ThreeOutputs))
 			return LCE_PositionMissmatch;
+
+		// ѕолучение настроек вспомогательного питани€
+		*PowerSupply = DUTConfig->AuxPowerSupply;
 	}
 
 	return LCE_None;
@@ -496,6 +506,36 @@ void LOGIC_CacheLeakageSettings()
 	{
 		ACVoltageBoard2.Setpoint = Setpoint;
 		ACVoltageBoard2.OutputLine = ACV_BUS_LV;
+	}
+}
+//-----------------------------
+
+void LOGIC_CachePowerSupplySettings(DL_AuxPowerSupply Mode)
+{
+	if(Mode == SingleDCSupply || Mode == DoubleDCSupply)
+	{
+		VIPair SetpointPS1;
+		SetpointPS1.Voltage = (uint32_t)DataTable[REG_AUX_PS1_VOLTAGE] * 1000;
+		SetpointPS1.Current = DataTable[REG_AUX_PS1_CURRENT];
+
+		DCVoltageBoard2.Setpoint = SetpointPS1;
+		DCVoltageBoard2.OutputLine = DCV_PS1;
+		DCVoltageBoard2.OutputType = DCV_Voltage;
+		DCVoltageBoard2.OutputMode = DCV_Continuous;
+		DCVoltageBoard2.PulseLength = DataTable[REG_CTRL_PULSE_LENGTH];
+
+		if(Mode == DoubleDCSupply)
+		{
+			VIPair SetpointPS2;
+			SetpointPS2.Voltage = (uint32_t)DataTable[REG_AUX_PS2_VOLTAGE] * 1000;
+			SetpointPS2.Current = DataTable[REG_AUX_PS2_CURRENT];
+
+			DCVoltageBoard3.Setpoint = SetpointPS2;
+			DCVoltageBoard3.OutputLine = DCV_PS2;
+			DCVoltageBoard3.OutputType = DCV_Voltage;
+			DCVoltageBoard3.OutputMode = DCV_Continuous;
+			DCVoltageBoard3.PulseLength = DataTable[REG_CTRL_PULSE_LENGTH];
+		}
 	}
 }
 //-----------------------------

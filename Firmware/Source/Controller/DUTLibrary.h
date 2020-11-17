@@ -41,7 +41,7 @@ typedef enum __DL_AuxPowerSupply
 	NoSupply = 0,
 	SingleDCSupply = 1,
 	DoubleDCSupply = 2
-} DL_AuxPowerSupply;
+} DL_AuxPowerSupply, *pDL_AuxPowerSupply;
 
 typedef struct __DL_DUTConfiguration
 {
