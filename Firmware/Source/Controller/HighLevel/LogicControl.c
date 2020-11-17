@@ -101,7 +101,7 @@ void CTRL_HandleMeasurement()
 							else
 							{
 								DataTable[REG_OP_RESULT] = OPRESULT_FAIL;
-								DataTable[REG_PROBLEM] = PROBLEM_CONTROL_NODE;
+								DataTable[REG_PROBLEM] = PROBLEM_CONTROL_RESULT;
 							}
 
 							CONTROL_SetDeviceState(DS_Ready, DSS_None);

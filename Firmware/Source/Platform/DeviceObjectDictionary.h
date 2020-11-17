@@ -195,25 +195,33 @@
 
 // Problem
 #define PROBLEM_NONE					0
-#define PROBLEM_CONTROL_NODE			1	// Проблема формирования сигнала управления
-#define PROBLEM_CURRENT_NODE			2	// Проблема формирования силового тока
-#define PROBLEM_LEAKAGE_NODE			3	// Проблема формирования напряжения измерения утечки
-#define PROBLEM_MUX_CONFIG				4	// Некорректная конфигурация мультиплексора
-#define PROBLEM_CONTROL_CONFIG			5	// Некорректная конфигурация цепи управления
-#define PROBLEM_CONTROL_READY_TIMEOUT	6	// Отсутствие сигнала готовности управления
-#define PROBLEM_CONTROL_IN_PROBLEM		7	// Источник сигнала управления в проблеме
-#define PROBLEM_CURRENT_CONFIG			8	// Некорректная конфигурация источника тока
-#define PROBLEM_LEAKAGE_CONFIG			9	// Некорректная конфигурация источника напряжения утечки
-#define PROBLEM_LEAKAGE_READY_TIMEOUT	10	// Отсутствие сигнала готовности утечки
-#define PROBLEM_LEAKAGE_IN_PROBLEM		11	// Источник сигнала утечки в проблеме
-#define PROBLEM_CAL_CONFIG				12	// Некорректная конфигурация калибруемого узла
-#define PROBLEM_CAL_READY_TIMEOUT		13	// Отсутствие сигнала готовности калибруемого узла
-#define PROBLEM_CAL_IN_PROBLEM			14	// Калибруемый узел в проблеме
-#define PROBLEM_PS_CONFIG				15	// Некорректная конфигурация вспомогательного питания
-#define PROBLEM_PS_READY_TIMEOUT		16	// Отсутствие сигнала готовности вспомогательного питания
-#define PROBLEM_PS_IN_PROBLEM			17	// Вспомогательного питание в проблеме
-#define PROBLEM_COMMAND_STOP			18	// Поступил внешний запрос на остановку
-#define PROBLEM_SAFETY_TRIG				19	// Остановка по срабатыванию системы безопасности
+#define PROBLEM_COMMAND_STOP			1	// Поступил внешний запрос на остановку
+#define PROBLEM_SAFETY_TRIG				2	// Остановка по срабатыванию системы безопасности
+
+#define PROBLEM_MUX_CONFIG				10	// Некорректная конфигурация мультиплексора
+
+#define PROBLEM_CAL_CONFIG				20	// Некорректная конфигурация калибруемого узла
+#define PROBLEM_CAL_READY_TIMEOUT		21	// Отсутствие сигнала готовности калибруемого узла
+#define PROBLEM_CAL_IN_PROBLEM			22	// Калибруемый узел в проблеме
+#define PROBLEM_CAL_RESULT				23	// Невалидный результат измерения
+
+#define PROBLEM_CONTROL_CONFIG			30	// Некорректная конфигурация цепи управления
+#define PROBLEM_CONTROL_READY_TIMEOUT	31	// Отсутствие сигнала готовности управления
+#define PROBLEM_CONTROL_IN_PROBLEM		32	// Источник сигнала управления в проблеме
+#define PROBLEM_CONTROL_RESULT			33	// Невалидный результат измерения
+
+#define PROBLEM_CURRENT_CONFIG			40	// Некорректная конфигурация источника тока
+#define PROBLEM_CURRENT_RESULT			41	// Невалидный результат измерения
+
+#define PROBLEM_LEAKAGE_CONFIG			50	// Некорректная конфигурация источника напряжения утечки
+#define PROBLEM_LEAKAGE_READY_TIMEOUT	51	// Отсутствие сигнала готовности утечки
+#define PROBLEM_LEAKAGE_IN_PROBLEM		52	// Источник сигнала утечки в проблеме
+#define PROBLEM_LEAKAGE_RESULT			53	// Невалидный результат измерения
+
+#define PROBLEM_PS_CONFIG				60	// Некорректная конфигурация вспомогательного питания
+#define PROBLEM_PS_READY_TIMEOUT		61	// Отсутствие сигнала готовности вспомогательного питания
+#define PROBLEM_PS_IN_PROBLEM			62	// Вспомогательного питание в проблеме
+#define PROBLEM_PS_RESULT				63	// Невалидный результат измерения
 
 //  Warning
 #define WARNING_NONE					0

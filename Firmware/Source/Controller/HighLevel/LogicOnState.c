@@ -114,7 +114,7 @@ void ONSTATE_HandleMeasurement()
 							else
 							{
 								DataTable[REG_OP_RESULT] = OPRESULT_FAIL;
-								DataTable[REG_PROBLEM] = PROBLEM_CURRENT_NODE;
+								DataTable[REG_PROBLEM] = PROBLEM_CURRENT_RESULT;
 							}
 
 							CONTROL_SetDeviceState(DS_Ready, DSS_None);
