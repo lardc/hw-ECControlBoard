@@ -65,6 +65,10 @@ ExecutionResult LOGIC_StopLeakage();
 ExecutionResult LOGIC_IsLeakageVoltageReady(bool *IsReady);
 bool IsLeakageNodeReady();
 
+ExecutionResult LOGIC_StartPowerSupply();
+ExecutionResult LOGIC_IsPowerSupplyReady(bool *IsReady);
+ExecutionResult LOGIC_StopPowerSupply();
+
 ExecutionResult LOGIC_StartCalibration();
 ExecutionResult LOGIC_StopCalibration();
 
@@ -878,6 +882,77 @@ ExecutionResult LOGIC_CalibrationReadResult(uint16_t *OpResult, pVIPair Result)
 	}
 
 	return ER_WrongNode;
+}
+//-----------------------------
+
+ExecutionResult LOGIC_StartPowerSupply()
+{
+	switch(CachedPowerSupply)
+	{
+		case SingleDCSupply:
+			return DCV_Execute(NAME_DCVoltage2);
+
+		case DoubleDCSupply:
+			{
+				ExecutionResult res = DCV_Execute(NAME_DCVoltage2);
+				if(res == ER_NoError)
+					return DCV_Execute(NAME_DCVoltage3);
+				else
+					return res;
+			}
+
+		default:
+			return ER_WrongNode;
+	}
+}
+//-----------------------------
+
+ExecutionResult LOGIC_IsPowerSupplyReady(bool *IsReady)
+{
+	switch(CachedPowerSupply)
+	{
+		case SingleDCSupply:
+			return DCV_IsVoltageReady(NAME_DCVoltage2, IsReady);
+
+		case DoubleDCSupply:
+			{
+				bool Ready1, Ready2;
+				ExecutionResult res = DCV_IsVoltageReady(NAME_DCVoltage2, &Ready1);
+				if(res == ER_NoError)
+				{
+					res = DCV_IsVoltageReady(NAME_DCVoltage3, &Ready2);
+					*IsReady = Ready1 & Ready2;
+					return res;
+				}
+				else
+					return res;
+			}
+
+		default:
+			return ER_WrongNode;
+	}
+}
+//-----------------------------
+
+ExecutionResult LOGIC_StopPowerSupply()
+{
+	switch(CachedPowerSupply)
+	{
+		case SingleDCSupply:
+			return DCV_Stop(NAME_DCVoltage2);
+
+		case DoubleDCSupply:
+			{
+				ExecutionResult res = DCV_Stop(NAME_DCVoltage2);
+				if(res == ER_NoError)
+					return DCV_Stop(NAME_DCVoltage3);
+				else
+					return res;
+			}
+
+		default:
+			return ER_WrongNode;
+	}
 }
 //-----------------------------
 
