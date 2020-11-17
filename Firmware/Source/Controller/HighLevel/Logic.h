@@ -96,6 +96,7 @@ void LOGIC_Wrapper_StartPowerSupply(DeviceSubState NextState, DeviceSubState Sto
 		uint64_t *Timeout, uint16_t *Problem);
 void LOGIC_Wrapper_IsPowerSupplyOutputReady(DeviceSubState NextState, DeviceSubState StopState,
 		uint64_t *Timeout, uint16_t *Problem);
-void LOGIC_Wrapper_StopPowerSupply(DeviceSubState NextState);
+void LOGIC_Wrapper_PowerSupply1ReadResult(DeviceSubState NextState, pVIPair Result, uint16_t *Problem);
+void LOGIC_Wrapper_PowerSupply2ReadResult(DeviceSubState NextState, pVIPair Result, uint16_t *Problem);
 
 #endif // __LOGIC_H

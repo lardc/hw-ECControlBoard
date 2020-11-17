@@ -85,6 +85,8 @@ bool LOGIC_IsPowerSupplyInProblem();
 ExecutionResult LOGIC_ControlReadResult(uint16_t *OpResult, pVIPair Result);
 ExecutionResult LOGIC_LeakageReadResult(uint16_t *OpResult, pVIPair Result);
 ExecutionResult LOGIC_CalibrationReadResult(uint16_t *OpResult, pVIPair Result);
+ExecutionResult LOGIC_PowerSupply1ReadResult(uint16_t *OpResult, pVIPair Result);
+ExecutionResult LOGIC_PowerSupply2ReadResult(uint16_t *OpResult, pVIPair Result);
 
 // Functions
 void LOGIC_InitEntities()
@@ -914,13 +916,13 @@ ExecutionResult LOGIC_StartPowerSupply()
 			return ER_NoError;
 
 		case SingleDCSupply:
-			return DCV_Execute(NAME_DCVoltage2);
+			return DCV_Execute(PowerSupply1Node);
 
 		case DoubleDCSupply:
 			{
-				ExecutionResult res = DCV_Execute(NAME_DCVoltage2);
+				ExecutionResult res = DCV_Execute(PowerSupply1Node);
 				if(res == ER_NoError)
-					return DCV_Execute(NAME_DCVoltage3);
+					return DCV_Execute(PowerSupply2Node);
 				else
 					return res;
 			}
@@ -940,15 +942,15 @@ ExecutionResult LOGIC_IsPowerSupplyReady(bool *IsReady)
 			return ER_NoError;
 
 		case SingleDCSupply:
-			return DCV_IsVoltageReady(NAME_DCVoltage2, IsReady);
+			return DCV_IsVoltageReady(PowerSupply1Node, IsReady);
 
 		case DoubleDCSupply:
 			{
 				bool Ready1, Ready2;
-				ExecutionResult res = DCV_IsVoltageReady(NAME_DCVoltage2, &Ready1);
+				ExecutionResult res = DCV_IsVoltageReady(PowerSupply1Node, &Ready1);
 				if(res == ER_NoError)
 				{
-					res = DCV_IsVoltageReady(NAME_DCVoltage3, &Ready2);
+					res = DCV_IsVoltageReady(PowerSupply2Node, &Ready2);
 					*IsReady = Ready1 & Ready2;
 					return res;
 				}
@@ -974,11 +976,65 @@ ExecutionResult LOGIC_StopPowerSupply()
 
 		case DoubleDCSupply:
 			{
-				ExecutionResult res = DCV_Stop(NAME_DCVoltage2);
+				ExecutionResult res = DCV_Stop(PowerSupply1Node);
 				if(res == ER_NoError)
-					return DCV_Stop(NAME_DCVoltage3);
+					return DCV_Stop(PowerSupply2Node);
 				else
 					return res;
+			}
+
+		default:
+			return ER_BadHighLevelConfig;
+	}
+}
+//-----------------------------
+
+ExecutionResult LOGIC_PowerSupply1ReadResult(uint16_t *OpResult, pVIPair Result)
+{
+	switch(CachedPowerSupply)
+	{
+		case NoSupply:
+			*OpResult = COMM_OPRESULT_OK;
+			return ER_NoError;
+
+		case SingleDCSupply:
+		case DoubleDCSupply:
+			{
+				pSlaveNode NodeData = COMM_GetSlaveDevicePointer(PowerSupply1Node);
+				pDCVoltageBoardObject Settings = (pDCVoltageBoardObject)NodeData->Settings;
+
+				ExecutionResult res = DCV_ReadResult(PowerSupply1Node);
+				*Result = Settings->Result;
+				*OpResult = NodeData->OpResult;
+
+				return res;
+			}
+
+		default:
+			return ER_BadHighLevelConfig;
+	}
+}
+//-----------------------------
+
+ExecutionResult LOGIC_PowerSupply2ReadResult(uint16_t *OpResult, pVIPair Result)
+{
+	switch(CachedPowerSupply)
+	{
+		case NoSupply:
+		case SingleDCSupply:
+			*OpResult = COMM_OPRESULT_OK;
+			return ER_NoError;
+
+		case DoubleDCSupply:
+			{
+				pSlaveNode NodeData = COMM_GetSlaveDevicePointer(PowerSupply2Node);
+				pDCVoltageBoardObject Settings = (pDCVoltageBoardObject)NodeData->Settings;
+
+				ExecutionResult res = DCV_ReadResult(PowerSupply2Node);
+				*Result = Settings->Result;
+				*OpResult = NodeData->OpResult;
+
+				return res;
 			}
 
 		default:
@@ -1345,5 +1401,19 @@ void LOGIC_Wrapper_IsPowerSupplyOutputReady(DeviceSubState NextState, DeviceSubS
 void LOGIC_Wrapper_StopPowerSupply(DeviceSubState NextState)
 {
 	LOGIC_Wrapper_TerminateX(NextState, &LOGIC_StopPowerSupply, &LOGIC_HandlePowerSupplyExecResult);
+}
+//-----------------------------
+
+void LOGIC_Wrapper_PowerSupply1ReadResult(DeviceSubState NextState, pVIPair Result, uint16_t *Problem)
+{
+	LOGIC_Wrapper_ReadResultX(NextState, Problem, PROBLEM_PS_RESULT,
+			&LOGIC_IsPowerSupplyInProblem, &LOGIC_PowerSupply1ReadResult, Result, LOGIC_HandlePowerSupplyExecResult);
+}
+//-----------------------------
+
+void LOGIC_Wrapper_PowerSupply2ReadResult(DeviceSubState NextState, pVIPair Result, uint16_t *Problem)
+{
+	LOGIC_Wrapper_ReadResultX(NextState, Problem, PROBLEM_PS_RESULT,
+			&LOGIC_IsPowerSupplyInProblem, &LOGIC_PowerSupply1ReadResult, Result, LOGIC_HandlePowerSupplyExecResult);
 }
 //-----------------------------
