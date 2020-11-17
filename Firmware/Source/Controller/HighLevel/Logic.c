@@ -894,6 +894,9 @@ ExecutionResult LOGIC_StartPowerSupply()
 {
 	switch(CachedPowerSupply)
 	{
+		case NoSupply:
+			return ER_NoError;
+
 		case SingleDCSupply:
 			return DCV_Execute(NAME_DCVoltage2);
 
@@ -907,7 +910,7 @@ ExecutionResult LOGIC_StartPowerSupply()
 			}
 
 		default:
-			return ER_WrongNode;
+			return ER_BadHighLevelConfig;
 	}
 }
 //-----------------------------
@@ -916,6 +919,10 @@ ExecutionResult LOGIC_IsPowerSupplyReady(bool *IsReady)
 {
 	switch(CachedPowerSupply)
 	{
+		case NoSupply:
+			*IsReady = true;
+			return ER_NoError;
+
 		case SingleDCSupply:
 			return DCV_IsVoltageReady(NAME_DCVoltage2, IsReady);
 
@@ -934,7 +941,7 @@ ExecutionResult LOGIC_IsPowerSupplyReady(bool *IsReady)
 			}
 
 		default:
-			return ER_WrongNode;
+			return ER_BadHighLevelConfig;
 	}
 }
 //-----------------------------
@@ -943,6 +950,9 @@ ExecutionResult LOGIC_StopPowerSupply()
 {
 	switch(CachedPowerSupply)
 	{
+		case NoSupply:
+			return ER_NoError;
+
 		case SingleDCSupply:
 			return DCV_Stop(NAME_DCVoltage2);
 
@@ -956,7 +966,7 @@ ExecutionResult LOGIC_StopPowerSupply()
 			}
 
 		default:
-			return ER_WrongNode;
+			return ER_BadHighLevelConfig;
 	}
 }
 //-----------------------------
