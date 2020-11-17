@@ -74,8 +74,7 @@ ExecutionResult LOGIC_StopCalibration();
 
 bool LOGIC_IsControlInProblem();
 bool LOGIC_IsLeakagelInProblem();
-bool LOGIC_IsPowerSupply1InProblem();
-bool LOGIC_IsPowerSupply2InProblem();
+bool LOGIC_IsPowerSupplyInProblem();
 
 // Functions
 void LOGIC_InitEntities()
@@ -981,15 +980,25 @@ bool LOGIC_IsLeakagelInProblem()
 }
 //-----------------------------
 
-bool LOGIC_IsPowerSupply1InProblem()
+bool LOGIC_IsPowerSupplyInProblem()
 {
-	return LOGIC_IsNodeInProblem(PowerSupply1Node);
-}
-//-----------------------------
+	switch(CachedPowerSupply)
+	{
+		case NoSupply:
+			return false;
 
-bool LOGIC_IsPowerSupply2InProblem()
-{
-	return LOGIC_IsNodeInProblem(PowerSupply2Node);
+		case SingleDCSupply:
+			return LOGIC_IsNodeInProblem(PowerSupply1Node);
+
+		case DoubleDCSupply:
+			{
+				bool ProblemPS1 = LOGIC_IsNodeInProblem(PowerSupply1Node);
+				bool ProblemPS2 = LOGIC_IsNodeInProblem(PowerSupply2Node);
+				return (ProblemPS1 || ProblemPS2);
+			}
+	}
+
+	return true;
 }
 //-----------------------------
 
