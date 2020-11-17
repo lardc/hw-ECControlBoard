@@ -1314,6 +1314,13 @@ void LOGIC_Wrapper_ControlReadResult(DeviceSubState NextState, pVIPair Result, u
 }
 //-----------------------------
 
+void LOGIC_Wrapper_ControlSaveResult(VIPair Result)
+{
+	DT_Write32(REG_RESULT_CONTROL_VOLTAGE, REG_RESULT_CONTROL_VOLTAGE_32, Result.Voltage);
+	DT_Write32(REG_RESULT_CONTROL_CURRENT, REG_RESULT_CONTROL_CURRENT_32, Result.Current);
+}
+//-----------------------------
+
 void LOGIC_Wrapper_PulseCurrent(DeviceSubState NextState, DeviceSubState StopState,
 		uint64_t *Timeout, uint16_t *Problem)
 {
@@ -1415,5 +1422,17 @@ void LOGIC_Wrapper_PowerSupply2ReadResult(DeviceSubState NextState, pVIPair Resu
 {
 	LOGIC_Wrapper_ReadResultX(NextState, Problem, PROBLEM_PS_RESULT,
 			&LOGIC_IsPowerSupplyInProblem, &LOGIC_PowerSupply1ReadResult, Result, LOGIC_HandlePowerSupplyExecResult);
+}
+//-----------------------------
+
+void LOGIC_Wrapper_PowerSupply1SaveResult(VIPair Result)
+{
+	DT_Write32(REG_RESULT_AUX_CURRENT1, REG_RESULT_AUX_CURRENT1_32, Result.Current);
+}
+//-----------------------------
+
+void LOGIC_Wrapper_PowerSupply2SaveResult(VIPair Result)
+{
+	DT_Write32(REG_RESULT_AUX_CURRENT2, REG_RESULT_AUX_CURRENT2_32, Result.Current);
 }
 //-----------------------------

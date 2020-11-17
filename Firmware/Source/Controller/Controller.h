@@ -86,7 +86,10 @@ typedef enum __DeviceSubState
 	DSS_Control_WaitStopPowerSupply,
 	DSS_Control_UnCommutate,
 	DSS_Control_WaitUnCommutate,
-	DSS_Control_ReadResult,
+	DSS_Control_ReadResultPS1,
+	DSS_Control_ReadResultPS2,
+	DSS_Control_ReadResultControl,
+	DSS_Control_SaveResult,
 
 	DSS_Inhibit_StartTest = 400,
 	DSS_Inhibit_ReadResult,

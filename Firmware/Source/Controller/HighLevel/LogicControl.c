@@ -11,6 +11,7 @@
 
 // Variables
 static const VIPair ZeroVI = {0, 0};
+static VIPair Control, PS1, PS2;
 
 // Functions
 void CTRL_HandleMeasurement()
@@ -26,12 +27,13 @@ void CTRL_HandleMeasurement()
 		switch(CONTROL_SubState)
 		{
 			case DSS_Control_StartTest:
+				Control = PS1 = PS2 = ZeroVI;
 				Problem = PROBLEM_NONE;
 				LOGIC_Wrapper_Start(DSS_Control_Commutate);
 				break;
 
 			case DSS_Control_Commutate:
-				LOGIC_Wrapper_Commutate(DSS_Control_WaitCommutation, DSS_Control_ReadResult, &Problem);
+				LOGIC_Wrapper_Commutate(DSS_Control_WaitCommutation, DSS_Control_SaveResult, &Problem);
 				break;
 
 			case DSS_Control_WaitCommutation:
@@ -79,43 +81,35 @@ void CTRL_HandleMeasurement()
 				break;
 
 			case DSS_Control_WaitUnCommutate:
-				LOGIC_Wrapper_WaitAllNodesReady(DSS_Control_ReadResult);
+				LOGIC_Wrapper_WaitAllNodesReady(DSS_Control_ReadResultPS1);
 				break;
 
-			case DSS_Control_ReadResult:
-				{
-					if(Problem == PROBLEM_NONE)
-					{
-						VIPair Result;
-						uint16_t OpResult;
-						//ExecutionResult res = LOGIC_ControlReadResult(&OpResult, &Result);
-						ExecutionResult res = ER_NoError;
-						if(res == ER_NoError)
-						{
-							if(OpResult == OPRESULT_OK)
-							{
-								DataTable[REG_OP_RESULT] = OPRESULT_OK;
-								DT_Write32(REG_RESULT_CONTROL_VOLTAGE, REG_RESULT_CONTROL_VOLTAGE_32, Result.Voltage);
-								DT_Write32(REG_RESULT_CONTROL_CURRENT, REG_RESULT_CONTROL_CURRENT_32, Result.Current);
-							}
-							else
-							{
-								DataTable[REG_OP_RESULT] = OPRESULT_FAIL;
-								DataTable[REG_PROBLEM] = PROBLEM_CONTROL_RESULT;
-							}
+			case DSS_Control_ReadResultPS1:
+				LOGIC_Wrapper_PowerSupply1ReadResult(DSS_Control_ReadResultPS2, &PS1, &Problem);
+				break;
 
-							CONTROL_SetDeviceState(DS_Ready, DSS_None);
-						}
-						else
-							LOGIC_HandleControlExecResult(res);
-					}
-					else
-					{
-						DataTable[REG_OP_RESULT] = OPRESULT_FAIL;
-						DataTable[REG_PROBLEM] = Problem;
-						CONTROL_SetDeviceState(DS_Ready, DSS_None);
-					}
+			case DSS_Control_ReadResultPS2:
+				LOGIC_Wrapper_PowerSupply2ReadResult(DSS_Control_ReadResultControl, &PS2, &Problem);
+				break;
+
+			case DSS_Control_ReadResultControl:
+				LOGIC_Wrapper_ControlReadResult(DSS_Control_SaveResult, &Control, &Problem);
+				break;
+
+			case DSS_Control_SaveResult:
+				if(Problem == PROBLEM_NONE)
+				{
+					DataTable[REG_OP_RESULT] = OPRESULT_OK;
+					LOGIC_Wrapper_ControlSaveResult(Control);
+					LOGIC_Wrapper_PowerSupply1SaveResult(PS1);
+					LOGIC_Wrapper_PowerSupply2SaveResult(PS2);
 				}
+				else
+				{
+					DataTable[REG_OP_RESULT] = OPRESULT_FAIL;
+					DataTable[REG_PROBLEM] = Problem;
+				}
+				CONTROL_SetDeviceState(DS_Ready, DSS_None);
 				break;
 
 			default:

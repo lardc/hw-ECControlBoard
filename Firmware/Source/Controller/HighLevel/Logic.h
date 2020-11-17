@@ -70,6 +70,7 @@ void LOGIC_Wrapper_StopControl(DeviceSubState NextState);
 void LOGIC_Wrapper_ControlSetDelay(DeviceSubState NextState, DeviceSubState NextStateNoDelay, uint64_t *Timeout);
 void LOGIC_Wrapper_IsControlNodeReady(DeviceSubState NextState);
 void LOGIC_Wrapper_ControlReadResult(DeviceSubState NextState, pVIPair Result, uint16_t *Problem);
+void LOGIC_Wrapper_ControlSaveResult(VIPair Result);
 
 // Обёртки формирователя тока
 void LOGIC_Wrapper_PulseCurrent(DeviceSubState NextState, DeviceSubState StopState,
@@ -96,7 +97,10 @@ void LOGIC_Wrapper_StartPowerSupply(DeviceSubState NextState, DeviceSubState Sto
 		uint64_t *Timeout, uint16_t *Problem);
 void LOGIC_Wrapper_IsPowerSupplyOutputReady(DeviceSubState NextState, DeviceSubState StopState,
 		uint64_t *Timeout, uint16_t *Problem);
+void LOGIC_Wrapper_StopPowerSupply(DeviceSubState NextState);
 void LOGIC_Wrapper_PowerSupply1ReadResult(DeviceSubState NextState, pVIPair Result, uint16_t *Problem);
 void LOGIC_Wrapper_PowerSupply2ReadResult(DeviceSubState NextState, pVIPair Result, uint16_t *Problem);
+void LOGIC_Wrapper_PowerSupply1SaveResult(VIPair Result);
+void LOGIC_Wrapper_PowerSupply2SaveResult(VIPair Result);
 
 #endif // __LOGIC_H
