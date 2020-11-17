@@ -41,7 +41,7 @@ void LEAK_HandleMeasurement()
 				break;
 
 			case DSS_Leakage_WaitControlReady:
-				LOGIC_Wrapper_IsControlReady(DSS_Leakage_SetControlDelay, DSS_Leakage_StopControl,
+				LOGIC_Wrapper_IsControlOutputReady(DSS_Leakage_SetControlDelay, DSS_Leakage_StopControl,
 						&Timeout, &Problem);
 				break;
 
@@ -54,7 +54,7 @@ void LEAK_HandleMeasurement()
 				break;
 
 			case DSS_Leakage_CheckReadyAfterDelay:
-				LOGIC_Wrapper_IsControlReady(DSS_Leakage_StartOutVoltage, DSS_Leakage_StopControl,
+				LOGIC_Wrapper_IsControlOutputReady(DSS_Leakage_StartOutVoltage, DSS_Leakage_StopControl,
 						NULL, &Problem);
 				break;
 

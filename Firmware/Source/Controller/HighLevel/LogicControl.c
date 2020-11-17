@@ -51,7 +51,7 @@ void CTRL_HandleMeasurement()
 				break;
 
 			case DSS_Control_WaitControlReady:
-				LOGIC_Wrapper_IsControlReady(DSS_Control_StopControl, DSS_Control_StopControl,
+				LOGIC_Wrapper_IsControlOutputReady(DSS_Control_StopControl, DSS_Control_StopControl,
 						&Timeout, &Problem);
 				break;
 
