@@ -60,6 +60,7 @@ bool LOGIC_IsDCLeakage();
 ExecutionResult LOGIC_StartControl();
 ExecutionResult LOGIC_StopControl();
 ExecutionResult LOGIC_IsControlVoltageReady(bool *IsReady);
+bool LOGIC_IsControlNodeReady();
 
 ExecutionResult LOGIC_StartLeakage();
 ExecutionResult LOGIC_StopLeakage();
@@ -625,6 +626,12 @@ ExecutionResult LOGIC_ControlReadResult(uint16_t *OpResult, pVIPair Result)
 
 	*OpResult = NodeData->OpResult;
 	return res;
+}
+//-----------------------------
+
+bool LOGIC_IsControlNodeReady()
+{
+	return COMM_IsSlaveInStateX(LOGIC_IsDCControl() ? ControlDCNode : ControlACNode, CDS_Ready);
 }
 //-----------------------------
 
@@ -1203,6 +1210,13 @@ void LOGIC_Wrapper_ControlSetDelay(DeviceSubState NextState, DeviceSubState Next
 	}
 	else
 		CONTROL_SetDeviceState(DS_InProcess, NextStateNoDelay);
+}
+//-----------------------------
+
+void LOGIC_Wrapper_IsControlNodeReady(DeviceSubState NextState)
+{
+	if(LOGIC_IsControlNodeReady())
+		CONTROL_SetDeviceState(DS_InProcess, NextState);
 }
 //-----------------------------
 
