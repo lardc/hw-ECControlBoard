@@ -16,6 +16,7 @@
 typedef ExecutionResult (*xExecFunction)();
 typedef ExecutionResult (*xIsReadyFunction)(bool *Result);
 typedef void (*xHandleFaultFunction)(ExecutionResult Result);
+typedef bool (*xIsProblemFunction)();
 
 // Variables
 static volatile MuxObject Multiplexer;
@@ -74,6 +75,7 @@ ExecutionResult LOGIC_StopCalibration();
 
 bool LOGIC_IsControlInProblem();
 bool LOGIC_IsLeakagelInProblem();
+bool LOGIC_IsCalibrationInProblem();
 bool LOGIC_IsPowerSupplyInProblem();
 
 // Functions
@@ -987,6 +989,37 @@ bool LOGIC_IsControlInProblem()
 bool LOGIC_IsLeakagelInProblem()
 {
 	return LOGIC_IsNodeInProblem(LOGIC_IsDCLeakage() ? LeakageDCNode : LeakageACNode);
+}
+//-----------------------------
+
+bool LOGIC_IsCalibrationInProblem()
+{
+	switch(CachedNode)
+	{
+		case CN_DC1:
+			return LOGIC_IsNodeInProblem(NAME_DCVoltage1);
+
+		case CN_DC2:
+			return LOGIC_IsNodeInProblem(NAME_DCVoltage2);
+
+		case CN_DC3:
+			return LOGIC_IsNodeInProblem(NAME_DCVoltage3);
+
+		case CN_HVDC:
+			return LOGIC_IsNodeInProblem(NAME_DCHighVoltage);
+
+		case CN_AC1:
+			return LOGIC_IsNodeInProblem(NAME_ACVoltage1);
+
+		case CN_AC2:
+			return LOGIC_IsNodeInProblem(NAME_ACVoltage2);
+
+		case CN_CB:
+			return LOGIC_IsNodeInProblem(NAME_DCCurrent);
+
+		default:
+			return ER_WrongNode;
+	}
 }
 //-----------------------------
 
