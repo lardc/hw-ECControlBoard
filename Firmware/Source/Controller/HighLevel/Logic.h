@@ -82,7 +82,7 @@ void LOGIC_Wrapper_WaitCurrentFinished(DeviceSubState NextState, uint64_t Timeou
 // Обёртки утечки
 void LOGIC_Wrapper_StartLeakage(DeviceSubState NextState, DeviceSubState StopState,
 		uint64_t *Timeout, uint16_t *Problem);
-void LOGIC_Wrapper_IsLeakageReady(DeviceSubState NextState, DeviceSubState StopState,
+void LOGIC_Wrapper_IsLeakageOutputReady(DeviceSubState NextState, DeviceSubState StopState,
 		uint64_t *Timeout, uint16_t *Problem);
 void LOGIC_Wrapper_StopLeakage(DeviceSubState NextState);
 void LOGIC_Wrapper_IsLeakageNodeReady(DeviceSubState NextState);
@@ -90,14 +90,14 @@ void LOGIC_Wrapper_IsLeakageNodeReady(DeviceSubState NextState);
 // Обёртки калибровки
 void LOGIC_Wrapper_StartCalibration(DeviceSubState NextState, DeviceSubState StopState,
 		uint64_t *Timeout, uint16_t *Problem);
-void LOGIC_Wrapper_IsCalibrationReady(DeviceSubState NextState, DeviceSubState StopState,
+void LOGIC_Wrapper_IsCalibrationOutputReady(DeviceSubState NextState, DeviceSubState StopState,
 		uint64_t *Timeout, uint16_t *Problem);
 void LOGIC_Wrapper_StopCalibration(DeviceSubState NextState);
 
 // Обёртки вспомогательного питания
 void LOGIC_Wrapper_StartPowerSupply(DeviceSubState NextState, DeviceSubState StopState,
 		uint64_t *Timeout, uint16_t *Problem);
-void LOGIC_Wrapper_IsPowerSupplyReady(DeviceSubState NextState, DeviceSubState StopState,
+void LOGIC_Wrapper_IsPowerSupplyOutputReady(DeviceSubState NextState, DeviceSubState StopState,
 		uint64_t *Timeout, uint16_t *Problem);
 void LOGIC_Wrapper_StopPowerSupply(DeviceSubState NextState);
 

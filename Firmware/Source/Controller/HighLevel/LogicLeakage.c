@@ -64,7 +64,7 @@ void LEAK_HandleMeasurement()
 				break;
 
 			case DSS_Leakage_WaitOutVoltageReady:
-				LOGIC_Wrapper_IsLeakageReady(DSS_Leakage_StopOutVoltage, DSS_Leakage_StopOutVoltage,
+				LOGIC_Wrapper_IsLeakageOutputReady(DSS_Leakage_StopOutVoltage, DSS_Leakage_StopOutVoltage,
 						&Timeout, &Problem);
 				break;
 

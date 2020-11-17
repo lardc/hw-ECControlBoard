@@ -41,7 +41,7 @@ void CTRL_HandleMeasurement()
 				break;
 
 			case DSS_Control_WaitStartPowerSupply:
-				LOGIC_Wrapper_IsPowerSupplyReady(DSS_Control_StartControl, DSS_Control_StopPowerSupply,
+				LOGIC_Wrapper_IsPowerSupplyOutputReady(DSS_Control_StartControl, DSS_Control_StopPowerSupply,
 						&Timeout, &Problem);
 				break;
 
