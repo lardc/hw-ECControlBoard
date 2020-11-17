@@ -73,7 +73,7 @@ void LEAK_HandleMeasurement()
 				break;
 
 			case DSS_Leakage_WaitStopOutVoltage:
-				LOGIC_Wrapper_WaitLeakageFinished(DSS_Leakage_StopControl, Timeout);
+				LOGIC_Wrapper_IsLeakageNodeReady(DSS_Leakage_StopControl);
 				break;
 
 			case DSS_Leakage_StopControl:

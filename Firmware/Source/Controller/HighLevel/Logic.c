@@ -65,7 +65,7 @@ bool LOGIC_IsControlNodeReady();
 ExecutionResult LOGIC_StartLeakage();
 ExecutionResult LOGIC_StopLeakage();
 ExecutionResult LOGIC_IsLeakageVoltageReady(bool *IsReady);
-bool IsLeakageNodeReady();
+bool LOGIC_IsLeakageNodeReady();
 
 ExecutionResult LOGIC_StartPowerSupply();
 ExecutionResult LOGIC_IsPowerSupplyReady(bool *IsReady);
@@ -693,7 +693,7 @@ ExecutionResult LOGIC_LeakageReadResult(uint16_t *OpResult, pVIPair Result)
 }
 //-----------------------------
 
-bool IsLeakageNodeReady()
+bool LOGIC_IsLeakageNodeReady()
 {
 	return COMM_IsSlaveInStateX(LOGIC_IsDCLeakage() ? LeakageDCNode : LeakageACNode, CDS_Ready);
 }
@@ -1259,12 +1259,10 @@ void LOGIC_Wrapper_StopLeakage(DeviceSubState NextState)
 }
 //-----------------------------
 
-void LOGIC_Wrapper_WaitLeakageFinished(DeviceSubState NextState, uint64_t Timeout)
+void LOGIC_Wrapper_IsLeakageNodeReady(DeviceSubState NextState)
 {
-	if(IsLeakageNodeReady())
+	if(LOGIC_IsLeakageNodeReady())
 		CONTROL_SetDeviceState(DS_InProcess, NextState);
-	else if(CONTROL_TimeCounter > Timeout)
-		LOGIC_HandleLeakageExecResult(ER_ChangeStateTimeout);
 }
 //-----------------------------
 
