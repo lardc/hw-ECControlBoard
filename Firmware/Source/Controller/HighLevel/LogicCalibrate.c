@@ -10,6 +10,10 @@
 #include "DeviceObjectDictionary.h"
 #include "Global.h"
 
+// Variables
+static const VIPair ZeroVI = {0, 0};
+static VIPair Calibration;
+
 // Functions
 void CALIBRATE_HandleMeasurement()
 {
@@ -24,12 +28,13 @@ void CALIBRATE_HandleMeasurement()
 		switch(CONTROL_SubState)
 		{
 			case DSS_Calibrate_Start:
+				Calibration = ZeroVI;
 				Problem = PROBLEM_NONE;
 				LOGIC_Wrapper_Start(DSS_Calibrate_Commutate);
 				break;
 
 			case DSS_Calibrate_Commutate:
-				LOGIC_Wrapper_Commutate(DSS_Calibrate_WaitCommutation, DSS_Calibrate_ReadResult, &Problem);
+				LOGIC_Wrapper_Commutate(DSS_Calibrate_WaitCommutation, DSS_Calibrate_SaveResult, &Problem);
 				break;
 
 			case DSS_Calibrate_WaitCommutation:
@@ -63,37 +68,21 @@ void CALIBRATE_HandleMeasurement()
 				break;
 
 			case DSS_Calibrate_ReadResult:
+				LOGIC_Wrapper_CalibrationReadResult(DSS_Calibrate_SaveResult, &Calibration, &Problem);
+				break;
+
+			case DSS_Calibrate_SaveResult:
+				if(Problem == PROBLEM_NONE)
 				{
-					if(Problem == PROBLEM_NONE)
-					{
-						VIPair Result;
-						uint16_t OpResult;
-						ExecutionResult res = LOGIC_CalibrationReadResult(&OpResult, &Result);
-
-						if(res == ER_NoError)
-						{
-							if(OpResult == OPRESULT_OK)
-							{
-								DT_Write32(REG_CALIBRATION_VOLTAGE, REG_CALIBRATION_VOLTAGE_32, Result.Voltage);
-								DT_Write32(REG_CALIBRATION_CURRENT, REG_CALIBRATION_CURRENT_32, Result.Current);
-
-								DataTable[REG_OP_RESULT] = OPRESULT_OK;
-							}
-							else
-								DataTable[REG_OP_RESULT] = OPRESULT_FAIL;
-
-							CONTROL_SetDeviceState(DS_Ready, DSS_None);
-						}
-						else
-							LOGIC_HandleCalibrationExecResult(res);
-					}
-					else
-					{
-						DataTable[REG_OP_RESULT] = OPRESULT_FAIL;
-						DataTable[REG_PROBLEM] = Problem;
-						CONTROL_SetDeviceState(DS_Ready, DSS_None);
-					}
+					DataTable[REG_OP_RESULT] = OPRESULT_OK;
+					LOGIC_Wrapper_CalibrationSaveResult(Calibration);
 				}
+				else
+				{
+					DataTable[REG_OP_RESULT] = OPRESULT_FAIL;
+					DataTable[REG_PROBLEM] = Problem;
+				}
+				CONTROL_SetDeviceState(DS_Ready, DSS_None);
 				break;
 
 			default:

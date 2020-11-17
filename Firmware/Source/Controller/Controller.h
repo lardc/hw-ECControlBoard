@@ -104,6 +104,7 @@ typedef enum __DeviceSubState
 	DSS_Calibrate_UnCommutate,
 	DSS_Calibrate_WaitUnCommutate,
 	DSS_Calibrate_ReadResult,
+	DSS_Calibrate_SaveResult
 } DeviceSubState;
 
 // Variables
