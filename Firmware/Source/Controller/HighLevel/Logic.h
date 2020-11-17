@@ -91,6 +91,8 @@ void LOGIC_Wrapper_StartCalibration(DeviceSubState NextState, DeviceSubState Sto
 void LOGIC_Wrapper_IsCalibrationOutputReady(DeviceSubState NextState, DeviceSubState StopState,
 		uint64_t *Timeout, uint16_t *Problem);
 void LOGIC_Wrapper_StopCalibration(DeviceSubState NextState);
+void LOGIC_Wrapper_CalibrationReadResult(DeviceSubState NextState, pVIPair Result, uint16_t *Problem);
+void LOGIC_Wrapper_CalibrationSaveResult(VIPair Result);
 
 // Обёртки вспомогательного питания
 void LOGIC_Wrapper_StartPowerSupply(DeviceSubState NextState, DeviceSubState StopState,

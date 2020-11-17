@@ -1389,6 +1389,20 @@ void LOGIC_Wrapper_StopCalibration(DeviceSubState NextState)
 }
 //-----------------------------
 
+void LOGIC_Wrapper_CalibrationReadResult(DeviceSubState NextState, pVIPair Result, uint16_t *Problem)
+{
+	LOGIC_Wrapper_ReadResultX(NextState, Problem, PROBLEM_CAL_RESULT,
+			&LOGIC_IsCalibrationInProblem, &LOGIC_CalibrationReadResult, Result, LOGIC_HandleCalibrationExecResult);
+}
+//-----------------------------
+
+void LOGIC_Wrapper_CalibrationSaveResult(VIPair Result)
+{
+	DT_Write32(REG_CALIBRATION_VOLTAGE, REG_CALIBRATION_VOLTAGE_32, Result.Voltage);
+	DT_Write32(REG_CALIBRATION_CURRENT, REG_CALIBRATION_CURRENT_32, Result.Current);
+}
+//-----------------------------
+
 void LOGIC_Wrapper_StartPowerSupply(DeviceSubState NextState, DeviceSubState StopState,
 		uint64_t *Timeout, uint16_t *Problem)
 {
