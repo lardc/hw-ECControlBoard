@@ -32,11 +32,21 @@ void CTRL_HandleMeasurement()
 				break;
 
 			case DSS_Control_WaitCommutation:
-				LOGIC_Wrapper_WaitAllNodesReady(DSS_Control_StartControl);
+				LOGIC_Wrapper_WaitAllNodesReady(DSS_Control_StartPowerSupply);
+				break;
+
+			case DSS_Control_StartPowerSupply:
+				LOGIC_Wrapper_StartPowerSupply(DSS_Control_WaitStartPowerSupply, DSS_Control_UnCommutate,
+						&Timeout, &Problem);
+				break;
+
+			case DSS_Control_WaitStartPowerSupply:
+				LOGIC_Wrapper_IsPowerSupplyReady(DSS_Control_StartControl, DSS_Control_StopPowerSupply,
+						&Timeout, &Problem);
 				break;
 
 			case DSS_Control_StartControl:
-				LOGIC_Wrapper_StartControl(DSS_Control_WaitControlReady, DSS_Control_UnCommutate,
+				LOGIC_Wrapper_StartControl(DSS_Control_WaitControlReady, DSS_Control_StopPowerSupply,
 						&Timeout, &Problem);
 				break;
 
@@ -50,6 +60,14 @@ void CTRL_HandleMeasurement()
 				break;
 
 			case DSS_Control_WaitStopControl:
+				LOGIC_Wrapper_IsControlNodeReady(DSS_Control_StopPowerSupply);
+				break;
+
+			case DSS_Control_StopPowerSupply:
+				LOGIC_Wrapper_StopPowerSupply(DSS_Control_WaitStopPowerSupply);
+				break;
+
+			case DSS_Control_WaitStopPowerSupply:
 				LOGIC_Wrapper_WaitAllNodesReady(DSS_Control_UnCommutate);
 				break;
 

@@ -191,6 +191,7 @@
 #define FAULT_EXT_GR_DC_VOLTAGE3		600	// DCVoltageBoard3
 #define FAULT_EXT_GR_AC_VOLTAGE1		700	// ACVoltageBoard1
 #define FAULT_EXT_GR_AC_VOLTAGE2		800	// ACVoltageBoard2
+#define FAULT_EXT_GR_POWER_SUPPLY		900	// PowerSupply
 
 // Problem
 #define PROBLEM_NONE					0
@@ -208,8 +209,11 @@
 #define PROBLEM_CAL_CONFIG				12	// Некорректная конфигурация калибруемого узла
 #define PROBLEM_CAL_READY_TIMEOUT		13	// Отсутствие сигнала готовности калибруемого узла
 #define PROBLEM_CAL_IN_PROBLEM			14	// Калибруемый узел в проблеме
-#define PROBLEM_COMMAND_STOP			15	// Поступил внешний запрос на остановку
-#define PROBLEM_SAFETY_TRIG				16	// Остановка по срабатыванию системы безопасности
+#define PROBLEM_PS_CONFIG				15	// Некорректная конфигурация вспомогательного питания
+#define PROBLEM_PS_READY_TIMEOUT		16	// Отсутствие сигнала готовности вспомогательного питания
+#define PROBLEM_PS_IN_PROBLEM			17	// Вспомогательного питание в проблеме
+#define PROBLEM_COMMAND_STOP			18	// Поступил внешний запрос на остановку
+#define PROBLEM_SAFETY_TRIG				19	// Остановка по срабатыванию системы безопасности
 
 //  Warning
 #define WARNING_NONE					0
