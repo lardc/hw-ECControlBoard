@@ -1251,6 +1251,13 @@ void LOGIC_Wrapper_IsControlNodeReady(DeviceSubState NextState)
 }
 //-----------------------------
 
+void LOGIC_Wrapper_ControlReadResult(DeviceSubState NextState, pVIPair Result, uint16_t *Problem)
+{
+	LOGIC_Wrapper_ReadResultX(NextState, Problem, PROBLEM_CONTROL_RESULT,
+			&LOGIC_IsControlInProblem, &LOGIC_ControlReadResult, Result, LOGIC_HandleControlExecResult);
+}
+//-----------------------------
+
 void LOGIC_Wrapper_PulseCurrent(DeviceSubState NextState, DeviceSubState StopState,
 		uint64_t *Timeout, uint16_t *Problem)
 {

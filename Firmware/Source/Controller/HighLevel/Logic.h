@@ -69,6 +69,7 @@ void LOGIC_Wrapper_IsControlOutputReady(DeviceSubState NextState, DeviceSubState
 void LOGIC_Wrapper_StopControl(DeviceSubState NextState);
 void LOGIC_Wrapper_ControlSetDelay(DeviceSubState NextState, DeviceSubState NextStateNoDelay, uint64_t *Timeout);
 void LOGIC_Wrapper_IsControlNodeReady(DeviceSubState NextState);
+void LOGIC_Wrapper_ControlReadResult(DeviceSubState NextState, pVIPair Result, uint16_t *Problem);
 
 // Обёртки формирователя тока
 void LOGIC_Wrapper_PulseCurrent(DeviceSubState NextState, DeviceSubState StopState,
