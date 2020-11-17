@@ -575,6 +575,12 @@ void LOGIC_HandleControlExecResult(ExecutionResult Result)
 }
 //-----------------------------
 
+void LOGIC_HandlePowerSupplyExecResult(ExecutionResult Result)
+{
+	CONTROL_SwitchToFault(Result, FAULT_EXT_GR_POWER_SUPPLY);
+}
+//-----------------------------
+
 ExecutionResult LOGIC_StartControl()
 {
 	return LOGIC_IsDCControl() ? DCV_Execute(ControlDCNode) : ACV_Execute(ControlACNode);
@@ -1215,5 +1221,27 @@ void LOGIC_Wrapper_IsCalibrationReady(DeviceSubState NextState, DeviceSubState S
 void LOGIC_Wrapper_StopCalibration(DeviceSubState NextState)
 {
 	LOGIC_Wrapper_TerminateX(NextState, &LOGIC_StopCalibration, &LOGIC_HandleCalibrationExecResult);
+}
+//-----------------------------
+
+void LOGIC_Wrapper_StartPowerSupply(DeviceSubState NextState, DeviceSubState StopState,
+		uint64_t *Timeout, uint16_t *Problem)
+{
+	LOGIC_Wrapper_ExecuteX(NextState, StopState, Timeout, Problem,
+			&LOGIC_StartPowerSupply, PROBLEM_PS_CONFIG, &LOGIC_HandlePowerSupplyExecResult);
+}
+//-----------------------------
+
+void LOGIC_Wrapper_IsPowerSupplyReady(DeviceSubState NextState, DeviceSubState StopState,
+		uint64_t *Timeout, uint16_t *Problem)
+{
+	LOGIC_Wrapper_IsReadyX(NextState, StopState, Timeout, Problem, &LOGIC_IsPowerSupplyReady,
+			PROBLEM_PS_IN_PROBLEM, PROBLEM_PS_READY_TIMEOUT, &LOGIC_HandlePowerSupplyExecResult);
+}
+//-----------------------------
+
+void LOGIC_Wrapper_StopPowerSupply(DeviceSubState NextState)
+{
+	LOGIC_Wrapper_TerminateX(NextState, &LOGIC_StopPowerSupply, &LOGIC_HandlePowerSupplyExecResult);
 }
 //-----------------------------

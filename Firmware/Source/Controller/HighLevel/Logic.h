@@ -52,6 +52,7 @@ void LOGIC_HandleControlExecResult(ExecutionResult Result);
 void LOGIC_HandleLeakageExecResult(ExecutionResult Result);
 void LOGIC_HandleCurrentExecResult(ExecutionResult Result);
 void LOGIC_HandleCalibrationExecResult(ExecutionResult Result);
+void LOGIC_HandlePowerSupplyExecResult(ExecutionResult Result);
 
 // Общие обёртки
 void LOGIC_Wrapper_SafetyMonitor();
@@ -91,5 +92,12 @@ void LOGIC_Wrapper_StartCalibration(DeviceSubState NextState, DeviceSubState Sto
 void LOGIC_Wrapper_IsCalibrationReady(DeviceSubState NextState, DeviceSubState StopState,
 		uint64_t *Timeout, uint16_t *Problem);
 void LOGIC_Wrapper_StopCalibration(DeviceSubState NextState);
+
+// Обёртки вспомогательного питания
+void LOGIC_Wrapper_StartPowerSupply(DeviceSubState NextState, DeviceSubState StopState,
+		uint64_t *Timeout, uint16_t *Problem);
+void LOGIC_Wrapper_IsPowerSupplyReady(DeviceSubState NextState, DeviceSubState StopState,
+		uint64_t *Timeout, uint16_t *Problem);
+void LOGIC_Wrapper_StopPowerSupply(DeviceSubState NextState);
 
 #endif // __LOGIC_H
