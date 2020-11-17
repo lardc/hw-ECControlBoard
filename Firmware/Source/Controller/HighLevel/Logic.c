@@ -17,6 +17,7 @@ typedef ExecutionResult (*xExecFunction)();
 typedef ExecutionResult (*xIsReadyFunction)(bool *Result);
 typedef void (*xHandleFaultFunction)(ExecutionResult Result);
 typedef bool (*xIsProblemFunction)();
+typedef ExecutionResult (*xReadResultFunction)(uint16_t *OpResult, pVIPair Result);
 
 // Variables
 static volatile MuxObject Multiplexer;
@@ -46,6 +47,8 @@ void LOGIC_Wrapper_TerminateX(DeviceSubState NextState, xExecFunction TerminateF
 void LOGIC_Wrapper_IsOutputReadyX(DeviceSubState NextState, DeviceSubState StopState,
 		uint64_t *Timeout, uint16_t *Problem, xIsReadyFunction MainReadyFunc, xIsProblemFunction IsInProblemFunc,
 		uint16_t ReadyProblem, uint16_t TimeoutProblem, xHandleFaultFunction FaultFunc);
+void LOGIC_Wrapper_ReadResultX(DeviceSubState NextState, uint16_t *Problem, uint16_t ProblemCode,
+		xIsProblemFunction IsInProblemFunc, xReadResultFunction ResultFunc, pVIPair Result, xHandleFaultFunction FaultFunc);
 
 LogicConfigError LOGIC_CacheMuxSettings(bool Calibration, pDL_AuxPowerSupply PowerSupply);
 void LOGIC_CacheCurrentBoardSettings();
@@ -78,6 +81,10 @@ bool LOGIC_IsControlInProblem();
 bool LOGIC_IsLeakagelInProblem();
 bool LOGIC_IsCalibrationInProblem();
 bool LOGIC_IsPowerSupplyInProblem();
+
+ExecutionResult LOGIC_ControlReadResult(uint16_t *OpResult, pVIPair Result);
+ExecutionResult LOGIC_LeakageReadResult(uint16_t *OpResult, pVIPair Result);
+ExecutionResult LOGIC_CalibrationReadResult(uint16_t *OpResult, pVIPair Result);
 
 // Functions
 void LOGIC_InitEntities()
@@ -1119,6 +1126,30 @@ void LOGIC_Wrapper_TerminateX(DeviceSubState NextState, xExecFunction TerminateF
 		CONTROL_SetDeviceState(DS_InProcess, NextState);
 	else
 		LOGIC_HandleMuxExecResult(res);
+}
+//-----------------------------
+
+void LOGIC_Wrapper_ReadResultX(DeviceSubState NextState, uint16_t *Problem, uint16_t ProblemCode,
+		xIsProblemFunction IsInProblemFunc, xReadResultFunction ResultFunc, pVIPair Result, xHandleFaultFunction FaultFunc)
+{
+	if(*Problem == PROBLEM_NONE)
+	{
+		uint16_t OpResult;
+		ExecutionResult res = ResultFunc(&OpResult, Result);
+
+		if(res == ER_NoError)
+		{
+			if(IsInProblemFunc() || (OpResult != COMM_OPRESULT_OK))
+				*Problem = ProblemCode;
+		}
+		else
+		{
+			FaultFunc(res);
+			return;
+		}
+	}
+
+	CONTROL_SetDeviceState(DS_InProcess, NextState);
 }
 //-----------------------------
 

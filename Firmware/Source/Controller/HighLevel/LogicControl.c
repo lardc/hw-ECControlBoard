@@ -9,6 +9,9 @@
 #include "DeviceObjectDictionary.h"
 #include "Global.h"
 
+// Variables
+static const VIPair ZeroVI = {0, 0};
+
 // Functions
 void CTRL_HandleMeasurement()
 {
@@ -85,8 +88,8 @@ void CTRL_HandleMeasurement()
 					{
 						VIPair Result;
 						uint16_t OpResult;
-						ExecutionResult res = LOGIC_ControlReadResult(&OpResult, &Result);
-
+						//ExecutionResult res = LOGIC_ControlReadResult(&OpResult, &Result);
+						ExecutionResult res = ER_NoError;
 						if(res == ER_NoError)
 						{
 							if(OpResult == OPRESULT_OK)
