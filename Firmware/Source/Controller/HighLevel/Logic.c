@@ -83,6 +83,7 @@ bool LOGIC_IsCalibrationInProblem();
 bool LOGIC_IsPowerSupplyInProblem();
 
 ExecutionResult LOGIC_ControlReadResult(uint16_t *OpResult, pVIPair Result);
+ExecutionResult LOGIC_CurrentReadResult(uint16_t *OpResult, pVIPair Result);
 ExecutionResult LOGIC_LeakageReadResult(uint16_t *OpResult, pVIPair Result);
 ExecutionResult LOGIC_CalibrationReadResult(uint16_t *OpResult, pVIPair Result);
 ExecutionResult LOGIC_PowerSupply1ReadResult(uint16_t *OpResult, pVIPair Result);
@@ -641,6 +642,19 @@ ExecutionResult LOGIC_ControlReadResult(uint16_t *OpResult, pVIPair Result)
 bool LOGIC_IsControlNodeReady()
 {
 	return COMM_IsSlaveInStateX(LOGIC_IsDCControl() ? ControlDCNode : ControlACNode, CDS_Ready);
+}
+//-----------------------------
+
+ExecutionResult LOGIC_CurrentReadResult(uint16_t *OpResult, pVIPair Result)
+{
+	pSlaveNode NodeData = COMM_GetSlaveDevicePointer(NAME_DCCurrent);
+	pCurrentBoardObject Settings = (pCurrentBoardObject)NodeData->Settings;
+
+	ExecutionResult res = CURR_ReadResult();
+	*Result = Settings->Result;
+	*OpResult = NodeData->OpResult;
+
+	return res;
 }
 //-----------------------------
 
