@@ -43,13 +43,6 @@ void LOGIC_HandleFaultAndStop();
 
 LogicConfigError LOGIC_PrepareMeasurement(bool Calibration);
 
-void LOGIC_HandleMuxExecResult(ExecutionResult Result);
-void LOGIC_HandleControlExecResult(ExecutionResult Result);
-void LOGIC_HandleLeakageExecResult(ExecutionResult Result);
-void LOGIC_HandleCurrentExecResult(ExecutionResult Result);
-void LOGIC_HandleCalibrationExecResult(ExecutionResult Result);
-void LOGIC_HandlePowerSupplyExecResult(ExecutionResult Result);
-
 // Общие обёртки
 void LOGIC_Wrapper_SafetyMonitor();
 void LOGIC_Wrapper_FaultControl();

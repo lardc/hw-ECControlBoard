@@ -90,6 +90,13 @@ ExecutionResult LOGIC_CalibrationReadResult(uint16_t *OpResult, pVIPair Result);
 ExecutionResult LOGIC_PowerSupply1ReadResult(uint16_t *OpResult, pVIPair Result);
 ExecutionResult LOGIC_PowerSupply2ReadResult(uint16_t *OpResult, pVIPair Result);
 
+void LOGIC_HandleMuxExecResult(ExecutionResult Result);
+void LOGIC_HandleControlExecResult(ExecutionResult Result);
+void LOGIC_HandleLeakageExecResult(ExecutionResult Result);
+void LOGIC_HandleCurrentExecResult(ExecutionResult Result);
+void LOGIC_HandleCalibrationExecResult(ExecutionResult Result);
+void LOGIC_HandlePowerSupplyExecResult(ExecutionResult Result);
+
 // Functions
 void LOGIC_InitEntities()
 {
