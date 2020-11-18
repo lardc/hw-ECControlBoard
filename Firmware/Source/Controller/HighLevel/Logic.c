@@ -1366,6 +1366,13 @@ void LOGIC_Wrapper_CurrentReadResult(DeviceSubState NextState, pVIPair Result, u
 }
 //-----------------------------
 
+void LOGIC_Wrapper_CurrentSaveResult(VIPair Result)
+{
+	DT_Write32(REG_RESULT_ON_VOLTAGE, REG_RESULT_ON_VOLTAGE_32, Result.Voltage);
+	DT_Write32(REG_RESULT_ON_CURRENT, REG_RESULT_ON_CURRENT_32, Result.Current);
+}
+//-----------------------------
+
 void LOGIC_Wrapper_StartLeakage(DeviceSubState NextState, DeviceSubState StopState,
 		uint64_t *Timeout, uint16_t *Problem)
 {
