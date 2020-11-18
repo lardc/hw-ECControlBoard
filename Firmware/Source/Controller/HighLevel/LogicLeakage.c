@@ -9,6 +9,10 @@
 #include "DeviceObjectDictionary.h"
 #include "Global.h"
 
+// Variables
+static const VIPair ZeroVI = {0, 0};
+static VIPair Control, Leakage, PS1, PS2;
+
 // Functions
 void LEAK_HandleMeasurement()
 {
@@ -23,16 +27,27 @@ void LEAK_HandleMeasurement()
 		switch(CONTROL_SubState)
 		{
 			case DSS_Leakage_StartTest:
+				Control = Leakage = PS1 = PS2 = ZeroVI;
 				Problem = PROBLEM_NONE;
 				LOGIC_Wrapper_Start(DSS_Leakage_Commutate);
 				break;
 
 			case DSS_Leakage_Commutate:
-				LOGIC_Wrapper_Commutate(DSS_Leakage_WaitCommutation, DSS_Leakage_ReadResult, &Problem);
+				LOGIC_Wrapper_Commutate(DSS_Leakage_WaitCommutation, DSS_Leakage_SaveResult, &Problem);
 				break;
 
 			case DSS_Leakage_WaitCommutation:
-				LOGIC_Wrapper_WaitAllNodesReady(DSS_Leakage_StartControl);
+				LOGIC_Wrapper_WaitAllNodesReady(DSS_Leakage_StartPowerSupply);
+				break;
+
+			case DSS_Leakage_StartPowerSupply:
+				LOGIC_Wrapper_StartPowerSupply(DSS_Leakage_WaitStartPowerSupply, DSS_Leakage_UnCommutate,
+						&Timeout, &Problem);
+				break;
+
+			case DSS_Leakage_WaitStartPowerSupply:
+				LOGIC_Wrapper_IsPowerSupplyOutputReady(DSS_Leakage_StartControl, DSS_Leakage_StopPowerSupply,
+						&Timeout, &Problem);
 				break;
 
 			case DSS_Leakage_StartControl:
@@ -81,6 +96,14 @@ void LEAK_HandleMeasurement()
 				break;
 
 			case DSS_Leakage_WaitStopControl:
+				LOGIC_Wrapper_IsControlNodeReady(DSS_Leakage_StopPowerSupply);
+				break;
+
+			case DSS_Leakage_StopPowerSupply:
+				LOGIC_Wrapper_StopPowerSupply(DSS_Leakage_WaitStopPowerSupply);
+				break;
+
+			case DSS_Leakage_WaitStopPowerSupply:
 				LOGIC_Wrapper_WaitAllNodesReady(DSS_Leakage_UnCommutate);
 				break;
 
@@ -89,51 +112,45 @@ void LEAK_HandleMeasurement()
 				break;
 
 			case DSS_Leakage_WaitUnCommutate:
-				LOGIC_Wrapper_WaitAllNodesReady(DSS_Leakage_ReadResult);
+				LOGIC_Wrapper_WaitAllNodesReady(DSS_Leakage_ReadResultPS1);
 				break;
 
-			case DSS_Leakage_ReadResult:
+			case DSS_Leakage_ReadResultPS1:
+				LOGIC_Wrapper_PowerSupply1ReadResult(DSS_Leakage_ReadResultPS2, &PS1, &Problem);
+				break;
+
+			case DSS_Leakage_ReadResultPS2:
+				LOGIC_Wrapper_PowerSupply2ReadResult(DSS_Leakage_ReadResultControl, &PS2, &Problem);
+				break;
+
+			case DSS_Leakage_ReadResultControl:
+				LOGIC_Wrapper_ControlReadResult(DSS_Leakage_ReadResultLeakage, &Control, &Problem);
+				break;
+
+			case DSS_Leakage_ReadResultLeakage:
+				LOGIC_Wrapper_LeakageReadResult(DSS_Leakage_SaveResult, &Leakage, &Problem);
+				break;
+
+			case DSS_Leakage_SaveResult:
+				if(Problem == PROBLEM_NONE)
 				{
-					if(Problem == PROBLEM_NONE)
-					{
-						VIPair Result, ControlResult;
-						uint16_t OpResult, ControlOpResult;
-
-						ExecutionResult res = LOGIC_LeakageReadResult(&OpResult, &Result);
-						if(res == ER_NoError)
-							res = LOGIC_ControlReadResult(&ControlOpResult, &ControlResult);
-
-						if(res == ER_NoError)
-						{
-							if(OpResult == OPRESULT_OK)
-							{
-								DataTable[REG_OP_RESULT] = OPRESULT_OK;
-
-								DT_Write32(REG_RESULT_LEAKAGE_VOLTAGE, REG_RESULT_LEAKAGE_VOLTAGE_32, Result.Voltage);
-								DT_Write32(REG_RESULT_LEAKAGE_CURRENT, REG_RESULT_LEAKAGE_CURRENT_32, Result.Current);
-
-								DT_Write32(REG_RESULT_CONTROL_VOLTAGE, REG_RESULT_CONTROL_VOLTAGE_32, ControlResult.Voltage);
-								DT_Write32(REG_RESULT_CONTROL_CURRENT, REG_RESULT_CONTROL_CURRENT_32, ControlResult.Current);
-							}
-							else
-								DataTable[REG_OP_RESULT] = OPRESULT_FAIL;
-
-							CONTROL_SetDeviceState(DS_Ready, DSS_None);
-						}
-						else
-							LOGIC_HandleLeakageExecResult(res);
-					}
-					else
-					{
-						DataTable[REG_OP_RESULT] = OPRESULT_FAIL;
-						DataTable[REG_PROBLEM] = Problem;
-						CONTROL_SetDeviceState(DS_Ready, DSS_None);
-					}
+					DataTable[REG_OP_RESULT] = OPRESULT_OK;
+					LOGIC_Wrapper_PowerSupply1SaveResult(PS1);
+					LOGIC_Wrapper_PowerSupply2SaveResult(PS2);
+					LOGIC_Wrapper_ControlSaveResult(Control);
+					LOGIC_Wrapper_LeakageSaveResult(Leakage);
 				}
+				else
+				{
+					DataTable[REG_OP_RESULT] = OPRESULT_FAIL;
+					DataTable[REG_PROBLEM] = Problem;
+				}
+				CONTROL_SetDeviceState(DS_Ready, DSS_None);
 				break;
 
 			default:
 				break;
+
 		}
 	}
 }
