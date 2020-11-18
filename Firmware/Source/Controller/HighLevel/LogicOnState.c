@@ -11,6 +11,10 @@
 #include "Global.h"
 #include "CurrentBoard.h"
 
+// Variables
+static const VIPair ZeroVI = {0, 0};
+static VIPair Control, Current, PS1, PS2;
+
 // Functions
 void ONSTATE_HandleMeasurement()
 {
@@ -25,16 +29,27 @@ void ONSTATE_HandleMeasurement()
 		switch(CONTROL_SubState)
 		{
 			case DSS_OnVoltage_StartTest:
+				Control = Current = PS1 = PS2 = ZeroVI;
 				Problem = PROBLEM_NONE;
 				LOGIC_Wrapper_Start(DSS_OnVoltage_Commutate);
 				break;
 
 			case DSS_OnVoltage_Commutate:
-				LOGIC_Wrapper_Commutate(DSS_OnVoltage_WaitCommutation, DSS_OnVoltage_ReadResult, &Problem);
+				LOGIC_Wrapper_Commutate(DSS_OnVoltage_WaitCommutation, DSS_OnVoltage_SaveResult, &Problem);
 				break;
 
 			case DSS_OnVoltage_WaitCommutation:
-				LOGIC_Wrapper_WaitAllNodesReady(DSS_OnVoltage_StartControl);
+				LOGIC_Wrapper_WaitAllNodesReady(DSS_OnVoltage_StartPowerSupply);
+				break;
+
+			case DSS_OnVoltage_StartPowerSupply:
+				LOGIC_Wrapper_StartPowerSupply(DSS_OnVoltage_WaitStartPowerSupply, DSS_OnVoltage_UnCommutate,
+						&Timeout, &Problem);
+				break;
+
+			case DSS_OnVoltage_WaitStartPowerSupply:
+				LOGIC_Wrapper_IsPowerSupplyOutputReady(DSS_OnVoltage_StartControl, DSS_OnVoltage_StopPowerSupply,
+						&Timeout, &Problem);
 				break;
 
 			case DSS_OnVoltage_StartControl:
@@ -74,6 +89,14 @@ void ONSTATE_HandleMeasurement()
 				break;
 
 			case DSS_OnVoltage_WaitStopControl:
+				LOGIC_Wrapper_WaitAllNodesReady(DSS_OnVoltage_StopPowerSupply);
+				break;
+
+			case DSS_OnVoltage_StopPowerSupply:
+				LOGIC_Wrapper_StopPowerSupply(DSS_OnVoltage_WaitStopPowerSupply);
+				break;
+
+			case DSS_OnVoltage_WaitStopPowerSupply:
 				LOGIC_Wrapper_WaitAllNodesReady(DSS_OnVoltage_UnCommutate);
 				break;
 
@@ -82,53 +105,40 @@ void ONSTATE_HandleMeasurement()
 				break;
 
 			case DSS_OnVoltage_WaitUnCommutate:
-				LOGIC_Wrapper_WaitAllNodesReady(DSS_OnVoltage_ReadResult);
+				LOGIC_Wrapper_WaitAllNodesReady(DSS_OnVoltage_ReadResultPS1);
 				break;
 
-			case DSS_OnVoltage_ReadResult:
+			case DSS_OnVoltage_ReadResultPS1:
+				LOGIC_Wrapper_PowerSupply1ReadResult(DSS_OnVoltage_ReadResultPS2, &PS1, &Problem);
+				break;
+
+			case DSS_OnVoltage_ReadResultPS2:
+				LOGIC_Wrapper_PowerSupply2ReadResult(DSS_OnVoltage_ReadResultControl, &PS2, &Problem);
+				break;
+
+			case DSS_OnVoltage_ReadResultControl:
+				LOGIC_Wrapper_ControlReadResult(DSS_OnVoltage_ReadResultCurrent, &Control, &Problem);
+				break;
+
+			case DSS_OnVoltage_ReadResultCurrent:
+				LOGIC_Wrapper_CurrentReadResult(DSS_OnVoltage_SaveResult, &Current, &Problem);
+				break;
+
+			case DSS_OnVoltage_SaveResult:
+				if(Problem == PROBLEM_NONE)
 				{
-					if(Problem == PROBLEM_NONE)
-					{
-						VIPair ControlResult;
-						uint16_t ControlOpResult;
-
-						ExecutionResult res = CURR_ReadResult();
-						if(res == ER_NoError)
-							res = LOGIC_ControlReadResult(&ControlOpResult, &ControlResult);
-
-						if(res == ER_NoError)
-						{
-							pSlaveNode NodeData = COMM_GetSlaveDevicePointer(NAME_DCCurrent);
-							pCurrentBoardObject Settings = (pCurrentBoardObject)NodeData->Settings;
-
-							if(NodeData->OpResult == OPRESULT_OK)
-							{
-								DataTable[REG_OP_RESULT] = OPRESULT_OK;
-
-								DT_Write32(REG_RESULT_ON_VOLTAGE, REG_RESULT_ON_VOLTAGE_32, Settings->Result.Voltage);
-								DT_Write32(REG_RESULT_ON_CURRENT, REG_RESULT_ON_CURRENT_32, Settings->Result.Current);
-
-								DT_Write32(REG_RESULT_CONTROL_VOLTAGE, REG_RESULT_CONTROL_VOLTAGE_32, ControlResult.Voltage);
-								DT_Write32(REG_RESULT_CONTROL_CURRENT, REG_RESULT_CONTROL_CURRENT_32, ControlResult.Current);
-							}
-							else
-							{
-								DataTable[REG_OP_RESULT] = OPRESULT_FAIL;
-								DataTable[REG_PROBLEM] = PROBLEM_CURRENT_RESULT;
-							}
-
-							CONTROL_SetDeviceState(DS_Ready, DSS_None);
-						}
-						else
-							LOGIC_HandleCurrentExecResult(res);
-					}
-					else
-					{
-						DataTable[REG_OP_RESULT] = OPRESULT_FAIL;
-						DataTable[REG_PROBLEM] = Problem;
-						CONTROL_SetDeviceState(DS_Ready, DSS_None);
-					}
+					DataTable[REG_OP_RESULT] = OPRESULT_OK;
+					LOGIC_Wrapper_PowerSupply1SaveResult(PS1);
+					LOGIC_Wrapper_PowerSupply2SaveResult(PS2);
+					LOGIC_Wrapper_ControlSaveResult(Control);
+					LOGIC_Wrapper_CurrentSaveResult(Current);
 				}
+				else
+				{
+					DataTable[REG_OP_RESULT] = OPRESULT_FAIL;
+					DataTable[REG_PROBLEM] = Problem;
+				}
+				CONTROL_SetDeviceState(DS_Ready, DSS_None);
 				break;
 
 			default:
