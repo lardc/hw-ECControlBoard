@@ -89,7 +89,7 @@ void ONSTATE_HandleMeasurement()
 				break;
 
 			case DSS_OnVoltage_WaitStopControl:
-				LOGIC_Wrapper_WaitAllNodesReady(DSS_OnVoltage_StopPowerSupply);
+				LOGIC_Wrapper_IsControlNodeReady(DSS_OnVoltage_StopPowerSupply);
 				break;
 
 			case DSS_OnVoltage_StopPowerSupply:
