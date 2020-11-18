@@ -86,6 +86,8 @@ void LOGIC_Wrapper_IsLeakageOutputReady(DeviceSubState NextState, DeviceSubState
 		uint64_t *Timeout, uint16_t *Problem);
 void LOGIC_Wrapper_StopLeakage(DeviceSubState NextState);
 void LOGIC_Wrapper_IsLeakageNodeReady(DeviceSubState NextState);
+void LOGIC_Wrapper_LeakageReadResult(DeviceSubState NextState, pVIPair Result, uint16_t *Problem);
+void LOGIC_Wrapper_LeakageSaveResult(VIPair Result);
 
 // Обёртки калибровки
 void LOGIC_Wrapper_StartCalibration(DeviceSubState NextState, DeviceSubState StopState,

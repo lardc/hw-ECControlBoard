@@ -1402,6 +1402,19 @@ void LOGIC_Wrapper_IsLeakageNodeReady(DeviceSubState NextState)
 }
 //-----------------------------
 
+void LOGIC_Wrapper_LeakageReadResult(DeviceSubState NextState, pVIPair Result, uint16_t *Problem)
+{
+	LOGIC_Wrapper_ReadResultX(NextState, Problem, PROBLEM_LEAKAGE_RESULT,
+			&LOGIC_IsLeakagelInProblem, &LOGIC_LeakageReadResult, Result, LOGIC_HandleLeakageExecResult);
+}
+//-----------------------------
+
+void LOGIC_Wrapper_LeakageSaveResult(VIPair Result)
+{
+	DT_Write32(REG_RESULT_LEAKAGE_CURRENT, REG_RESULT_LEAKAGE_CURRENT_32, Result.Current);
+}
+//-----------------------------
+
 void LOGIC_Wrapper_StartCalibration(DeviceSubState NextState, DeviceSubState StopState,
 		uint64_t *Timeout, uint16_t *Problem)
 {
