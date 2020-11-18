@@ -78,6 +78,7 @@ ExecutionResult LOGIC_StartCalibration();
 ExecutionResult LOGIC_StopCalibration();
 
 bool LOGIC_IsControlInProblem();
+bool LOGIC_IsCurrentInProblem();
 bool LOGIC_IsLeakagelInProblem();
 bool LOGIC_IsCalibrationInProblem();
 bool LOGIC_IsPowerSupplyInProblem();
@@ -1070,6 +1071,12 @@ bool LOGIC_IsControlInProblem()
 }
 //-----------------------------
 
+bool LOGIC_IsCurrentInProblem()
+{
+	return LOGIC_IsNodeInProblem(NAME_DCCurrent);
+}
+//-----------------------------
+
 bool LOGIC_IsLeakagelInProblem()
 {
 	return LOGIC_IsNodeInProblem(LOGIC_IsDCLeakage() ? LeakageDCNode : LeakageACNode);
@@ -1349,6 +1356,13 @@ void LOGIC_Wrapper_WaitCurrentFinished(DeviceSubState NextState, uint64_t Timeou
 		CONTROL_SetDeviceState(DS_InProcess, NextState);
 	else if(CONTROL_TimeCounter > Timeout)
 		LOGIC_HandleCurrentExecResult(ER_ChangeStateTimeout);
+}
+//-----------------------------
+
+void LOGIC_Wrapper_CurrentReadResult(DeviceSubState NextState, pVIPair Result, uint16_t *Problem)
+{
+	LOGIC_Wrapper_ReadResultX(NextState, Problem, PROBLEM_CURRENT_RESULT,
+			&LOGIC_IsCurrentInProblem, &LOGIC_CurrentReadResult, Result, LOGIC_HandleCurrentExecResult);
 }
 //-----------------------------
 

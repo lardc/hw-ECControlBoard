@@ -76,6 +76,7 @@ void LOGIC_Wrapper_ControlSaveResult(VIPair Result);
 void LOGIC_Wrapper_PulseCurrent(DeviceSubState NextState, DeviceSubState StopState,
 		uint64_t *Timeout, uint16_t *Problem);
 void LOGIC_Wrapper_WaitCurrentFinished(DeviceSubState NextState, uint64_t Timeout);
+void LOGIC_Wrapper_CurrentReadResult(DeviceSubState NextState, pVIPair Result, uint16_t *Problem);
 
 // Обёртки утечки
 void LOGIC_Wrapper_StartLeakage(DeviceSubState NextState, DeviceSubState StopState,
