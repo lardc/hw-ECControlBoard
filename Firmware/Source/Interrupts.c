@@ -18,6 +18,8 @@ void USART1_IRQHandler()
 		USARTx_RegisterToFIFO(USART1);
 		USARTx_RecieveFlagClear(USART1);
 	}
+	else
+		USARTx_OverrunFlagClear(USART1);
 }
 //-----------------------------------------
 
@@ -28,6 +30,8 @@ void USART2_IRQHandler()
 		USARTx_RegisterToFIFO(USART2);
 		USARTx_RecieveFlagClear(USART2);
 	}
+	else
+		USARTx_OverrunFlagClear(USART2);
 }
 //-----------------------------------------
 
