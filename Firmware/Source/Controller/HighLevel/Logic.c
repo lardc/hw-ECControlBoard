@@ -957,6 +957,8 @@ ExecutionResult LOGIC_StartPowerSupply()
 
 ExecutionResult LOGIC_IsPowerSupplyReady(bool *IsReady)
 {
+	*IsReady = false;
+
 	switch(CachedPowerSupply)
 	{
 		case NoSupply:
@@ -973,7 +975,7 @@ ExecutionResult LOGIC_IsPowerSupplyReady(bool *IsReady)
 				if(res == ER_NoError)
 				{
 					res = DCV_IsVoltageReady(PowerSupply2Node, &Ready2);
-					*IsReady = Ready1 & Ready2;
+					*IsReady = Ready1 && Ready2;
 					return res;
 				}
 				else
