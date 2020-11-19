@@ -539,8 +539,8 @@ void LOGIC_CachePowerSupplySettings(DL_AuxPowerSupply Mode)
 	if(Mode == SingleDCSupply || Mode == DoubleDCSupply)
 	{
 		VIPair SetpointPS1;
-		SetpointPS1.Voltage = (uint32_t)DataTable[REG_AUX_PS1_VOLTAGE] * 1000;
-		SetpointPS1.Current = DataTable[REG_AUX_PS1_CURRENT];
+		SetpointPS1.Voltage = DT_Read32(REG_AUX_PS1_VOLTAGE, REG_AUX_PS1_VOLTAGE_32);
+		SetpointPS1.Current = DT_Read32(REG_AUX_PS1_CURRENT, REG_AUX_PS1_CURRENT_32);
 
 		DCVoltageBoard2.Setpoint = SetpointPS1;
 		DCVoltageBoard2.OutputLine = DCV_PS1;
@@ -551,8 +551,8 @@ void LOGIC_CachePowerSupplySettings(DL_AuxPowerSupply Mode)
 		if(Mode == DoubleDCSupply)
 		{
 			VIPair SetpointPS2;
-			SetpointPS2.Voltage = (uint32_t)DataTable[REG_AUX_PS2_VOLTAGE] * 1000;
-			SetpointPS2.Current = DataTable[REG_AUX_PS2_CURRENT];
+			SetpointPS2.Voltage = DT_Read32(REG_AUX_PS2_VOLTAGE, REG_AUX_PS2_VOLTAGE_32);
+			SetpointPS2.Current = DT_Read32(REG_AUX_PS2_CURRENT, REG_AUX_PS2_CURRENT_32);
 
 			DCVoltageBoard3.Setpoint = SetpointPS2;
 			DCVoltageBoard3.OutputLine = DCV_PS2;
