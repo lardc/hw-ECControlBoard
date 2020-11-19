@@ -58,7 +58,7 @@ void LOGIC_Wrapper_UnCommutate(DeviceSubState NextState);
 void LOGIC_Wrapper_StartControl(DeviceSubState NextState, DeviceSubState StopState,
 		uint64_t *Timeout, uint16_t *Problem);
 void LOGIC_Wrapper_IsControlOutputReady(DeviceSubState NextState, DeviceSubState StopState,
-		uint64_t *Timeout, uint16_t *Problem);
+		uint64_t Timeout, uint16_t *Problem);
 void LOGIC_Wrapper_StopControl(DeviceSubState NextState);
 void LOGIC_Wrapper_ControlSetDelay(DeviceSubState NextState, DeviceSubState NextStateNoDelay, uint64_t *Timeout);
 void LOGIC_Wrapper_IsControlNodeReady(DeviceSubState NextState);
@@ -76,7 +76,7 @@ void LOGIC_Wrapper_CurrentSaveResult(VIPair Result);
 void LOGIC_Wrapper_StartLeakage(DeviceSubState NextState, DeviceSubState StopState,
 		uint64_t *Timeout, uint16_t *Problem);
 void LOGIC_Wrapper_IsLeakageOutputReady(DeviceSubState NextState, DeviceSubState StopState,
-		uint64_t *Timeout, uint16_t *Problem);
+		uint64_t Timeout, uint16_t *Problem);
 void LOGIC_Wrapper_StopLeakage(DeviceSubState NextState);
 void LOGIC_Wrapper_IsLeakageNodeReady(DeviceSubState NextState);
 void LOGIC_Wrapper_LeakageReadResult(DeviceSubState NextState, pVIPair Result, uint16_t *Problem);
@@ -86,7 +86,7 @@ void LOGIC_Wrapper_LeakageSaveResult(VIPair Result);
 void LOGIC_Wrapper_StartCalibration(DeviceSubState NextState, DeviceSubState StopState,
 		uint64_t *Timeout, uint16_t *Problem);
 void LOGIC_Wrapper_IsCalibrationOutputReady(DeviceSubState NextState, DeviceSubState StopState,
-		uint64_t *Timeout, uint16_t *Problem);
+		uint64_t Timeout, uint16_t *Problem);
 void LOGIC_Wrapper_StopCalibration(DeviceSubState NextState);
 void LOGIC_Wrapper_CalibrationReadResult(DeviceSubState NextState, pVIPair Result, uint16_t *Problem);
 void LOGIC_Wrapper_CalibrationSaveResult(VIPair Result);
@@ -95,7 +95,7 @@ void LOGIC_Wrapper_CalibrationSaveResult(VIPair Result);
 void LOGIC_Wrapper_StartPowerSupply(DeviceSubState NextState, DeviceSubState StopState,
 		uint64_t *Timeout, uint16_t *Problem);
 void LOGIC_Wrapper_IsPowerSupplyOutputReady(DeviceSubState NextState, DeviceSubState StopState,
-		uint64_t *Timeout, uint16_t *Problem);
+		uint64_t Timeout, uint16_t *Problem);
 void LOGIC_Wrapper_StopPowerSupply(DeviceSubState NextState);
 void LOGIC_Wrapper_PowerSupply1ReadResult(DeviceSubState NextState, pVIPair Result, uint16_t *Problem);
 void LOGIC_Wrapper_PowerSupply2ReadResult(DeviceSubState NextState, pVIPair Result, uint16_t *Problem);

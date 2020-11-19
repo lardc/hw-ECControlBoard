@@ -48,7 +48,7 @@ void CALIBRATE_HandleMeasurement()
 
 			case DSS_Calibrate_WaitOutputReady:
 				LOGIC_Wrapper_IsCalibrationOutputReady(DSS_Calibrate_StopOutput, DSS_Calibrate_StopOutput,
-						&Timeout, &Problem);
+						Timeout, &Problem);
 				break;
 
 			case DSS_Calibrate_StopOutput:
