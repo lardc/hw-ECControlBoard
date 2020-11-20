@@ -163,6 +163,11 @@
 #define REG_CALIBRATION_CURRENT			242	// Результат калибровки: ток (в мкА)
 #define REG_CALIBRATION_CURRENT_32		243
 
+#define REG_RESULT_AUX_VOLTAGE1			244	// Напряжение вспомогательного источника 1 (в мкВ)
+#define REG_RESULT_AUX_VOLTAGE1_32		245
+#define REG_RESULT_AUX_VOLTAGE2			246	// Напряжение вспомогательного источника 2 (в мкВ)
+#define REG_RESULT_AUX_VOLTAGE2_32		247
+
 #define REG_DBG_INT_SYNC1				251	// Регистр состояния внутреннейи линии SYNC1
 #define REG_DBG_INT_SYNC2				252	// Регистр состояния внутреннейи линии SYNC2
 #define REG_FAN_STATE					253	// Регистр управления вентилятором

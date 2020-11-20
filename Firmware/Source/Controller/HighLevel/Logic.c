@@ -1517,12 +1517,14 @@ void LOGIC_Wrapper_PowerSupply2ReadResult(DeviceSubState NextState, pVIPair Resu
 
 void LOGIC_Wrapper_PowerSupply1SaveResult(VIPair Result)
 {
+	DT_Write32(REG_RESULT_AUX_VOLTAGE1, REG_RESULT_AUX_VOLTAGE1_32, Result.Voltage);
 	DT_Write32(REG_RESULT_AUX_CURRENT1, REG_RESULT_AUX_CURRENT1_32, Result.Current);
 }
 //-----------------------------
 
 void LOGIC_Wrapper_PowerSupply2SaveResult(VIPair Result)
 {
+	DT_Write32(REG_RESULT_AUX_VOLTAGE2, REG_RESULT_AUX_VOLTAGE2_32, Result.Voltage);
 	DT_Write32(REG_RESULT_AUX_CURRENT2, REG_RESULT_AUX_CURRENT2_32, Result.Current);
 }
 //-----------------------------
