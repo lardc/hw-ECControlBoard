@@ -1396,7 +1396,7 @@ void LOGIC_Wrapper_CurrentSaveResult(VIPair Result)
 	if(CurrentBoard.ResistanceMode)
 	{
 		float Res = (float)Result.Voltage / Result.Current;
-		DataTable[REG_RESULT_OUTPUT_RES] = Res * 1000;
+		DT_Write32(REG_RESULT_OUTPUT_RES, REG_RESULT_OUTPUT_RES_32, Res * 1e6);
 	}
 }
 //-----------------------------
