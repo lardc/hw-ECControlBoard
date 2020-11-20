@@ -15,6 +15,7 @@ typedef struct __CurrentBoardObject
 {
 	VIPair Setpoint;
 	VIPair Result;
+	bool ResistanceMode;
 } CurrentBoardObject, *pCurrentBoardObject;
 
 // Functions

@@ -497,6 +497,7 @@ void LOGIC_CacheCurrentBoardSettings()
 {
 	CurrentBoard.Setpoint.Current = DT_Read32(REG_COMM_CURRENT, REG_COMM_CURRENT_32);
 	CurrentBoard.Setpoint.Voltage = DT_Read32(REG_COMM_VOLTAGE, REG_COMM_VOLTAGE_32);
+	CurrentBoard.ResistanceMode = DataTable[REG_MODE_OUTPUT_RES];
 }
 //-----------------------------
 
@@ -1391,6 +1392,12 @@ void LOGIC_Wrapper_CurrentSaveResult(VIPair Result)
 {
 	DT_Write32(REG_RESULT_ON_VOLTAGE, REG_RESULT_ON_VOLTAGE_32, Result.Voltage);
 	DT_Write32(REG_RESULT_ON_CURRENT, REG_RESULT_ON_CURRENT_32, Result.Current);
+
+	if(CurrentBoard.ResistanceMode)
+	{
+		float Res = (float)Result.Voltage / Result.Current;
+		DataTable[REG_RESULT_OUTPUT_RES] = Res * 1000;
+	}
 }
 //-----------------------------
 
