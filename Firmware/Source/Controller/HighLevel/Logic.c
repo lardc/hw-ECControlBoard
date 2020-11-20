@@ -285,16 +285,15 @@ void LOGIC_HandleFaultAndStop()
 
 LogicConfigError LOGIC_PrepareMeasurement(bool Calibration)
 {
+	if(Calibration)
+		CachedNode = DataTable[REG_CALIBRATION_NODE];
+
 	LogicConfigError err = LOGIC_CacheMuxSettings(Calibration, &CachedPowerSupply);
 
 	if(err == LCE_None)
 	{
 		GeneralLogicTimeout = DataTable[REG_GENERAL_LOGIC_TIMEOUT];
 		ControlWaitDelay = DataTable[REG_CTRL_HOLD_DELAY];
-
-		if(Calibration)
-			CachedNode = DataTable[REG_CALIBRATION_NODE];
-
 		LOGIC_CachePowerSupplySettings(CachedPowerSupply);
 
 		switch(Multiplexer.MeasureType)
