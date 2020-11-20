@@ -21,7 +21,6 @@ GPIO_PortPinSettingMacro GPIO_EXT_SYNC1_OUT		= {GPIOA, Pin_3};
 GPIO_PortPinSettingMacro GPIO_EXT_SYNC2_OUT		= {GPIOA, Pin_4};
 GPIO_PortPinSettingMacro GPIO_EXT_LED			= {GPIOA, Pin_5};
 GPIO_PortPinSettingMacro GPIO_FAN				= {GPIOA, Pin_7};
-
 GPIO_PortPinSettingMacro GPIO_INT_SYNC2_OUT		= {GPIOB, Pin_0};
 GPIO_PortPinSettingMacro GPIO_INT_SYNC1_OUT		= {GPIOB, Pin_1};
 GPIO_PortPinSettingMacro GPIO_INT_LED			= {GPIOB, Pin_7};

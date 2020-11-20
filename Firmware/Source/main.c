@@ -26,6 +26,9 @@ int main()
 	// Настройка сторожевого таймера
 	INITCFG_ConfigWatchDog();
 	
+	// Проброс линии синхронизации 2
+	INITCFG_Sync2Proxy();
+
 	// Инициализация логики контроллера
 	CONTROL_Init();
 	

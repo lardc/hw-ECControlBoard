@@ -26,6 +26,10 @@ void INITCFG_ConfigIO()
 	GPIO_InitPushPullOutput(GPIO_EXT_SYNC2_OUT);
 	GPIO_InitPushPullOutput(GPIO_FAN);
 
+	// Входы
+	GPIO_InitInput(GPIO_INT_SYNC1_IN, NoPull);
+	GPIO_InitInput(GPIO_INT_SYNC2_IN, NoPull);
+
 	// Альтернативные функции
 	GPIO_InitAltFunction(GPIO_ALT_CAN_RX, AltFn_9);
 	GPIO_InitAltFunction(GPIO_ALT_CAN_TX, AltFn_9);
@@ -69,5 +73,11 @@ void INITCFG_ConfigWatchDog()
 {
 	IWDG_Config();
 	IWDG_ConfigureSlowUpdate();
+}
+//------------------------------------------------
+
+void INITCFG_Sync2Proxy()
+{
+	EXTI_Config(EXTI_PB, EXTI_10, BOTH_TRIG, 0);
 }
 //------------------------------------------------
