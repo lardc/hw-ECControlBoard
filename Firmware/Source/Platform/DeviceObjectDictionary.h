@@ -121,18 +121,18 @@
 #define REG_PROBLEM						196	// Регистр Problem
 #define REG_OP_RESULT					197	// Регистр результата операции
 
-#define REG_RESULT_LEAKAGE_CURRENT		198	// Ток утечки на выходе
+#define REG_RESULT_LEAKAGE_CURRENT		198	// Ток утечки на выходе (в мкА)
 #define REG_RESULT_ON_VOLTAGE			199	// Остаточное напряжение на выходе (в мкВ)
-#define REG_RESULT_CONTROL_CURRENT		200	// Ток управления
-#define REG_RESULT_CONTROL_VOLTAGE		201	// Напряжение управления
-#define REG_RESULT_INHIBIT_VOLTAGE		202	// Напряжение запрета
-#define REG_RESULT_AUX_CURRENT1			203	// Ток вспомогательного источника 1
-#define REG_RESULT_AUX_CURRENT2			204	// Ток вспомогательного источника 2
-#define REG_RESULT_OUTPUT_RES			205	// Выходное сопротивление
+#define REG_RESULT_CONTROL_CURRENT		200	// Ток управления (в мкА)
+#define REG_RESULT_CONTROL_VOLTAGE		201	// Напряжение управления (в мкВ)
+#define REG_RESULT_INHIBIT_VOLTAGE		202	// Напряжение запрета (в мкВ)
+#define REG_RESULT_AUX_CURRENT1			203	// Ток вспомогательного источника 1 (в мкА)
+#define REG_RESULT_AUX_CURRENT2			204	// Ток вспомогательного источника 2 (в мкА)
+#define REG_RESULT_OUTPUT_RES			205	// Выходное сопротивление (в мкОм)
 
-#define REG_RESULT_LEAKAGE_VOLTAGE		206	// Напряжение измерения утечки
+#define REG_RESULT_LEAKAGE_VOLTAGE		206	// Напряжение измерения утечки (в мкВ)
 #define REG_RESULT_LEAKAGE_VOLTAGE_32	207
-#define REG_RESULT_ON_CURRENT			208	// Ток измерения остаточного напряжения
+#define REG_RESULT_ON_CURRENT			208	// Ток измерения остаточного напряжения (в мкА)
 #define REG_RESULT_ON_CURRENT_32		209
 
 #define REG_DEV_SUB_STATE				220	// Регистр вспомогательного состояния
@@ -149,18 +149,18 @@
 #define REG_BHL_DETAILS					229	// Ошибка интерфейса ВУ: детали
 
 // Старшие слова 32битных чисел результатов
-#define REG_RESULT_LEAKAGE_CURRENT_32	230	// Ток утечки на выходе
-#define REG_RESULT_ON_VOLTAGE_32		231	// Остаточное напряжение на выходе (в мкВ)
-#define REG_RESULT_CONTROL_CURRENT_32	232	// Ток управления
-#define REG_RESULT_CONTROL_VOLTAGE_32	233	// Напряжение управления
-#define REG_RESULT_INHIBIT_VOLTAGE_32	234	// Напряжение запрета
-#define REG_RESULT_AUX_CURRENT1_32		235	// Ток вспомогательного источника 1
-#define REG_RESULT_AUX_CURRENT2_32		236	// Ток вспомогательного источника 2
-#define REG_RESULT_OUTPUT_RES_32		237	// Выходное сопротивление
+#define REG_RESULT_LEAKAGE_CURRENT_32	230	// Ток утечки на выходе (старшая часть) (в мкА)
+#define REG_RESULT_ON_VOLTAGE_32		231	// Остаточное напряжение на выходе (старшая часть) (в мкВ)
+#define REG_RESULT_CONTROL_CURRENT_32	232	// Ток управления (старшая часть) (в мкА)
+#define REG_RESULT_CONTROL_VOLTAGE_32	233	// Напряжение управления (старшая часть) (в мкВ)
+#define REG_RESULT_INHIBIT_VOLTAGE_32	234	// Напряжение запрета (старшая часть) (в мкВ)
+#define REG_RESULT_AUX_CURRENT1_32		235	// Ток вспомогательного источника 1 (старшая часть) (в мкА)
+#define REG_RESULT_AUX_CURRENT2_32		236	// Ток вспомогательного источника 2 (старшая часть) (в мкА)
+#define REG_RESULT_OUTPUT_RES_32		237	// Выходное сопротивление (старшая часть) (в мкОм)
 
-#define REG_CALIBRATION_VOLTAGE			240	// Результат калибровки: напряжение
+#define REG_CALIBRATION_VOLTAGE			240	// Результат калибровки: напряжение (в мкВ)
 #define REG_CALIBRATION_VOLTAGE_32		241
-#define REG_CALIBRATION_CURRENT			242	// Результат калибровки: ток
+#define REG_CALIBRATION_CURRENT			242	// Результат калибровки: ток (в мкА)
 #define REG_CALIBRATION_CURRENT_32		243
 
 #define REG_DBG_INT_SYNC1				251	// Регистр состояния внутреннейи линии SYNC1
