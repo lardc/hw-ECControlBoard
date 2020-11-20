@@ -33,6 +33,11 @@
 #define FAN_TIME_MAX				600
 #define FAN_TIME_DEF				30
 
+// в мс
+#define ALTER_DELAY_MIN				0
+#define ALTER_DELAY_MAX				10000
+#define ALTER_DELAY_DEF				0
+
 // Types
 typedef struct __TableItemConstraint
 {

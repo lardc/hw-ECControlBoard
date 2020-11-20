@@ -60,6 +60,7 @@
 #define REG_GENERAL_LOGIC_TIMEOUT		21	// Таймаут основных быстрых логических операций (в сек.)
 #define REG_FAN_OPERATE_PERIOD			22	// Период активации вентилятора по простою (в сек.)
 #define REG_FAN_OPERATE_MIN_TIME		23	// Минимальное время работы вентилятора (в сек.)
+#define REG_ALTER_SCAN_STATE_DELAY		24	// Длительность альтернативной задержки опроса состояний (в мс)
 
 // Несохраняемы регистры чтения-записи
 #define REG_MEASUREMENT_TYPE			128	// Тип выполняемого измерения

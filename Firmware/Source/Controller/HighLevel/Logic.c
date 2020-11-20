@@ -28,6 +28,7 @@ static volatile DCHVoltageBoardObject DCHighVoltageBoard;
 static uint16_t GeneralLogicTimeout, ControlWaitDelay;
 static CalibrateNodeIndex CachedNode;
 static DL_AuxPowerSupply CachedPowerSupply;
+static Int64U StatesUpdateTimeCounter = 0;
 
 static const NodeName ControlDCNode = NAME_DCVoltage1;
 static const NodeName ControlACNode = NAME_ACVoltage1;
@@ -56,6 +57,7 @@ void LOGIC_CacheControlSettings(DCV_OutputMode Mode);
 void LOGIC_CacheLeakageSettings();
 void LOGIC_CachePowerSupplySettings(DL_AuxPowerSupply Mode);
 void LOGIC_CacheCalibrationSettings();
+void LOGIC_AlterStateUpdateDelay();
 
 bool LOGIC_IsDCControl();
 bool LOGIC_IsDCLeakage();
@@ -122,14 +124,18 @@ void LOGIC_AttachSettings(NodeName Name, void *SettingsPointer)
 
 void LOGIC_HandleStateUpdate()
 {
-	static Int64U TimeCounter = 0;
-
-	if(CONTROL_State == DS_InProcess && CONTROL_TimeCounter > TimeCounter)
+	if(CONTROL_State == DS_InProcess && CONTROL_TimeCounter > StatesUpdateTimeCounter)
 	{
-		TimeCounter = CONTROL_TimeCounter + TIME_SLAVE_STATE_UPDATE;
+		StatesUpdateTimeCounter = CONTROL_TimeCounter + TIME_SLAVE_STATE_UPDATE;
 		if(!COMM_SlavesReadState())
 			CONTROL_SwitchToFault(ER_InterfaceError, FAULT_EXT_GR_COMMON);
 	}
+}
+//-----------------------------
+
+void LOGIC_AlterStateUpdateDelay()
+{
+	StatesUpdateTimeCounter = CONTROL_TimeCounter + DataTable[REG_ALTER_SCAN_STATE_DELAY];
 }
 //-----------------------------
 
@@ -675,7 +681,13 @@ void LOGIC_HandleLeakageExecResult(ExecutionResult Result)
 
 ExecutionResult LOGIC_StartLeakage()
 {
-	return LOGIC_IsDCLeakage() ? DCHV_Execute() : ACV_Execute(LeakageACNode);
+	if(LOGIC_IsDCLeakage())
+	{
+		LOGIC_AlterStateUpdateDelay();
+		return DCHV_Execute();
+	}
+	else
+		return ACV_Execute(LeakageACNode);
 }
 //-----------------------------
 
