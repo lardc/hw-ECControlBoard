@@ -7,11 +7,11 @@
 
 // Регистры
 #define DCHV_REG_VOLTAGE_SETPOINT			128	// Значение задания напряжения
-#define DCHV_REG_CURRENT_SETPOINT_32		129
-#define DCHV_REG_CURRENT_SETPOINT			130	// Значение задания тока
+#define DCHV_REG_CURRENT_SETPOINT			129
+#define DCHV_REG_CURRENT_SETPOINT_32		130	// Значение задания тока
 
 #define DCHV_REG_VOLTAGE_RESULT				200	// Значение измерения напряжения
-#define DCHV_REG_CURRENT_RESULT_32			201
-#define DCHV_REG_CURRENT_RESULT				202	// Значение измерения тока
+#define DCHV_REG_CURRENT_RESULT				201
+#define DCHV_REG_CURRENT_RESULT_32			202	// Значение измерения тока
 
 #endif // __DC_HIGH_VOLTAGE_BOARD_DICT_H
