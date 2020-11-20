@@ -390,3 +390,9 @@ void CONTROL_HandleFanLogic()
 	}
 }
 // ----------------------------------------
+
+bool CONTROL_IsSafetyActive()
+{
+	return SafetyMonitorActive;
+}
+// ----------------------------------------

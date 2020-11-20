@@ -469,7 +469,7 @@ LogicConfigError LOGIC_CacheMuxSettings(bool Calibration, pDL_AuxPowerSupply Pow
 	Multiplexer.InputType = DataTable[REG_INPUT_CONTROL_TYPE];
 	Multiplexer.LeakageType = DataTable[REG_COMM_VOLTAGE_TYPE_LEAKAGE];
 	Multiplexer.Polarity = DataTable[REG_COMM_POLARITY];
-	Multiplexer.SafetyMute = DataTable[REG_DIAG_SAFETY_MUTE];
+	Multiplexer.SafetyMute = DataTable[REG_DIAG_SAFETY_MUTE] ? true : !CONTROL_IsSafetyActive();
 
 	// Валидация конфигурации
 	if(!Calibration)

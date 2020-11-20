@@ -138,5 +138,6 @@ void CONTROL_Init();
 void CONTROL_Idle();
 void CONTROL_SwitchToFault(ExecutionResult Result, Int16U Group);
 void CONTROL_SetDeviceState(DeviceState NewState, DeviceSubState NewSubState);
+bool CONTROL_IsSafetyActive();
 
 #endif // __CONTROLLER_H
