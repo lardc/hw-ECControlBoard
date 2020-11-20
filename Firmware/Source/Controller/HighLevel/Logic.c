@@ -1439,6 +1439,7 @@ void LOGIC_Wrapper_LeakageReadResult(DeviceSubState NextState, pVIPair Result, u
 
 void LOGIC_Wrapper_LeakageSaveResult(VIPair Result)
 {
+	DT_Write32(REG_RESULT_LEAKAGE_VOLTAGE, REG_RESULT_LEAKAGE_VOLTAGE_32, Result.Voltage);
 	DT_Write32(REG_RESULT_LEAKAGE_CURRENT, REG_RESULT_LEAKAGE_CURRENT_32, Result.Current);
 }
 //-----------------------------
