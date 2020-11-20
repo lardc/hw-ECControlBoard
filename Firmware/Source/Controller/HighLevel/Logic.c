@@ -1511,7 +1511,7 @@ void LOGIC_Wrapper_PowerSupply1ReadResult(DeviceSubState NextState, pVIPair Resu
 void LOGIC_Wrapper_PowerSupply2ReadResult(DeviceSubState NextState, pVIPair Result, uint16_t *Problem)
 {
 	LOGIC_Wrapper_ReadResultX(NextState, Problem, PROBLEM_PS_RESULT,
-			&LOGIC_IsPowerSupplyInProblem, &LOGIC_PowerSupply1ReadResult, Result, LOGIC_HandlePowerSupplyExecResult);
+			&LOGIC_IsPowerSupplyInProblem, &LOGIC_PowerSupply2ReadResult, Result, LOGIC_HandlePowerSupplyExecResult);
 }
 //-----------------------------
 
