@@ -38,4 +38,11 @@ typedef enum __CommonDeviceState
 	CDS_InProcess = 4
 } CommonDeviceState;
 
+// Other definitions
+typedef enum __CalibrationOutputType
+{
+	COT_Current = 1,
+	COT_Voltage = 2
+} CalibrationOutputType;
+
 #endif // __COMMON_DICTIONARY_H

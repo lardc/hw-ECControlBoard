@@ -363,7 +363,8 @@ void LOGIC_CacheCalibrationSettings()
 			{
 				DCVoltageBoard1.Setpoint = Setpoint;
 				DCVoltageBoard1.OutputLine = DCV_CTRL;
-				DCVoltageBoard1.OutputType = DataTable[REG_CALIBRATION_TYPE];
+				DCVoltageBoard1.OutputType =
+						(DataTable[REG_CALIBRATION_TYPE] == COT_Voltage) ? DCV_Voltage : DCV_Current;
 				DCVoltageBoard1.OutputMode = DCV_Continuous;
 				DCVoltageBoard1.PulseLength = DataTable[REG_CTRL_PULSE_LENGTH];
 			}
