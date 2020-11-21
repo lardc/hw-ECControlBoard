@@ -1297,6 +1297,13 @@ void LOGIC_Wrapper_CommutateFast(DeviceSubState NextState, DeviceSubState StopSt
 }
 //-----------------------------
 
+void LOGIC_Wrapper_IsCommutationNodeReady(DeviceSubState NextState)
+{
+	if(COMM_IsSlaveInStateX(NAME_Multiplexer, CDS_Ready))
+		CONTROL_SetDeviceState(DS_InProcess, NextState);
+}
+//-----------------------------
+
 void LOGIC_Wrapper_UnCommutate(DeviceSubState NextState)
 {
 	LOGIC_Wrapper_TerminateX(NextState, &MUX_Disconnect, &LOGIC_HandleMuxExecResult);
