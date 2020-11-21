@@ -68,6 +68,7 @@ ExecutionResult LOGIC_IsControlVoltageReady(bool *IsReady);
 bool LOGIC_IsControlNodeReady();
 
 ExecutionResult LOGIC_StartLeakage();
+ExecutionResult LOGIC_StartLeakageNext();
 ExecutionResult LOGIC_StopLeakage();
 ExecutionResult LOGIC_IsLeakageVoltageReady(bool *IsReady);
 bool LOGIC_IsLeakageNodeReady();
@@ -692,6 +693,15 @@ ExecutionResult LOGIC_StartLeakage()
 		LOGIC_AlterStateUpdateDelay();
 		return DCHV_Execute();
 	}
+	else
+		return ER_NoError;
+}
+//-----------------------------
+
+ExecutionResult LOGIC_StartLeakageNext()
+{
+	if(LOGIC_IsDCLeakage())
+		return DCHV_ExecuteNext();
 	else
 		return ACV_Execute(LeakageACNode);
 }
@@ -1418,6 +1428,14 @@ void LOGIC_Wrapper_StartLeakage(DeviceSubState NextState, DeviceSubState StopSta
 {
 	LOGIC_Wrapper_ExecuteX(NextState, StopState, Timeout, Problem,
 			&LOGIC_StartLeakage, PROBLEM_LEAKAGE_CONFIG, &LOGIC_HandleLeakageExecResult);
+}
+//-----------------------------
+
+void LOGIC_Wrapper_StartLeakageNext(DeviceSubState NextState, DeviceSubState StopState,
+		uint64_t *Timeout, uint16_t *Problem)
+{
+	LOGIC_Wrapper_ExecuteX(NextState, StopState, Timeout, Problem,
+			&LOGIC_StartLeakageNext, PROBLEM_LEAKAGE_NEXT_CONFIG, &LOGIC_HandleLeakageExecResult);
 }
 //-----------------------------
 

@@ -20,6 +20,7 @@ typedef struct __DCHVoltageBoardObject
 // Functions
 //
 ExecutionResult DCHV_Execute();
+ExecutionResult DCHV_ExecuteNext();
 ExecutionResult DCHV_ReadResult();
 ExecutionResult DCHV_Stop();
 

@@ -76,6 +76,8 @@ void LOGIC_Wrapper_CurrentSaveResult(VIPair Result);
 // Обёртки утечки
 void LOGIC_Wrapper_StartLeakage(DeviceSubState NextState, DeviceSubState StopState,
 		uint64_t *Timeout, uint16_t *Problem);
+void LOGIC_Wrapper_StartLeakageNext(DeviceSubState NextState, DeviceSubState StopState,
+		uint64_t *Timeout, uint16_t *Problem);
 void LOGIC_Wrapper_IsLeakageOutputReady(DeviceSubState NextState, DeviceSubState StopState,
 		uint64_t Timeout, uint16_t *Problem);
 void LOGIC_Wrapper_StopLeakage(DeviceSubState NextState);

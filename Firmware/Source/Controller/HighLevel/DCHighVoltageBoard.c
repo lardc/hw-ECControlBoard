@@ -82,6 +82,12 @@ ExecutionResult DCHV_ReadResult()
 }
 //-----------------------------
 
+ExecutionResult DCHV_ExecuteNext()
+{
+	return COMM_NodeCall(NAME_DCHighVoltage, DCHV_ACT_SECOND_START_PROCESS);
+}
+//-----------------------------
+
 ExecutionResult DCHV_Stop()
 {
 	return COMM_NodeCall(NAME_DCHighVoltage, DCHV_ACT_STOP_PROCESS);

@@ -226,6 +226,7 @@
 #define PROBLEM_LEAKAGE_READY_TIMEOUT	51	// Отсутствие сигнала готовности утечки
 #define PROBLEM_LEAKAGE_IN_PROBLEM		52	// Источник сигнала утечки в проблеме
 #define PROBLEM_LEAKAGE_RESULT			53	// Невалидный результат измерения
+#define PROBLEM_LEAKAGE_NEXT_CONFIG		54	// Некорректная конфигурация источника напряжения утечки (повторный вызов)
 
 #define PROBLEM_PS_CONFIG				60	// Некорректная конфигурация вспомогательного питания
 #define PROBLEM_PS_READY_TIMEOUT		61	// Отсутствие сигнала готовности вспомогательного питания
