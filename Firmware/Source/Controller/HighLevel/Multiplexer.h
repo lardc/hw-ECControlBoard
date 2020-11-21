@@ -21,6 +21,7 @@ typedef struct __MuxObject
 // Functions
 //
 ExecutionResult MUX_Connect();
+ExecutionResult MUX_ConnectFast();
 ExecutionResult MUX_Disconnect();
 
 #endif // __MULTIPLEXER_H

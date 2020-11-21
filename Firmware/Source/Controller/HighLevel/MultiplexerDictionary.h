@@ -4,6 +4,7 @@
 // Команды
 #define MUX_ACT_SET_RELAY_GROUP				100	// Подключить группу реле (на основании корпуса и т.д.)
 #define MUX_ACT_SET_RELAY_NONE				101	// Отключить все релле
+#define MUX_ACT_SET_RELAY_GROUP_FAST_HV		102	// Быстрое подключение высоковольтных реле
 
 // Регистры
 #define MUX_REG_TYPE_MEASURE				130	// Тип измерения

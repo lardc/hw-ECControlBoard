@@ -52,6 +52,32 @@ ExecutionResult MUX_Connect()
 }
 //-----------------------------
 
+ExecutionResult MUX_ConnectFast()
+{
+	pSlaveNode NodeData = COMM_GetSlaveDevicePointer(NAME_Multiplexer);
+	pMuxObject Settings = (pMuxObject)NodeData->Settings;
+
+	if(Settings != NULL)
+	{
+		if(!NodeData->Emulation)
+		{
+			uint16_t NodeID = NodeData->NodeID;
+			if(BHL_Call(NodeID, MUX_ACT_SET_RELAY_GROUP_FAST_HV))
+			{
+				NodeData->StateIsUpToDate = false;
+				return ER_NoError;
+			}
+		}
+		else
+			return ER_NoError;
+
+		return ER_InterfaceError;
+	}
+	else
+		return ER_SettingsError;
+}
+//-----------------------------
+
 ExecutionResult MUX_Disconnect()
 {
 	pSlaveNode NodeData = COMM_GetSlaveDevicePointer(NAME_Multiplexer);
