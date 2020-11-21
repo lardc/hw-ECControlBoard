@@ -1264,6 +1264,13 @@ void LOGIC_Wrapper_Commutate(DeviceSubState NextState, DeviceSubState StopState,
 }
 //-----------------------------
 
+void LOGIC_Wrapper_CommutateFast(DeviceSubState NextState, DeviceSubState StopState, uint16_t *Problem)
+{
+	LOGIC_Wrapper_ExecuteX(NextState, StopState, NULL, Problem,
+			&MUX_ConnectFast, PROBLEM_MUX_FAST_CONFIG, &LOGIC_HandleMuxExecResult);
+}
+//-----------------------------
+
 void LOGIC_Wrapper_UnCommutate(DeviceSubState NextState)
 {
 	LOGIC_Wrapper_TerminateX(NextState, &MUX_Disconnect, &LOGIC_HandleMuxExecResult);

@@ -52,6 +52,7 @@ void LOGIC_Wrapper_SetStateAfterDelay(DeviceSubState NextState, uint64_t Timeout
 
 // Обёртки коммутации
 void LOGIC_Wrapper_Commutate(DeviceSubState NextState, DeviceSubState StopState, uint16_t *Problem);
+void LOGIC_Wrapper_CommutateFast(DeviceSubState NextState, DeviceSubState StopState, uint16_t *Problem);
 void LOGIC_Wrapper_UnCommutate(DeviceSubState NextState);
 
 // Обёртки управления

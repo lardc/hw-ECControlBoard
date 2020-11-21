@@ -207,6 +207,7 @@
 #define PROBLEM_SAFETY_TRIG				2	// Остановка по срабатыванию системы безопасности
 
 #define PROBLEM_MUX_CONFIG				10	// Некорректная конфигурация мультиплексора
+#define PROBLEM_MUX_FAST_CONFIG			11	// Некорректная конфигурация быстрой коммутации мультиплексора
 
 #define PROBLEM_CAL_CONFIG				20	// Некорректная конфигурация калибруемого узла
 #define PROBLEM_CAL_READY_TIMEOUT		21	// Отсутствие сигнала готовности калибруемого узла
