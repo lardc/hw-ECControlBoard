@@ -80,6 +80,8 @@ void LOGIC_Wrapper_StartLeakageNext(DeviceSubState NextState, DeviceSubState Sto
 		uint64_t *Timeout, uint16_t *Problem);
 void LOGIC_Wrapper_IsLeakageOutputReady(DeviceSubState NextState, DeviceSubState StopState,
 		uint64_t Timeout, uint16_t *Problem);
+void LOGIC_Wrapper_IsLeakageReadyForNext(DeviceSubState NextState, DeviceSubState StopState,
+		uint64_t Timeout, uint16_t *Problem);
 void LOGIC_Wrapper_StopLeakage(DeviceSubState NextState);
 void LOGIC_Wrapper_IsLeakageNodeReady(DeviceSubState NextState);
 void LOGIC_Wrapper_LeakageReadResult(DeviceSubState NextState, pVIPair Result, uint16_t *Problem);

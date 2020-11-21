@@ -16,6 +16,6 @@
 #define DCHV_REG_CURRENT_RESULT_32			202	// Значение измерения тока
 
 // Дополнительные состояния
-#define MUX_DCHV_STATE_IN_PROCESS_EX		5
+#define DCHV_STATE_IN_PROCESS_EX			5
 
 #endif // __DC_HIGH_VOLTAGE_BOARD_DICT_H

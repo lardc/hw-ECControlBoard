@@ -71,6 +71,7 @@ ExecutionResult LOGIC_StartLeakage();
 ExecutionResult LOGIC_StartLeakageNext();
 ExecutionResult LOGIC_StopLeakage();
 ExecutionResult LOGIC_IsLeakageVoltageReady(bool *IsReady);
+ExecutionResult LOGIC_IsLeakageReadyForNext(bool *IsReady);
 bool LOGIC_IsLeakageNodeReady();
 
 ExecutionResult LOGIC_StartPowerSupply();
@@ -722,6 +723,21 @@ ExecutionResult LOGIC_IsLeakageVoltageReady(bool *IsReady)
 	}
 	else
 		return ACV_IsVoltageReady(LeakageACNode, IsReady);
+}
+//-----------------------------
+
+ExecutionResult LOGIC_IsLeakageReadyForNext(bool *IsReady)
+{
+	if(LOGIC_IsDCLeakage())
+	{
+		*IsReady = COMM_IsSlaveInStateX(LeakageDCNode, DCHV_STATE_IN_PROCESS_EX);
+		return ER_NoError;
+	}
+	else
+	{
+		*IsReady = COMM_IsSlaveInStateX(LeakageACNode, CDS_Ready);
+		return ER_NoError;
+	}
 }
 //-----------------------------
 
@@ -1444,6 +1460,14 @@ void LOGIC_Wrapper_IsLeakageOutputReady(DeviceSubState NextState, DeviceSubState
 {
 	LOGIC_Wrapper_IsOutputReadyX(NextState, StopState, Timeout, Problem, &LOGIC_IsLeakageVoltageReady, &LOGIC_IsLeakagelInProblem,
 			PROBLEM_LEAKAGE_IN_PROBLEM, PROBLEM_LEAKAGE_READY_TIMEOUT, &LOGIC_HandleLeakageExecResult);
+}
+//-----------------------------
+
+void LOGIC_Wrapper_IsLeakageReadyForNext(DeviceSubState NextState, DeviceSubState StopState,
+		uint64_t Timeout, uint16_t *Problem)
+{
+	LOGIC_Wrapper_IsOutputReadyX(NextState, StopState, Timeout, Problem, &LOGIC_IsLeakageReadyForNext, &LOGIC_IsLeakagelInProblem,
+			PROBLEM_LEAKAGE_NEXT_IN_PROBLEM, PROBLEM_LEAKAGE_NEXT_TIMEOUT, &LOGIC_HandleLeakageExecResult);
 }
 //-----------------------------
 
