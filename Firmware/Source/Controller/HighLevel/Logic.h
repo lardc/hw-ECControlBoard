@@ -88,6 +88,7 @@ void LOGIC_Wrapper_StartCalibration(DeviceSubState NextState, DeviceSubState Sto
 void LOGIC_Wrapper_IsCalibrationOutputReady(DeviceSubState NextState, DeviceSubState StopState,
 		uint64_t Timeout, uint16_t *Problem);
 void LOGIC_Wrapper_StopCalibration(DeviceSubState NextState);
+void LOGIC_Wrapper_CalibrationSetDelay(DeviceSubState NextState, DeviceSubState NextStateNoDelay, uint64_t *Timeout);
 void LOGIC_Wrapper_CalibrationReadResult(DeviceSubState NextState, pVIPair Result, uint16_t *Problem);
 void LOGIC_Wrapper_CalibrationSaveResult(VIPair Result);
 

@@ -25,7 +25,7 @@ static volatile CurrentBoardObject CurrentBoard;
 static volatile DCVoltageBoardObject DCVoltageBoard1, DCVoltageBoard2, DCVoltageBoard3;
 static volatile ACVoltageBoardObject ACVoltageBoard1, ACVoltageBoard2;
 static volatile DCHVoltageBoardObject DCHighVoltageBoard;
-static uint16_t GeneralLogicTimeout, ControlWaitDelay;
+static uint16_t GeneralLogicTimeout, ControlWaitDelay, CalibrationWaitDelay;
 static CalibrateNodeIndex CachedNode;
 static DL_AuxPowerSupply CachedPowerSupply;
 static Int64U StatesUpdateTimeCounter = 0;
@@ -336,6 +336,7 @@ LogicConfigError LOGIC_PrepareMeasurement(bool Calibration)
 			case MT_CalibrateACControl:
 			case MT_CalibrateCurrent:
 				{
+					CalibrationWaitDelay = DataTable[REG_CALIBRATION_HOLD_DELAY];
 					LOGIC_CacheCalibrationSettings();
 					CONTROL_SetDeviceState(DS_InProcess, DSS_Calibrate_Start);
 				}
@@ -1463,6 +1464,18 @@ void LOGIC_Wrapper_IsCalibrationOutputReady(DeviceSubState NextState, DeviceSubS
 void LOGIC_Wrapper_StopCalibration(DeviceSubState NextState)
 {
 	LOGIC_Wrapper_TerminateX(NextState, &LOGIC_StopCalibration, &LOGIC_HandleCalibrationExecResult);
+}
+//-----------------------------
+
+void LOGIC_Wrapper_CalibrationSetDelay(DeviceSubState NextState, DeviceSubState NextStateNoDelay, uint64_t *Timeout)
+{
+	if(CalibrationWaitDelay)
+	{
+		*Timeout = CONTROL_TimeCounter + CalibrationWaitDelay;
+		CONTROL_SetDeviceState(DS_InProcess, NextState);
+	}
+	else
+		CONTROL_SetDeviceState(DS_InProcess, NextStateNoDelay);
 }
 //-----------------------------
 

@@ -28,6 +28,11 @@
 #define CTRL_DELAY_MAX				5000
 #define CTRL_DELAY_DEF				500
 
+// в мс
+#define CALIBRATION_DELAY_MIN		0
+#define CALIBRATION_DELAY_MAX		10000
+#define CALIBRATION_DELAY_DEF		1000
+
 // в сек.
 #define FAN_TIME_MIN				10
 #define FAN_TIME_MAX				600

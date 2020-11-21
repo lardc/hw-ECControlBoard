@@ -118,6 +118,8 @@ typedef enum __DeviceSubState
 	DSS_Calibrate_WaitCommutation,
 	DSS_Calibrate_StartOutput,
 	DSS_Calibrate_WaitOutputReady,
+	DSS_Calibrate_SetOutputDelay,
+	DSS_Calibrate_WaitOutputDelay,
 	DSS_Calibrate_StopOutput,
 	DSS_Calibrate_WaitStopOutput,
 	DSS_Calibrate_UnCommutate,
