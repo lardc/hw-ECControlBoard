@@ -50,6 +50,14 @@ typedef enum __DeviceSubState
 	DSS_Leakage_WaitControlDelay,
 	DSS_Leakage_CheckReadyAfterDelay,
 	DSS_Leakage_StartOutVoltage,
+
+
+	DSS_Leakage_WaitReadyForNextStart,
+	DSS_Leakage_MakeFastCommutation,
+	DSS_Leakage_WaitFastCommutationReady,
+	DSS_Leakage_NextStartOutVoltage,
+
+
 	DSS_Leakage_WaitOutVoltageReady,
 	DSS_Leakage_StopOutVoltage,
 	DSS_Leakage_WaitStopOutVoltage,

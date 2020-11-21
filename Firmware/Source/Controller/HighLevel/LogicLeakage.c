@@ -74,7 +74,25 @@ void LEAK_HandleMeasurement()
 				break;
 
 			case DSS_Leakage_StartOutVoltage:
-				LOGIC_Wrapper_StartLeakage(DSS_Leakage_WaitOutVoltageReady, DSS_Leakage_StopControl,
+				LOGIC_Wrapper_StartLeakage(DSS_Leakage_WaitReadyForNextStart, DSS_Leakage_StopControl,
+						&Timeout, &Problem);
+				break;
+
+			case DSS_Leakage_WaitReadyForNextStart:
+				LOGIC_Wrapper_IsLeakageReadyForNext(DSS_Leakage_MakeFastCommutation, DSS_Leakage_StopOutVoltage,
+						Timeout, &Problem);
+				break;
+
+			case DSS_Leakage_MakeFastCommutation:
+				LOGIC_Wrapper_CommutateFast(DSS_Leakage_WaitFastCommutationReady, DSS_Leakage_StopOutVoltage, &Problem);
+				break;
+
+			case DSS_Leakage_WaitFastCommutationReady:
+				LOGIC_Wrapper_IsCommutationNodeReady(DSS_Leakage_NextStartOutVoltage);
+				break;
+
+			case DSS_Leakage_NextStartOutVoltage:
+				LOGIC_Wrapper_StartLeakageNext(DSS_Leakage_WaitOutVoltageReady, DSS_Leakage_StopOutVoltage,
 						&Timeout, &Problem);
 				break;
 
