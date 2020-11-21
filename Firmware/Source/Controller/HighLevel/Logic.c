@@ -426,12 +426,22 @@ LogicConfigError LOGIC_CacheMuxSettings(bool Calibration, pDL_AuxPowerSupply Pow
 {
 	*PowerSupply = NoSupply;
 
+	Multiplexer.MeasureType = DataTable[REG_MEASUREMENT_TYPE];
+	Multiplexer.InputType = DataTable[REG_INPUT_CONTROL_TYPE];
+	Multiplexer.LeakageType = DataTable[REG_COMM_VOLTAGE_TYPE_LEAKAGE];
+	Multiplexer.Case = DataTable[REG_DUT_CASE_TYPE];
+	Multiplexer.Position = DataTable[REG_DUT_POSITION_NUMBER];
+	Multiplexer.Polarity = DataTable[REG_COMM_POLARITY];
+	Multiplexer.SafetyMute = DataTable[REG_DIAG_SAFETY_MUTE] ? true : !CONTROL_IsSafetyActive();
+
+	// Перезапись необходимых параметров, если выполняется калибровка
 	if(Calibration)
 	{
 		switch(CachedNode)
 		{
 			case CN_DC1:
 				Multiplexer.MeasureType = MT_CalibrateDCControl;
+				Multiplexer.InputType = IT_ControlVDC;
 				break;
 
 			case CN_DC2:
@@ -444,14 +454,17 @@ LogicConfigError LOGIC_CacheMuxSettings(bool Calibration, pDL_AuxPowerSupply Pow
 
 			case CN_HVDC:
 				Multiplexer.MeasureType = MT_CalibrateDCLeakage;
+				Multiplexer.LeakageType = LT_LeakageDC;
 				break;
 
 			case CN_AC1:
 				Multiplexer.MeasureType = MT_CalibrateACControl;
+				Multiplexer.InputType = IT_ControlVAC;
 				break;
 
 			case CN_AC2:
 				Multiplexer.MeasureType = MT_CalibrateACLeakage;
+				Multiplexer.LeakageType = LT_LeakageAC;
 				break;
 
 			case CN_CB:
@@ -462,15 +475,6 @@ LogicConfigError LOGIC_CacheMuxSettings(bool Calibration, pDL_AuxPowerSupply Pow
 				break;
 		}
 	}
-	else
-		Multiplexer.MeasureType = DataTable[REG_MEASUREMENT_TYPE];
-
-	Multiplexer.Case = DataTable[REG_DUT_CASE_TYPE];
-	Multiplexer.Position = DataTable[REG_DUT_POSITION_NUMBER];
-	Multiplexer.InputType = DataTable[REG_INPUT_CONTROL_TYPE];
-	Multiplexer.LeakageType = DataTable[REG_COMM_VOLTAGE_TYPE_LEAKAGE];
-	Multiplexer.Polarity = DataTable[REG_COMM_POLARITY];
-	Multiplexer.SafetyMute = DataTable[REG_DIAG_SAFETY_MUTE] ? true : !CONTROL_IsSafetyActive();
 
 	// Валидация конфигурации
 	if(!Calibration)
