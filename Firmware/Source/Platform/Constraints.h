@@ -26,7 +26,7 @@
 // в мс
 #define CTRL_DELAY_MIN				0
 #define CTRL_DELAY_MAX				5000
-#define CTRL_DELAY_DEF				0
+#define CTRL_DELAY_DEF				500
 
 // в сек.
 #define FAN_TIME_MIN				10
