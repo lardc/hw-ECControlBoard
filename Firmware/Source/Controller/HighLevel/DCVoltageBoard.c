@@ -105,7 +105,7 @@ ExecutionResult DCV_ReadResult(NodeName Name)
 								Current |= (uint32_t)CurrentHigh << 16;
 
 								Settings->Result.Voltage = Voltage * 1000;
-								Settings->Result.Current = Current;
+								Settings->Result.Current = Current / 100;
 								return ER_NoError;
 							}
 			}
