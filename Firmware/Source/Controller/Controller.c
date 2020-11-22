@@ -148,14 +148,14 @@ static Boolean CONTROL_DispatchAction(Int16U ActionID, pInt16U pUserError)
 					COMM_UpdateEmulationSettings();
 					CONTROL_SetDeviceState(DS_InProcess, DSS_PowerEnable);
 				}
-				else if(CONTROL_State != DS_Ready)
+				else if(CONTROL_State != DS_Ready && CONTROL_State != DS_SafetyTrig)
 					*pUserError = ERR_DEVICE_NOT_READY;
 			}
 			break;
 			
 		case ACT_DISABLE_POWER:
 			{
-				if(CONTROL_State == DS_Ready)
+				if(CONTROL_State == DS_Ready || CONTROL_State == DS_SafetyTrig)
 				{
 					CONTROL_ResetOutputRegisters();
 					CONTROL_SetDeviceState(DS_None, DSS_PowerOff);
@@ -167,21 +167,24 @@ static Boolean CONTROL_DispatchAction(Int16U ActionID, pInt16U pUserError)
 
 		case ACT_SAFETY_SET_ACTIVE:
 			{
-				if(CONTROL_State == DS_Ready)
+				if(CONTROL_State == DS_Ready || CONTROL_State == DS_SafetyTrig)
+				{
 					SafetyMonitorActive = true;
+					CONTROL_SetDeviceState(DS_Ready, DSS_None);
+				}
 				else
-					*pUserError = ERR_DEVICE_NOT_READY;
+					*pUserError = ERR_OPERATION_BLOCKED;
 			}
 			break;
 
 		case ACT_SAFETY_SET_INACTIVE:
 			{
-				if(CONTROL_State == DS_SafetyTrig)
+				if(CONTROL_State == DS_Ready || CONTROL_State == DS_SafetyTrig)
 				{
 					SafetyMonitorActive = false;
 					CONTROL_SetDeviceState(DS_Ready, DSS_None);
 				}
-				else if(CONTROL_State != DS_Ready)
+				else
 					*pUserError = ERR_OPERATION_BLOCKED;
 			}
 			break;
@@ -189,7 +192,7 @@ static Boolean CONTROL_DispatchAction(Int16U ActionID, pInt16U pUserError)
 		case ACT_CALIBRATE:
 		case ACT_START_TEST:
 			{
-				if(CONTROL_State == DS_Ready)
+				if(CONTROL_State == DS_Ready || CONTROL_State == DS_SafetyTrig)
 				{
 					LL_SetStateExtLed(true);
 					LL_SetStateExtLineSync1(true);
@@ -233,6 +236,11 @@ static Boolean CONTROL_DispatchAction(Int16U ActionID, pInt16U pUserError)
 
 		case ACT_WARNING_CLEAR:
 			DataTable[REG_WARNING] = WARNING_NONE;
+			break;
+
+		case ACT_SAFETY_CLEAR:
+			if(CONTROL_State == DS_SafetyTrig)
+				CONTROL_SetDeviceState(DS_Ready, DSS_None);
 			break;
 
 		case ACT_DIAG_READ_REG:

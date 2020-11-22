@@ -27,7 +27,9 @@ typedef enum __DeviceSubState
 	DSS_PowerOff = 3,
 
 	DSS_Fault_Request = 10,
-	DSS_Stop_Request = 11,
+	DSS_Stop_Request,
+	DSS_StopSafety_Request,
+
 	DSS_FaultStop_StopDCCurrent,
 	DSS_FaultStop_StopHV,
 	DSS_FaultStop_StopDC1,

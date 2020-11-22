@@ -205,6 +205,7 @@ void LOGIC_HandleFaultAndStop()
 		{
 			case DSS_Fault_Request:
 			case DSS_Stop_Request:
+			case DSS_StopSafety_Request:
 				{
 					SavedRequest = CONTROL_SubState;
 					CONTROL_SetDeviceState(DS_InProcess, DSS_FaultStop_StopDCCurrent);
@@ -271,10 +272,20 @@ void LOGIC_HandleFaultAndStop()
 				{
 					MUX_Disconnect();
 
-					if(SavedRequest == DSS_Fault_Request)
-						CONTROL_SetDeviceState(DS_Fault, DSS_None);
-					else
-						CONTROL_SetDeviceState(DS_Ready, DSS_None);
+					switch(SavedRequest)
+					{
+						case DSS_Fault_Request:
+							CONTROL_SetDeviceState(DS_Fault, DSS_None);
+							break;
+
+						case DSS_StopSafety_Request:
+							CONTROL_SetDeviceState(DS_SafetyTrig, DSS_None);
+							break;
+
+						default:
+							CONTROL_SetDeviceState(DS_Ready, DSS_None);
+							break;
+					}
 				}
 				break;
 
@@ -1195,7 +1206,7 @@ void LOGIC_Wrapper_SafetyMonitor()
 	{
 		if(CONTROL_SubState >= DSS_InterruptableStatesBegin)
 		{
-			CONTROL_SetDeviceState(DS_InProcess, DSS_Stop_Request);
+			CONTROL_SetDeviceState(DS_InProcess, DSS_StopSafety_Request);
 
 			DataTable[REG_PROBLEM] = PROBLEM_SAFETY_TRIG;
 			DataTable[REG_OP_RESULT] = OPRESULT_FAIL;
