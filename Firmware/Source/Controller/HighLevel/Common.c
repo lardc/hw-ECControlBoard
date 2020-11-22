@@ -130,6 +130,12 @@ bool COMM_IsSlaveInStateX(NodeName Name, uint16_t State)
 }
 //-----------------------------
 
+bool COMM_IsSlaveInEmulation(NodeName Name)
+{
+	return NodeArray[Name].Emulation;
+}
+//-----------------------------
+
 uint16_t COMM_GetSlaveOpResult(NodeName Name)
 {
 	return NodeArray[Name].OpResult;

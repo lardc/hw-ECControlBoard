@@ -741,7 +741,8 @@ ExecutionResult LOGIC_IsLeakageReadyForNext(bool *IsReady)
 {
 	if(LOGIC_IsDCLeakage())
 	{
-		*IsReady = COMM_IsSlaveInStateX(LeakageDCNode, DCHV_STATE_IN_PROCESS_EX);
+		*IsReady = COMM_IsSlaveInEmulation(LeakageDCNode) ?
+				true : COMM_IsSlaveInStateX(LeakageDCNode, DCHV_STATE_IN_PROCESS_EX);
 		return ER_NoError;
 	}
 	else
