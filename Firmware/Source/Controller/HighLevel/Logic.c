@@ -649,6 +649,7 @@ ExecutionResult LOGIC_ControlReadResult(uint16_t *OpResult, pVIPair Result)
 {
 	ExecutionResult res;
 	pSlaveNode NodeData;
+	bool ForceOpResultOk = false;
 
 	if(LOGIC_IsDCControl())
 	{
@@ -657,6 +658,8 @@ ExecutionResult LOGIC_ControlReadResult(uint16_t *OpResult, pVIPair Result)
 
 		res = DCV_ReadResult(ControlDCNode);
 		*Result = Settings->Result;
+
+		ForceOpResultOk = (Settings->Setpoint.Voltage == 0 && Settings->Setpoint.Current == 0);
 	}
 	else
 	{
@@ -665,9 +668,11 @@ ExecutionResult LOGIC_ControlReadResult(uint16_t *OpResult, pVIPair Result)
 
 		res = ACV_ReadResult(ControlACNode);
 		*Result = Settings->Result;
+
+		ForceOpResultOk = (Settings->Setpoint.Voltage == 0 && Settings->Setpoint.Current == 0);
 	}
 
-	*OpResult = NodeData->OpResult;
+	*OpResult = ForceOpResultOk ? true : NodeData->OpResult;
 	return res;
 }
 //-----------------------------
