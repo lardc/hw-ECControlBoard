@@ -162,7 +162,7 @@ const TableItemConstraint VConstraint[DATA_TABLE_WP_START - DATA_TABLE_WR_START]
 		{0, INT16U_MAX, 0},															// 141
 		{0, INT16U_MAX, 0},															// 142
 		{0, INT16U_MAX, 0},															// 143
-		{0, 0, 0},																	// 144
+		{NO, YES, NO},																// 144
 		{CTRL_PULSE_LENGH_MIN, CTRL_PULSE_LENGH_MAX, CTRL_PULSE_LENGH_DEF},			// 145
 		{CTRL_DELAY_MIN, CTRL_DELAY_MAX, CTRL_DELAY_DEF},							// 146
 		{CALIBRATION_DELAY_MIN, CALIBRATION_DELAY_MAX, CALIBRATION_DELAY_DEF},		// 147
