@@ -130,7 +130,7 @@
 #define REG_RESULT_INHIBIT_VOLTAGE		202	// Напряжение запрета (в мкВ)
 #define REG_RESULT_AUX_CURRENT1			203	// Ток вспомогательного источника 1 (в мкА)
 #define REG_RESULT_AUX_CURRENT2			204	// Ток вспомогательного источника 2 (в мкА)
-#define REG_RESULT_OUTPUT_RES			205	// Выходное сопротивление (в мкОм)
+#define REG_RESULT_OUTPUT_RES			205	// Выходное сопротивление (в мОм)
 
 #define REG_RESULT_LEAKAGE_VOLTAGE		206	// Напряжение измерения утечки (в мкВ)
 #define REG_RESULT_LEAKAGE_VOLTAGE_32	207
@@ -158,7 +158,7 @@
 #define REG_RESULT_INHIBIT_VOLTAGE_32	234	// Напряжение запрета (старшая часть) (в мкВ)
 #define REG_RESULT_AUX_CURRENT1_32		235	// Ток вспомогательного источника 1 (старшая часть) (в мкА)
 #define REG_RESULT_AUX_CURRENT2_32		236	// Ток вспомогательного источника 2 (старшая часть) (в мкА)
-#define REG_RESULT_OUTPUT_RES_32		237	// Выходное сопротивление (старшая часть) (в мкОм)
+#define REG_RESULT_OUTPUT_RES_32		237	// Выходное сопротивление (старшая часть) (в мОм)
 
 #define REG_CALIBRATION_VOLTAGE			240	// Результат калибровки: напряжение (в мкВ)
 #define REG_CALIBRATION_VOLTAGE_32		241
