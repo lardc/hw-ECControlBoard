@@ -217,8 +217,8 @@ static Boolean CONTROL_DispatchAction(Int16U ActionID, pInt16U pUserError)
 				{
 					CONTROL_SetDeviceState(DS_InProcess, DSS_Stop_Request);
 
-					DataTable[REG_PROBLEM] = PROBLEM_COMMAND_STOP;
-					DataTable[REG_OP_RESULT] = OPRESULT_FAIL;
+					DataTable[REG_WARNING] = WARNING_COMMAND_STOP;
+					DataTable[REG_OP_RESULT] = OPRESULT_OK;
 				}
 			}
 			break;

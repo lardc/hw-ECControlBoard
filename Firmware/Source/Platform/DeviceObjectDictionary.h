@@ -203,8 +203,6 @@
 
 // Problem
 #define PROBLEM_NONE					0
-#define PROBLEM_COMMAND_STOP			1	// Поступил внешний запрос на остановку
-#define PROBLEM_SAFETY_TRIG				2	// Остановка по срабатыванию системы безопасности
 
 #define PROBLEM_MUX_CONFIG				10	// Некорректная конфигурация мультиплексора
 #define PROBLEM_MUX_FAST_CONFIG			11	// Некорректная конфигурация быстрой коммутации мультиплексора
@@ -237,6 +235,8 @@
 
 //  Warning
 #define WARNING_NONE					0
+#define WARNING_COMMAND_STOP			1	// Поступил внешний запрос на остановку
+#define WARNING_SAFETY_TRIG				2	// Остановка по срабатыванию системы безопасности
 
 // Endpoints
 #define EP_SLAVE_DATA					1	// Данные вычитанные из Slave-устройств

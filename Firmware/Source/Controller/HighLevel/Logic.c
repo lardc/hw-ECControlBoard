@@ -1214,8 +1214,8 @@ void LOGIC_Wrapper_SafetyMonitor()
 		{
 			CONTROL_SetDeviceState(DS_InProcess, DSS_StopSafety_Request);
 
-			DataTable[REG_PROBLEM] = PROBLEM_SAFETY_TRIG;
-			DataTable[REG_OP_RESULT] = OPRESULT_FAIL;
+			DataTable[REG_WARNING] = WARNING_SAFETY_TRIG;
+			DataTable[REG_OP_RESULT] = OPRESULT_OK;
 		}
 	}
 }
