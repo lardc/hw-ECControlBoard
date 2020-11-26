@@ -213,7 +213,7 @@ static Boolean CONTROL_DispatchAction(Int16U ActionID, pInt16U pUserError)
 
 		case ACT_STOP_TEST:
 			{
-				if((CONTROL_State == DS_InProcess) && (CONTROL_SubState >= DSS_InterruptableStatesBegin))
+				if(CONTROL_State == DS_InProcess && CONTROL_SubState < DSS_InterruptableStatesEnd)
 				{
 					CONTROL_SetDeviceState(DS_InProcess, DSS_Stop_Request);
 
@@ -315,7 +315,7 @@ static Boolean CONTROL_DispatchAction(Int16U ActionID, pInt16U pUserError)
 
 void CONTROL_SwitchToFault(ExecutionResult Result, Int16U Group)
 {
-	if(Result != ER_NoError)
+	if(Result != ER_NoError && CONTROL_SubState < DSS_InterruptableStatesEnd)
 	{
 		if(Result == ER_InterfaceError)
 		{

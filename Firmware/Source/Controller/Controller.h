@@ -22,24 +22,9 @@ typedef enum __DeviceSubState
 {
 	DSS_None = 0,
 
-	DSS_PowerEnable = 1,
-	DSS_PowerWaitReady = 2,
-	DSS_PowerOff = 3,
-
-	DSS_Fault_Request = 10,
-	DSS_Stop_Request,
-	DSS_StopSafety_Request,
-
-	DSS_FaultStop_StopDCCurrent,
-	DSS_FaultStop_StopHV,
-	DSS_FaultStop_StopDC1,
-	DSS_FaultStop_StopDC2,
-	DSS_FaultStop_StopDC3,
-	DSS_FaultStop_StopAC1,
-	DSS_FaultStop_StopAC2,
-	DSS_FaultStop_StopMux,
-
-	DSS_InterruptableStatesBegin = 100,
+	DSS_PowerEnable,
+	DSS_PowerWaitReady,
+	DSS_PowerOff,
 
 	DSS_Leakage_StartTest = 100,
 	DSS_Leakage_Commutate,
@@ -52,14 +37,10 @@ typedef enum __DeviceSubState
 	DSS_Leakage_WaitControlDelay,
 	DSS_Leakage_CheckReadyAfterDelay,
 	DSS_Leakage_StartOutVoltage,
-
-
 	DSS_Leakage_WaitReadyForNextStart,
 	DSS_Leakage_MakeFastCommutation,
 	DSS_Leakage_WaitFastCommutationReady,
 	DSS_Leakage_NextStartOutVoltage,
-
-
 	DSS_Leakage_WaitOutVoltageReady,
 	DSS_Leakage_StopOutVoltage,
 	DSS_Leakage_WaitStopOutVoltage,
@@ -135,7 +116,22 @@ typedef enum __DeviceSubState
 	DSS_Calibrate_UnCommutate,
 	DSS_Calibrate_WaitUnCommutate,
 	DSS_Calibrate_ReadResult,
-	DSS_Calibrate_SaveResult
+	DSS_Calibrate_SaveResult,
+
+	DSS_InterruptableStatesEnd = 900,
+
+	DSS_Fault_Request = 900,
+	DSS_Stop_Request,
+	DSS_StopSafety_Request,
+
+	DSS_FaultStop_StopDCCurrent,
+	DSS_FaultStop_StopHV,
+	DSS_FaultStop_StopDC1,
+	DSS_FaultStop_StopDC2,
+	DSS_FaultStop_StopDC3,
+	DSS_FaultStop_StopAC1,
+	DSS_FaultStop_StopAC2,
+	DSS_FaultStop_StopMux
 } DeviceSubState;
 
 // Variables
