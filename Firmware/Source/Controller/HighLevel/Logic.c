@@ -897,34 +897,59 @@ void LOGIC_HandleCalibrationExecResult(ExecutionResult Result)
 
 ExecutionResult LOGIC_IsCalibrationReady(bool *IsReady)
 {
+	bool LocalReady;
+	ExecutionResult res = ER_WrongNode;
+
 	switch(CachedNode)
 	{
 		case CN_DC1:
-			return DCV_IsVoltageReady(NAME_DCVoltage1, IsReady);
+			{
+				res = DCV_IsVoltageReady(NAME_DCVoltage1, &LocalReady);
+				*IsReady = LocalReady || COMM_IsSlaveInStateX(NAME_DCVoltage1, CDS_Ready);
+			}
+			break;
 
 		case CN_DC2:
-			return DCV_IsVoltageReady(NAME_DCVoltage2, IsReady);
+			{
+				res = DCV_IsVoltageReady(NAME_DCVoltage2, &LocalReady);
+				*IsReady = LocalReady || COMM_IsSlaveInStateX(NAME_DCVoltage2, CDS_Ready);
+			}
+			break;
 
 		case CN_DC3:
-			return DCV_IsVoltageReady(NAME_DCVoltage3, IsReady);
+			{
+				res = DCV_IsVoltageReady(NAME_DCVoltage3, &LocalReady);
+				*IsReady = LocalReady || COMM_IsSlaveInStateX(NAME_DCVoltage3, CDS_Ready);
+			}
+			break;
 
 		case CN_HVDC:
 			 *IsReady = COMM_IsSlaveInStateX(NAME_DCHighVoltage, CDS_Ready);
 			return ER_NoError;
 
 		case CN_AC1:
-			return ACV_IsVoltageReady(NAME_ACVoltage1, IsReady);
+			{
+				res = ACV_IsVoltageReady(NAME_ACVoltage1, &LocalReady);
+				*IsReady = LocalReady || COMM_IsSlaveInStateX(NAME_ACVoltage1, CDS_Ready);
+			}
+			break;
 
 		case CN_AC2:
-			return ACV_IsVoltageReady(NAME_ACVoltage2, IsReady);
+			{
+				res = ACV_IsVoltageReady(NAME_ACVoltage2, &LocalReady);
+				*IsReady = LocalReady || COMM_IsSlaveInStateX(NAME_ACVoltage2, CDS_Ready);
+			}
+			break;
 
 		case CN_CB:
 			 *IsReady = COMM_IsSlaveInStateX(NAME_DCCurrent, CDS_Ready);
 			return ER_NoError;
 
 		default:
-			return ER_WrongNode;
+			break;
 	}
+
+	return res;
 }
 //-----------------------------
 
@@ -1210,7 +1235,7 @@ void LOGIC_Wrapper_SafetyMonitor()
 {
 	if(COMM_IsSlaveInStateX(NAME_Multiplexer, MUX_STATE_SAFETY_TRIG))
 	{
-		if(CONTROL_SubState >= DSS_InterruptableStatesBegin)
+		if(CONTROL_SubState < DSS_InterruptableStatesEnd)
 		{
 			CONTROL_SetDeviceState(DS_InProcess, DSS_StopSafety_Request);
 
