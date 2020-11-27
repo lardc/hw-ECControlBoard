@@ -58,6 +58,7 @@ void LOGIC_CacheLeakageSettings();
 void LOGIC_CachePowerSupplySettings(DL_AuxPowerSupply Mode);
 void LOGIC_CacheCalibrationSettings();
 void LOGIC_AlterStateUpdateDelay();
+void LOGIC_CurrentCalibrationOverrideReadyTimeout(uint64_t *Timeout);
 
 bool LOGIC_IsDCControl();
 bool LOGIC_IsDCLeakage();
@@ -822,6 +823,13 @@ ExecutionResult LOGIC_StartCalibration()
 }
 //-----------------------------
 
+void LOGIC_CurrentCalibrationOverrideReadyTimeout(uint64_t *Timeout)
+{
+	if(CachedNode == CN_CB)
+		*Timeout = CONTROL_TimeCounter + DataTable[REG_POWER_ENABLE_CHARGE_TIMEOUT];
+}
+//-----------------------------
+
 ExecutionResult LOGIC_StopCalibration()
 {
 	switch(CachedNode)
@@ -1576,6 +1584,8 @@ void LOGIC_Wrapper_StartCalibration(DeviceSubState NextState, DeviceSubState Sto
 {
 	LOGIC_Wrapper_ExecuteX(NextState, StopState, Timeout, Problem,
 			&LOGIC_StartCalibration, PROBLEM_CAL_CONFIG, &LOGIC_HandleCalibrationExecResult);
+
+	LOGIC_CurrentCalibrationOverrideReadyTimeout(Timeout);
 }
 //-----------------------------
 
