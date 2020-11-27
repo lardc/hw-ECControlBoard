@@ -153,7 +153,7 @@ void LOGIC_HandlePowerOn()
 				{
 					if(COMM_SlavesEnablePower())
 					{
-						TimeCounter = CONTROL_TimeCounter + DataTable[REG_POWER_ENABLE_TIMEOUT];
+						TimeCounter = CONTROL_TimeCounter + DataTable[REG_POWER_ENABLE_CHARGE_TIMEOUT];
 						CONTROL_SetDeviceState(DS_InProcess, DSS_PowerWaitReady);
 					}
 					else
