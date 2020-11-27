@@ -1390,18 +1390,28 @@ void LOGIC_Wrapper_IsOutputReadyX(DeviceSubState NextState, DeviceSubState StopS
 	if(res == ER_NoError)
 	{
 		if(IsVoltageReady)
-			CONTROL_SetDeviceState(DS_InProcess, NextState);
-		else if(IsInProblemFunc())
 		{
-			*Problem = ReadyProblem;
-			CONTROL_SetDeviceState(DS_InProcess, StopState);
+			CONTROL_SetDeviceState(DS_InProcess, NextState);
+			return;
 		}
-		else if(Timeout)
+
+		if(IsInProblemFunc)
+		{
+			if(IsInProblemFunc())
+			{
+				*Problem = ReadyProblem;
+				CONTROL_SetDeviceState(DS_InProcess, StopState);
+				return;
+			}
+		}
+
+		if(Timeout)
 		{
 			if(CONTROL_TimeCounter > Timeout)
 			{
 				*Problem = TimeoutProblem;
 				CONTROL_SetDeviceState(DS_InProcess, StopState);
+				return;
 			}
 		}
 	}
@@ -1448,6 +1458,20 @@ void LOGIC_Wrapper_ControlSaveResult(VIPair Result)
 {
 	DT_Write32(REG_RESULT_CONTROL_VOLTAGE, REG_RESULT_CONTROL_VOLTAGE_32, Result.Voltage);
 	DT_Write32(REG_RESULT_CONTROL_CURRENT, REG_RESULT_CONTROL_CURRENT_32, Result.Current);
+}
+//-----------------------------
+
+void LOGIC_Wrapper_CurrentAfterPulseSetTimeout(DeviceSubState NextState, uint64_t *Timeout)
+{
+	*Timeout = CONTROL_TimeCounter + DataTable[REG_POWER_ENABLE_CHARGE_TIMEOUT];
+	CONTROL_SetDeviceState(DS_InProcess, NextState);
+}
+//-----------------------------
+
+void LOGIC_Wrapper_WaitCurrentAfterPulse(DeviceSubState NextState, DeviceSubState StopState, uint64_t Timeout, uint16_t *Problem)
+{
+	LOGIC_Wrapper_IsOutputReadyX(NextState, StopState, Timeout, Problem, &CURR_AfterPulseReady, NULL,
+			0, PROBLEM_CURR_AFTER_PULSE_TIME, &LOGIC_HandleCurrentExecResult);
 }
 //-----------------------------
 

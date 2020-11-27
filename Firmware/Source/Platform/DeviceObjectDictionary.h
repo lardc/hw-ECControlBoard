@@ -219,6 +219,7 @@
 
 #define PROBLEM_CURRENT_CONFIG			40	// Некорректная конфигурация источника тока
 #define PROBLEM_CURRENT_RESULT			41	// Невалидный результат измерения
+#define PROBLEM_CURR_AFTER_PULSE_TIME	42	// Таймаут ожидания готовности после импульса
 
 #define PROBLEM_LEAKAGE_CONFIG			50	// Некорректная конфигурация источника напряжения утечки
 #define PROBLEM_LEAKAGE_READY_TIMEOUT	51	// Отсутствие сигнала готовности утечки

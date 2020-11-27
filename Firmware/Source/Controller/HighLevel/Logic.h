@@ -68,6 +68,8 @@ void LOGIC_Wrapper_ControlReadResult(DeviceSubState NextState, pVIPair Result, u
 void LOGIC_Wrapper_ControlSaveResult(VIPair Result);
 
 // Обёртки формирователя тока
+void LOGIC_Wrapper_CurrentAfterPulseSetTimeout(DeviceSubState NextState, uint64_t *Timeout);
+void LOGIC_Wrapper_WaitCurrentAfterPulse(DeviceSubState NextState, DeviceSubState StopState, uint64_t Timeout, uint16_t *Problem);
 void LOGIC_Wrapper_PulseCurrent(DeviceSubState NextState, DeviceSubState StopState,
 		uint64_t *Timeout, uint16_t *Problem);
 void LOGIC_Wrapper_WaitCurrentFinished(DeviceSubState NextState, uint64_t Timeout);
