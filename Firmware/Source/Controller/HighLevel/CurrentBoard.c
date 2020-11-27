@@ -96,3 +96,13 @@ ExecutionResult CURR_Stop()
 	return COMM_NodeCall(NAME_DCCurrent, CURR_ACT_STOP_PROCESS);
 }
 //-----------------------------
+
+ExecutionResult CURR_AfterPulseReady(bool *Ready)
+{
+	bool Register;
+	ExecutionResult res = COMM_NodeOutputReady(NAME_DCCurrent, CURR_REG_AFTER_PULSE_DELAY, &Register);
+	*Ready = !Register;
+
+	return res;
+}
+//-----------------------------

@@ -11,6 +11,8 @@
 #define CURR_REG_VOLTAGE_DUT_LIM			130	// Предельное значение падения напряжения (в мкВ)
 #define CURR_REG_VOLTAGE_DUT_LIM_32			131
 
+#define CURR_REG_AFTER_PULSE_DELAY			200	// Индикация выдерживания паузы между импульсами (1 - пауза активна)
+
 #define CURR_REG_RESULT_CURRENT				250	// Полученное значение тока (в мкА)
 #define CURR_REG_RESULT_CURRENT_32			251
 #define CURR_REG_RESULT_VOLTAGE				252	// Полученное значение напряжения (в мкВ)

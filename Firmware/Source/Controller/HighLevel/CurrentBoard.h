@@ -23,5 +23,6 @@ typedef struct __CurrentBoardObject
 ExecutionResult CURR_Execute();
 ExecutionResult CURR_ReadResult();
 ExecutionResult CURR_Stop();
+ExecutionResult CURR_AfterPulseReady(bool *Ready);
 
 #endif // __CURRENT_BOARD_H
