@@ -204,7 +204,12 @@ static Boolean CONTROL_DispatchAction(Int16U ActionID, pInt16U pUserError)
 					DataTable[REG_CONFIG_ERR] = err;
 
 					if(err != LCE_None)
+					{
+						LL_SetStateExtLed(false);
+						LL_SetStateExtLineSync1(false);
+
 						*pUserError = ERR_BAD_CONFIG;
+					}
 				}
 				else
 					*pUserError = ERR_OPERATION_BLOCKED;
