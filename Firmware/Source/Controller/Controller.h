@@ -59,6 +59,8 @@ typedef enum __DeviceSubState
 	DSS_OnVoltage_StartTest = 200,
 	DSS_OnVoltage_Commutate,
 	DSS_OnVoltage_WaitCommutation,
+	DSS_OnVoltage_InitAfterPulseWait,
+	DSS_OnVoltage_AfterPulseWait,
 	DSS_OnVoltage_StartPowerSupply,
 	DSS_OnVoltage_WaitStartPowerSupply,
 	DSS_OnVoltage_StartControl,

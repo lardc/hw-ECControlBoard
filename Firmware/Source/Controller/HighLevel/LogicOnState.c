@@ -39,7 +39,15 @@ void ONSTATE_HandleMeasurement()
 				break;
 
 			case DSS_OnVoltage_WaitCommutation:
-				LOGIC_Wrapper_WaitAllNodesReady(DSS_OnVoltage_StartPowerSupply);
+				LOGIC_Wrapper_WaitAllNodesReady(DSS_OnVoltage_InitAfterPulseWait);
+				break;
+
+			case DSS_OnVoltage_InitAfterPulseWait:
+				LOGIC_Wrapper_CurrentAfterPulseSetTimeout(DSS_OnVoltage_AfterPulseWait, &Timeout);
+				break;
+
+			case DSS_OnVoltage_AfterPulseWait:
+				LOGIC_Wrapper_WaitCurrentAfterPulse(DSS_OnVoltage_StartPowerSupply, DSS_OnVoltage_UnCommutate, Timeout, &Problem);
 				break;
 
 			case DSS_OnVoltage_StartPowerSupply:
