@@ -82,6 +82,9 @@ ExecutionResult LOGIC_StopPowerSupply();
 ExecutionResult LOGIC_StartCalibration();
 ExecutionResult LOGIC_StopCalibration();
 
+bool LOGIC_IsControlSelfTerminated();
+bool LOGIC_IsPowerSupplySelfTerminated();
+
 bool LOGIC_IsControlInProblem();
 bool LOGIC_IsCurrentInProblem();
 bool LOGIC_IsLeakagelInProblem();
@@ -1237,6 +1240,34 @@ bool LOGIC_IsPowerSupplyInProblem()
 				bool ProblemPS1 = LOGIC_IsNodeInProblem(PowerSupply1Node);
 				bool ProblemPS2 = LOGIC_IsNodeInProblem(PowerSupply2Node);
 				return (ProblemPS1 || ProblemPS2);
+			}
+	}
+
+	return true;
+}
+//-----------------------------
+
+bool LOGIC_IsControlSelfTerminated()
+{
+	return (COMM_IsSlaveInStateX(LOGIC_IsDCControl() ? ControlDCNode : ControlACNode, CDS_Ready) == GSSR_Equal);
+}
+//-----------------------------
+
+bool LOGIC_IsPowerSupplySelfTerminated()
+{
+	switch(CachedPowerSupply)
+	{
+		case NoSupply:
+			return false;
+
+		case SingleDCSupply:
+			return (COMM_IsSlaveInStateX(PowerSupply1Node, CDS_Ready) == GSSR_Equal);
+
+		case DoubleDCSupply:
+			{
+				bool TerminatedPS1 = (COMM_IsSlaveInStateX(PowerSupply1Node, CDS_Ready) == GSSR_Equal);
+				bool TerminatedPS2 = (COMM_IsSlaveInStateX(PowerSupply2Node, CDS_Ready) == GSSR_Equal);
+				return (TerminatedPS1 || TerminatedPS2);
 			}
 	}
 
