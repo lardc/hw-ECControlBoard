@@ -738,14 +738,24 @@ ExecutionResult LOGIC_StopLeakage()
 
 ExecutionResult LOGIC_IsLeakageVoltageReady(bool *IsReady)
 {
+	GetSlaveStateResult StateResult;
+
 	if(LOGIC_IsDCLeakage())
 	{
-		GetSlaveStateResult StateResult = COMM_IsSlaveInStateX(LeakageDCNode, CDS_Ready);
+		StateResult = COMM_IsSlaveInStateX(LeakageDCNode, CDS_Ready);
+
 		*IsReady = (StateResult == GSSR_Emulation || StateResult == GSSR_Equal);
 		return ER_NoError;
 	}
 	else
-		return ACV_IsVoltageReady(LeakageACNode, IsReady);
+	{
+		bool LocalReady;
+		ExecutionResult res = ACV_IsVoltageReady(LeakageACNode, &LocalReady);
+		StateResult = COMM_IsSlaveInStateX(LeakageACNode, CDS_Ready);
+
+		*IsReady = (LocalReady || StateResult == GSSR_Emulation || StateResult == GSSR_Equal);
+		return res;
+	}
 }
 //-----------------------------
 
