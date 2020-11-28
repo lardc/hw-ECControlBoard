@@ -47,7 +47,8 @@ void LOGIC_Wrapper_ExecuteX(DeviceSubState NextState, DeviceSubState StopState, 
 void LOGIC_Wrapper_TerminateX(DeviceSubState NextState, xExecFunction TerminateFunc, xHandleFaultFunction FaultFunc);
 void LOGIC_Wrapper_IsOutputReadyX(DeviceSubState NextState, DeviceSubState StopState,
 		uint64_t Timeout, uint16_t *Problem, xIsReadyFunction MainReadyFunc, xIsProblemFunction IsInProblemFunc,
-		uint16_t ReadyProblem, uint16_t TimeoutProblem, xHandleFaultFunction FaultFunc);
+		xIsProblemFunction IsSelfTerminatedFunc, uint16_t ReadyProblem, uint16_t TimeoutProblem,
+		uint16_t SelfTerminatedProblem, xHandleFaultFunction FaultFunc);
 void LOGIC_Wrapper_ReadResultX(DeviceSubState NextState, uint16_t *Problem, uint16_t ProblemCode,
 		xIsProblemFunction IsInProblemFunc, xReadResultFunction ResultFunc, pVIPair Result, xHandleFaultFunction FaultFunc);
 
@@ -1427,7 +1428,8 @@ void LOGIC_Wrapper_StopControl(DeviceSubState NextState)
 
 void LOGIC_Wrapper_IsOutputReadyX(DeviceSubState NextState, DeviceSubState StopState,
 		uint64_t Timeout, uint16_t *Problem, xIsReadyFunction MainReadyFunc, xIsProblemFunction IsInProblemFunc,
-		uint16_t ReadyProblem, uint16_t TimeoutProblem, xHandleFaultFunction FaultFunc)
+		xIsProblemFunction IsSelfTerminatedFunc, uint16_t ReadyProblem, uint16_t TimeoutProblem,
+		uint16_t SelfTerminatedProblem, xHandleFaultFunction FaultFunc)
 {
 	bool IsVoltageReady;
 	ExecutionResult res = MainReadyFunc(&IsVoltageReady);
@@ -1441,24 +1443,29 @@ void LOGIC_Wrapper_IsOutputReadyX(DeviceSubState NextState, DeviceSubState StopS
 		}
 
 		if(IsInProblemFunc)
-		{
 			if(IsInProblemFunc())
 			{
 				*Problem = ReadyProblem;
 				CONTROL_SetDeviceState(DS_InProcess, StopState);
 				return;
 			}
-		}
 
 		if(Timeout)
-		{
 			if(CONTROL_TimeCounter > Timeout)
 			{
 				*Problem = TimeoutProblem;
 				CONTROL_SetDeviceState(DS_InProcess, StopState);
 				return;
 			}
-		}
+
+		if(IsSelfTerminatedFunc)
+			if(IsSelfTerminatedFunc())
+			{
+				*Problem = SelfTerminatedProblem;
+				CONTROL_SetDeviceState(DS_InProcess, StopState);
+				return;
+			}
+
 	}
 	else
 		FaultFunc(res);
@@ -1469,7 +1476,8 @@ void LOGIC_Wrapper_IsControlOutputReady(DeviceSubState NextState, DeviceSubState
 		uint64_t Timeout, uint16_t *Problem)
 {
 	LOGIC_Wrapper_IsOutputReadyX(NextState, StopState, Timeout, Problem, &LOGIC_IsControlVoltageReady, &LOGIC_IsControlInProblem,
-			PROBLEM_CONTROL_IN_PROBLEM, PROBLEM_CONTROL_READY_TIMEOUT, &LOGIC_HandleControlExecResult);
+			&LOGIC_IsControlSelfTerminated, PROBLEM_CONTROL_IN_PROBLEM, PROBLEM_CONTROL_READY_TIMEOUT, PROBLEM_CONTROL,
+			&LOGIC_HandleControlExecResult);
 }
 //-----------------------------
 
@@ -1515,8 +1523,8 @@ void LOGIC_Wrapper_CurrentAfterPulseSetTimeout(DeviceSubState NextState, uint64_
 
 void LOGIC_Wrapper_WaitCurrentAfterPulse(DeviceSubState NextState, DeviceSubState StopState, uint64_t Timeout, uint16_t *Problem)
 {
-	LOGIC_Wrapper_IsOutputReadyX(NextState, StopState, Timeout, Problem, &CURR_AfterPulseReady, NULL,
-			0, PROBLEM_CURR_AFTER_PULSE_TIME, &LOGIC_HandleCurrentExecResult);
+	LOGIC_Wrapper_IsOutputReadyX(NextState, StopState, Timeout, Problem, &CURR_AfterPulseReady, NULL, NULL,
+			0, PROBLEM_CURR_AFTER_PULSE_TIME, 0, &LOGIC_HandleCurrentExecResult);
 }
 //-----------------------------
 
@@ -1578,7 +1586,7 @@ void LOGIC_Wrapper_IsLeakageOutputReady(DeviceSubState NextState, DeviceSubState
 		uint64_t Timeout, uint16_t *Problem)
 {
 	LOGIC_Wrapper_IsOutputReadyX(NextState, StopState, Timeout, Problem, &LOGIC_IsLeakageVoltageReady, &LOGIC_IsLeakagelInProblem,
-			PROBLEM_LEAKAGE_IN_PROBLEM, PROBLEM_LEAKAGE_READY_TIMEOUT, &LOGIC_HandleLeakageExecResult);
+			NULL, PROBLEM_LEAKAGE_IN_PROBLEM, PROBLEM_LEAKAGE_READY_TIMEOUT, 0, &LOGIC_HandleLeakageExecResult);
 }
 //-----------------------------
 
@@ -1586,7 +1594,7 @@ void LOGIC_Wrapper_IsLeakageReadyForNext(DeviceSubState NextState, DeviceSubStat
 		uint64_t Timeout, uint16_t *Problem)
 {
 	LOGIC_Wrapper_IsOutputReadyX(NextState, StopState, Timeout, Problem, &LOGIC_IsLeakageReadyForNext, &LOGIC_IsLeakagelInProblem,
-			PROBLEM_LEAKAGE_NEXT_IN_PROBLEM, PROBLEM_LEAKAGE_NEXT_TIMEOUT, &LOGIC_HandleLeakageExecResult);
+			NULL, PROBLEM_LEAKAGE_NEXT_IN_PROBLEM, PROBLEM_LEAKAGE_NEXT_TIMEOUT, 0, &LOGIC_HandleLeakageExecResult);
 }
 //-----------------------------
 
@@ -1631,7 +1639,7 @@ void LOGIC_Wrapper_IsCalibrationOutputReady(DeviceSubState NextState, DeviceSubS
 		uint64_t Timeout, uint16_t *Problem)
 {
 	LOGIC_Wrapper_IsOutputReadyX(NextState, StopState, Timeout, Problem, &LOGIC_IsCalibrationReady, &LOGIC_IsCalibrationInProblem,
-			PROBLEM_CAL_IN_PROBLEM, PROBLEM_CAL_READY_TIMEOUT, &LOGIC_HandleCalibrationExecResult);
+			NULL, PROBLEM_CAL_IN_PROBLEM, PROBLEM_CAL_READY_TIMEOUT, 0, &LOGIC_HandleCalibrationExecResult);
 }
 //-----------------------------
 
@@ -1679,7 +1687,8 @@ void LOGIC_Wrapper_IsPowerSupplyOutputReady(DeviceSubState NextState, DeviceSubS
 		uint64_t Timeout, uint16_t *Problem)
 {
 	LOGIC_Wrapper_IsOutputReadyX(NextState, StopState, Timeout, Problem, &LOGIC_IsPowerSupplyReady, &LOGIC_IsPowerSupplyInProblem,
-			PROBLEM_PS_IN_PROBLEM, PROBLEM_PS_READY_TIMEOUT, &LOGIC_HandlePowerSupplyExecResult);
+			&LOGIC_IsPowerSupplySelfTerminated, PROBLEM_PS_IN_PROBLEM, PROBLEM_PS_READY_TIMEOUT, PROBLEM_POWER_SUPPLY,
+			&LOGIC_HandlePowerSupplyExecResult);
 }
 //-----------------------------
 

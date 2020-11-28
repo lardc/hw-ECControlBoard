@@ -203,6 +203,8 @@
 
 // Problem
 #define PROBLEM_NONE					0
+#define PROBLEM_CONTROL					1	// Автоматическая остановка формирователя сигнала управления
+#define PROBLEM_POWER_SUPPLY			2	// Автоматическая остановка источников вспомогательного питания
 
 #define PROBLEM_MUX_CONFIG				10	// Некорректная конфигурация мультиплексора
 #define PROBLEM_MUX_FAST_CONFIG			11	// Некорректная конфигурация быстрой коммутации мультиплексора
