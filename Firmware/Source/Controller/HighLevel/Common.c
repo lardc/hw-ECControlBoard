@@ -124,15 +124,16 @@ bool COMM_AreSlavesInStateX(uint16_t State)
 }
 //-----------------------------
 
-bool COMM_IsSlaveInStateX(NodeName Name, uint16_t State)
+GetSlaveStateResult COMM_IsSlaveInStateX(NodeName Name, uint16_t State)
 {
-	return (NodeArray[Name].State == State && (NodeArray[Name].StateIsUpToDate || NodeArray[Name].Emulation));
-}
-//-----------------------------
-
-bool COMM_IsSlaveInEmulation(NodeName Name)
-{
-	return NodeArray[Name].Emulation;
+	if(NodeArray[Name].Emulation)
+		return GSSR_Emulation;
+	else if(!NodeArray[Name].StateIsUpToDate)
+		return GSSR_Outdated;
+	else if(NodeArray[Name].State == State)
+		return GSSR_Equal;
+	else
+		return GSSR_NotEqual;
 }
 //-----------------------------
 

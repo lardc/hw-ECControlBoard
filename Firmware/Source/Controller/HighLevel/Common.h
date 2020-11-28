@@ -60,6 +60,14 @@ typedef enum __InputType
 	IT_ControlVAC = 3
 } InputType;
 
+typedef enum __GetSlaveStateResult
+{
+	GSSR_Emulation = 1,
+	GSSR_Outdated = 2,
+	GSSR_Equal = 3,
+	GSSR_NotEqual = 4
+} GetSlaveStateResult;
+
 typedef struct __SlaveNode
 {
 	bool Emulation;
@@ -83,8 +91,7 @@ void COMM_UpdateEmulationSettings();
 
 bool COMM_SlavesReadState();
 bool COMM_AreSlavesInStateX(uint16_t State);
-bool COMM_IsSlaveInStateX(NodeName Name, uint16_t State);
-bool COMM_IsSlaveInEmulation(NodeName Name);
+GetSlaveStateResult COMM_IsSlaveInStateX(NodeName Name, uint16_t State);
 uint16_t COMM_GetSlaveOpResult(NodeName Name);
 bool COMM_IsSlaveInFaultOrDisabled();
 void COMM_ForceEmulationByNodeID(uint16_t NodeID);

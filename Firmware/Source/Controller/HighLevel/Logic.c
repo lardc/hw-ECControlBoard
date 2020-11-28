@@ -215,7 +215,7 @@ void LOGIC_HandleFaultAndStop()
 
 			case DSS_FaultStop_StopDCCurrent:
 				{
-					if(COMM_IsSlaveInStateX(NAME_DCCurrent, CDS_InProcess))
+					if(COMM_IsSlaveInStateX(NAME_DCCurrent, CDS_InProcess) == GSSR_Equal)
 						CURR_Stop();
 					CONTROL_SetDeviceState(DS_InProcess, DSS_FaultStop_StopHV);
 				}
@@ -223,7 +223,7 @@ void LOGIC_HandleFaultAndStop()
 
 			case DSS_FaultStop_StopHV:
 				{
-					if(COMM_IsSlaveInStateX(NAME_DCHighVoltage, CDS_InProcess))
+					if(COMM_IsSlaveInStateX(NAME_DCHighVoltage, CDS_InProcess) == GSSR_Equal)
 						DCHV_Stop();
 					CONTROL_SetDeviceState(DS_InProcess, DSS_FaultStop_StopDC1);
 				}
@@ -231,7 +231,7 @@ void LOGIC_HandleFaultAndStop()
 
 			case DSS_FaultStop_StopDC1:
 				{
-					if(COMM_IsSlaveInStateX(NAME_DCVoltage1, CDS_InProcess))
+					if(COMM_IsSlaveInStateX(NAME_DCVoltage1, CDS_InProcess) == GSSR_Equal)
 						DCV_Stop(NAME_DCVoltage1);
 					CONTROL_SetDeviceState(DS_InProcess, DSS_FaultStop_StopDC2);
 				}
@@ -239,7 +239,7 @@ void LOGIC_HandleFaultAndStop()
 
 			case DSS_FaultStop_StopDC2:
 				{
-					if(COMM_IsSlaveInStateX(NAME_DCVoltage2, CDS_InProcess))
+					if(COMM_IsSlaveInStateX(NAME_DCVoltage2, CDS_InProcess) == GSSR_Equal)
 						DCV_Stop(NAME_DCVoltage2);
 					CONTROL_SetDeviceState(DS_InProcess, DSS_FaultStop_StopDC3);
 				}
@@ -247,7 +247,7 @@ void LOGIC_HandleFaultAndStop()
 
 			case DSS_FaultStop_StopDC3:
 				{
-					if(COMM_IsSlaveInStateX(NAME_DCVoltage3, CDS_InProcess))
+					if(COMM_IsSlaveInStateX(NAME_DCVoltage3, CDS_InProcess) == GSSR_Equal)
 						DCV_Stop(NAME_DCVoltage3);
 					CONTROL_SetDeviceState(DS_InProcess, DSS_FaultStop_StopAC1);
 				}
@@ -255,7 +255,7 @@ void LOGIC_HandleFaultAndStop()
 
 			case DSS_FaultStop_StopAC1:
 				{
-					if(COMM_IsSlaveInStateX(NAME_ACVoltage1, CDS_InProcess))
+					if(COMM_IsSlaveInStateX(NAME_ACVoltage1, CDS_InProcess) == GSSR_Equal)
 						ACV_Stop(NAME_ACVoltage1);
 					CONTROL_SetDeviceState(DS_InProcess, DSS_FaultStop_StopAC2);
 				}
@@ -263,7 +263,7 @@ void LOGIC_HandleFaultAndStop()
 
 			case DSS_FaultStop_StopAC2:
 				{
-					if(COMM_IsSlaveInStateX(NAME_ACVoltage2, CDS_InProcess))
+					if(COMM_IsSlaveInStateX(NAME_ACVoltage2, CDS_InProcess) == GSSR_Equal)
 						ACV_Stop(NAME_ACVoltage2);
 					CONTROL_SetDeviceState(DS_InProcess, DSS_FaultStop_StopMux);
 				}
@@ -680,7 +680,8 @@ ExecutionResult LOGIC_ControlReadResult(uint16_t *OpResult, pVIPair Result)
 
 bool LOGIC_IsControlNodeReady()
 {
-	return COMM_IsSlaveInStateX(LOGIC_IsDCControl() ? ControlDCNode : ControlACNode, CDS_Ready);
+	GetSlaveStateResult StateResult = COMM_IsSlaveInStateX(LOGIC_IsDCControl() ? ControlDCNode : ControlACNode, CDS_Ready);
+	return (StateResult == GSSR_Emulation || StateResult == GSSR_Equal);
 }
 //-----------------------------
 
@@ -735,7 +736,8 @@ ExecutionResult LOGIC_IsLeakageVoltageReady(bool *IsReady)
 {
 	if(LOGIC_IsDCLeakage())
 	{
-		*IsReady = COMM_IsSlaveInStateX(LeakageDCNode, CDS_Ready);
+		GetSlaveStateResult StateResult = COMM_IsSlaveInStateX(LeakageDCNode, CDS_Ready);
+		*IsReady = (StateResult == GSSR_Emulation || StateResult == GSSR_Equal);
 		return ER_NoError;
 	}
 	else
@@ -745,17 +747,11 @@ ExecutionResult LOGIC_IsLeakageVoltageReady(bool *IsReady)
 
 ExecutionResult LOGIC_IsLeakageReadyForNext(bool *IsReady)
 {
-	if(LOGIC_IsDCLeakage())
-	{
-		*IsReady = COMM_IsSlaveInEmulation(LeakageDCNode) ?
-				true : COMM_IsSlaveInStateX(LeakageDCNode, DCHV_STATE_IN_PROCESS_EX);
-		return ER_NoError;
-	}
-	else
-	{
-		*IsReady = COMM_IsSlaveInStateX(LeakageACNode, CDS_Ready);
-		return ER_NoError;
-	}
+	GetSlaveStateResult StateResult = LOGIC_IsDCLeakage() ? COMM_IsSlaveInStateX(LeakageDCNode, DCHV_STATE_IN_PROCESS_EX) :
+			COMM_IsSlaveInStateX(LeakageACNode, CDS_Ready);
+
+	*IsReady = (StateResult == GSSR_Emulation || StateResult == GSSR_Equal);
+	return ER_NoError;
 }
 //-----------------------------
 
@@ -788,7 +784,8 @@ ExecutionResult LOGIC_LeakageReadResult(uint16_t *OpResult, pVIPair Result)
 
 bool LOGIC_IsLeakageNodeReady()
 {
-	return COMM_IsSlaveInStateX(LOGIC_IsDCLeakage() ? LeakageDCNode : LeakageACNode, CDS_Ready);
+	GetSlaveStateResult StateResult = COMM_IsSlaveInStateX(LOGIC_IsDCLeakage() ? LeakageDCNode : LeakageACNode, CDS_Ready);
+	return (StateResult == GSSR_Emulation || StateResult == GSSR_Equal);
 }
 //-----------------------------
 
@@ -907,50 +904,58 @@ ExecutionResult LOGIC_IsCalibrationReady(bool *IsReady)
 {
 	bool LocalReady;
 	ExecutionResult res = ER_WrongNode;
+	GetSlaveStateResult StateResult;
 
 	switch(CachedNode)
 	{
 		case CN_DC1:
 			{
 				res = DCV_IsVoltageReady(NAME_DCVoltage1, &LocalReady);
-				*IsReady = LocalReady || COMM_IsSlaveInStateX(NAME_DCVoltage1, CDS_Ready);
+				StateResult = COMM_IsSlaveInStateX(NAME_DCVoltage1, CDS_Ready);
+				*IsReady = (LocalReady || StateResult == GSSR_Emulation || StateResult == GSSR_Equal);
 			}
 			break;
 
 		case CN_DC2:
 			{
 				res = DCV_IsVoltageReady(NAME_DCVoltage2, &LocalReady);
-				*IsReady = LocalReady || COMM_IsSlaveInStateX(NAME_DCVoltage2, CDS_Ready);
+				StateResult = COMM_IsSlaveInStateX(NAME_DCVoltage2, CDS_Ready);
+				*IsReady = (LocalReady || StateResult == GSSR_Emulation || StateResult == GSSR_Equal);
 			}
 			break;
 
 		case CN_DC3:
 			{
 				res = DCV_IsVoltageReady(NAME_DCVoltage3, &LocalReady);
-				*IsReady = LocalReady || COMM_IsSlaveInStateX(NAME_DCVoltage3, CDS_Ready);
+				StateResult = COMM_IsSlaveInStateX(NAME_DCVoltage3, CDS_Ready);
+				*IsReady = (LocalReady || StateResult == GSSR_Emulation || StateResult == GSSR_Equal);
 			}
 			break;
 
 		case CN_HVDC:
-			 *IsReady = COMM_IsSlaveInStateX(NAME_DCHighVoltage, CDS_Ready);
+			StateResult = COMM_IsSlaveInStateX(NAME_DCHighVoltage, CDS_Ready);
+			 *IsReady = (StateResult == GSSR_Emulation || StateResult == GSSR_Equal);
 			return ER_NoError;
 
 		case CN_AC1:
 			{
 				res = ACV_IsVoltageReady(NAME_ACVoltage1, &LocalReady);
-				*IsReady = LocalReady || COMM_IsSlaveInStateX(NAME_ACVoltage1, CDS_Ready);
+				StateResult = COMM_IsSlaveInStateX(NAME_ACVoltage1, CDS_Ready);
+				*IsReady = (LocalReady || StateResult == GSSR_Emulation || StateResult == GSSR_Equal);
 			}
 			break;
 
 		case CN_AC2:
 			{
 				res = ACV_IsVoltageReady(NAME_ACVoltage2, &LocalReady);
-				*IsReady = LocalReady || COMM_IsSlaveInStateX(NAME_ACVoltage2, CDS_Ready);
+				StateResult = COMM_IsSlaveInStateX(NAME_ACVoltage2, CDS_Ready);
+				*IsReady = (LocalReady || StateResult == GSSR_Emulation || StateResult == GSSR_Equal);
 			}
 			break;
 
 		case CN_CB:
-			 *IsReady = COMM_IsSlaveInStateX(NAME_DCCurrent, CDS_Ready);
+			StateResult = COMM_IsSlaveInStateX(NAME_DCCurrent, CDS_Ready);
+			*IsReady = (StateResult == GSSR_Emulation || StateResult == GSSR_Equal);
 			return ER_NoError;
 
 		default:
@@ -1163,8 +1168,8 @@ ExecutionResult LOGIC_PowerSupply2ReadResult(uint16_t *OpResult, pVIPair Result)
 
 bool LOGIC_IsNodeInProblem(NodeName Name)
 {
-	return (COMM_GetSlaveOpResult(Name) == COMM_OPRESULT_FAIL)
-			&& COMM_IsSlaveInStateX(Name, CDS_Ready);
+	return (COMM_GetSlaveOpResult(Name) == COMM_OPRESULT_FAIL &&
+			COMM_IsSlaveInStateX(Name, CDS_Ready) == GSSR_Equal);
 }
 //-----------------------------
 
@@ -1241,7 +1246,7 @@ bool LOGIC_IsPowerSupplyInProblem()
 
 void LOGIC_Wrapper_SafetyMonitor()
 {
-	if(COMM_IsSlaveInStateX(NAME_Multiplexer, MUX_STATE_SAFETY_TRIG))
+	if(COMM_IsSlaveInStateX(NAME_Multiplexer, MUX_STATE_SAFETY_TRIG) == GSSR_Equal)
 	{
 		if(CONTROL_SubState < DSS_InterruptableStatesEnd)
 		{
@@ -1349,7 +1354,8 @@ void LOGIC_Wrapper_CommutateFast(DeviceSubState NextState, DeviceSubState StopSt
 
 void LOGIC_Wrapper_IsCommutationNodeReady(DeviceSubState NextState)
 {
-	if(COMM_IsSlaveInStateX(NAME_Multiplexer, CDS_Ready))
+	GetSlaveStateResult SlaveState = COMM_IsSlaveInStateX(NAME_Multiplexer, CDS_Ready);
+	if(SlaveState == GSSR_Equal || SlaveState == GSSR_Emulation)
 		CONTROL_SetDeviceState(DS_InProcess, NextState);
 }
 //-----------------------------
@@ -1493,7 +1499,8 @@ void LOGIC_Wrapper_PulseCurrent(DeviceSubState NextState, DeviceSubState StopSta
 
 void LOGIC_Wrapper_WaitCurrentFinished(DeviceSubState NextState, uint64_t Timeout)
 {
-	if(COMM_IsSlaveInStateX(NAME_DCCurrent, CDS_Ready))
+	GetSlaveStateResult SlaveState = COMM_IsSlaveInStateX(NAME_DCCurrent, CDS_Ready);
+	if(SlaveState == GSSR_Equal || SlaveState == GSSR_Emulation)
 		CONTROL_SetDeviceState(DS_InProcess, NextState);
 	else if(CONTROL_TimeCounter > Timeout)
 		LOGIC_HandleCurrentExecResult(ER_ChangeStateTimeout);
