@@ -20,21 +20,22 @@
 
 typedef enum __MUX_Position
 {
-	MX_Position1 = 1,
-	MX_Position2 = 2,
-	MX_Position3 = 3
+	MXP_Position1 = 1,
+	MXP_Position2 = 2,
+	MXP_Position3 = 3
 } MUX_Position;
 
-typedef enum __MUX_Polarity
+typedef enum __MUX_OutputPolarity
 {
-	MX_PolarityDirect = 1,
-	MX_PolarityReverse = 2
+	MXOP_Direct = 1,
+	MXOP_Reverse = 2
 } MUX_Polarity;
 
-typedef enum __MUX_ControlSupply
+typedef enum __MUX_Control
 {
-	MUX_ControlDC = 1,
-	MUX_ControlAC = 2
-} MUX_ControlSupply;
+	MXC_ControlDC = 1,
+	MXC_ControlAC = 2,
+	MXC_ControlDCReverse = 3
+} MUX_Control;
 
 #endif // __MULTIPLEXER_DICTIONARY_H

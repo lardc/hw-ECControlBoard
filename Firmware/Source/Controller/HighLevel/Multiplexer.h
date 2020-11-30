@@ -12,9 +12,10 @@ typedef struct __MuxObject
 	MeasurementType MeasureType;
 	DL_Case Case;
 	MUX_Position Position;
-	MUX_Polarity Polarity;
 	InputType InputType;
 	LeakageType LeakageType;
+	MUX_Control InputCommutation;
+	MUX_Polarity OutputCommutationPolarity;
 	bool SafetyMute;
 } MuxObject, *pMuxObject;
 

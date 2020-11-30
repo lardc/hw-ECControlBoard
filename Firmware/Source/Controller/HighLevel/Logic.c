@@ -449,8 +449,50 @@ LogicConfigError LOGIC_CacheMuxSettings(bool Calibration, pDL_AuxPowerSupply Pow
 	Multiplexer.LeakageType = DataTable[REG_COMM_VOLTAGE_TYPE_LEAKAGE];
 	Multiplexer.Case = DataTable[REG_DUT_CASE_TYPE];
 	Multiplexer.Position = DataTable[REG_DUT_POSITION_NUMBER];
-	Multiplexer.Polarity = DataTable[REG_COMM_POLARITY];
 	Multiplexer.SafetyMute = DataTable[REG_DIAG_SAFETY_MUTE] ? true : !CONTROL_IsSafetyActive();
+
+	if(!Calibration)
+	{
+		// Определение коммутации по входу
+		switch(Multiplexer.InputType)
+		{
+			case IT_ControlIDC:
+				Multiplexer.InputCommutation =
+						((int32_t)DT_Read32(REG_CONTROL_CURRENT, REG_CONTROL_CURRENT_32) >= 0) ? MXC_ControlDC : MXC_ControlDCReverse;
+				break;
+
+			case IT_ControlVDC:
+				Multiplexer.InputCommutation =
+						((int32_t)DT_Read32(REG_CONTROL_VOLTAGE, REG_CONTROL_VOLTAGE_32) >= 0) ? MXC_ControlDC : MXC_ControlDCReverse;
+				break;
+
+			case IT_ControlVAC:
+				Multiplexer.InputCommutation = MXC_ControlAC;
+				break;
+
+			default:
+				Multiplexer.InputCommutation = MXC_ControlDC;
+				break;
+		}
+
+		// Определение полярности по выходу
+		switch(Multiplexer.MeasureType)
+		{
+			case MT_LeakageCurrent:
+				Multiplexer.OutputCommutationPolarity =
+						((int32_t)DT_Read32(REG_COMM_VOLTAGE, REG_COMM_VOLTAGE_32) >= 0) ? MXOP_Direct : MXOP_Reverse;
+				break;
+
+			case MT_OnVoltage:
+				Multiplexer.OutputCommutationPolarity =
+						((int32_t)DT_Read32(REG_COMM_CURRENT, REG_COMM_CURRENT_32) >= 0) ? MXOP_Direct : MXOP_Reverse;
+				break;
+
+			default:
+				Multiplexer.OutputCommutationPolarity = MXOP_Direct;
+				break;
+		}
+	}
 
 	// Перезапись необходимых параметров, если выполняется калибровка
 	if(Calibration)
@@ -459,7 +501,18 @@ LogicConfigError LOGIC_CacheMuxSettings(bool Calibration, pDL_AuxPowerSupply Pow
 		{
 			case CN_DC1:
 				Multiplexer.MeasureType = MT_CalibrateDCControl;
-				Multiplexer.InputType = IT_ControlVDC;
+				Multiplexer.InputType = (DataTable[REG_CALIBRATION_TYPE] == COT_Voltage) ? IT_ControlVDC : IT_ControlIDC;;
+
+				if(DataTable[REG_CALIBRATION_TYPE] == COT_Current)
+				{
+					Multiplexer.InputCommutation =
+							((int32_t)DT_Read32(REG_CALIBRATION_ISET, REG_CALIBRATION_ISET_32) >= 0) ? MXC_ControlDC : MXC_ControlDCReverse;
+				}
+				else
+				{
+					Multiplexer.InputCommutation =
+							((int32_t)DT_Read32(REG_CALIBRATION_VSET, REG_CALIBRATION_VSET_32) >= 0) ? MXC_ControlDC : MXC_ControlDCReverse;
+				}
 				break;
 
 			case CN_DC2:
@@ -473,6 +526,9 @@ LogicConfigError LOGIC_CacheMuxSettings(bool Calibration, pDL_AuxPowerSupply Pow
 			case CN_HVDC:
 				Multiplexer.MeasureType = MT_CalibrateDCLeakage;
 				Multiplexer.LeakageType = LT_LeakageDC;
+
+				Multiplexer.OutputCommutationPolarity =
+						((int32_t)DT_Read32(REG_CALIBRATION_VSET, REG_CALIBRATION_VSET_32) >= 0) ? MXOP_Direct : MXOP_Reverse;
 				break;
 
 			case CN_AC1:
@@ -487,6 +543,9 @@ LogicConfigError LOGIC_CacheMuxSettings(bool Calibration, pDL_AuxPowerSupply Pow
 
 			case CN_CB:
 				Multiplexer.MeasureType = MT_CalibrateCurrent;
+
+				Multiplexer.OutputCommutationPolarity =
+						((int32_t)DT_Read32(REG_CALIBRATION_ISET, REG_CALIBRATION_ISET_32) >= 0) ? MXOP_Direct : MXOP_Reverse;
 				break;
 
 			default:
@@ -504,8 +563,8 @@ LogicConfigError LOGIC_CacheMuxSettings(bool Calibration, pDL_AuxPowerSupply Pow
 			return LCE_UnknownCase;
 
 		// Проверка соответствия номеров позиций
-		if((Multiplexer.Position == MX_Position2 && DUTConfig->OutputPositionsNum == OneOutput) ||
-			(Multiplexer.Position == MX_Position3 && DUTConfig->OutputPositionsNum != ThreeOutputs))
+		if((Multiplexer.Position == MXP_Position2 && DUTConfig->OutputPositionsNum == OneOutput) ||
+			(Multiplexer.Position == MXP_Position3 && DUTConfig->OutputPositionsNum != ThreeOutputs))
 			return LCE_PositionMissmatch;
 
 		// Получение настроек вспомогательного питания

@@ -148,12 +148,12 @@ const TableItemConstraint NVConstraint[DATA_TABLE_NV_SIZE] = {
 const TableItemConstraint VConstraint[DATA_TABLE_WP_START - DATA_TABLE_WR_START] = {
 		{MT_LeakageCurrent, MT_InhibitVoltage, MT_OnVoltage},						// 128
 		{A1, D192, A1},																// 129
-		{MX_Position1, MX_Position3, MX_Position1},									// 130
+		{MXP_Position1, MXP_Position3, MXP_Position1},								// 130
 		{IT_ControlIDC, IT_ControlVAC, IT_ControlIDC},								// 131
 		{0, INT16U_MAX, 0},															// 132
 		{0, INT16U_MAX, 0},															// 133
 		{LT_LeakageDC, LT_LeakageAC, LT_LeakageDC},									// 134
-		{MX_PolarityDirect, MX_PolarityReverse, MX_PolarityDirect},					// 135
+		{0, INT16U_MAX, 0},															// 135
 		{CB_CurrentTrapeze, CB_CurrentSin, CB_CurrentTrapeze},						// 136
 		{0, INT16U_MAX, 0},															// 137
 		{0, INT16U_MAX, 0},															// 138

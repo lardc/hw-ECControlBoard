@@ -72,7 +72,7 @@
 #define REG_CONTROL_CURRENT				133	// Ток входа управления
 
 #define REG_COMM_VOLTAGE_TYPE_LEAKAGE	134	// Тип коммутируемого напряжения при измерении утечки
-#define REG_COMM_POLARITY				135	// Полярность приложения постоянного коммутируемого напряжения
+// 135
 #define REG_COMM_CURRENT_SHAPE			136	// Форма импульса коммутируемого тока
 #define REG_COMM_CURRENT_TIME			137	// Длительность импульса коммутируемого тока
 #define REG_COMM_CURRENT				138	// Коммутируемый ток (мкА)

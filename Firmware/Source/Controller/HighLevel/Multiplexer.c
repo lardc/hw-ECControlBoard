@@ -16,14 +16,13 @@ ExecutionResult MUX_Connect()
 		if(!NodeData->Emulation)
 		{
 			uint16_t NodeID = NodeData->NodeID;
-			MUX_ControlSupply InputVoltageSupply = (Settings->InputType == IT_ControlVAC) ? MUX_ControlAC : MUX_ControlDC;
 
 			if(BHL_WriteRegister(NodeID, MUX_REG_TYPE_MEASURE, Settings->MeasureType))
 				if(BHL_WriteRegister(NodeID, MUX_REG_TYPE_CASE, Settings->Case))
 					if(BHL_WriteRegister(NodeID, MUX_REG_POSITION_OF_CASE, Settings->Position))
-						if(BHL_WriteRegister(NodeID, MUX_REG_TYPE_SIGNAL_CTRL, InputVoltageSupply))
+						if(BHL_WriteRegister(NodeID, MUX_REG_TYPE_SIGNAL_CTRL, Settings->InputCommutation))
 							if(BHL_WriteRegister(NodeID, MUX_REG_TYPE_LEAKAGE, Settings->LeakageType))
-								if(BHL_WriteRegister(NodeID, MUX_REG_TYPE_POLARITY, Settings->Polarity))
+								if(BHL_WriteRegister(NodeID, MUX_REG_TYPE_POLARITY, Settings->OutputCommutationPolarity))
 									if(BHL_WriteRegister(NodeID, MUX_REG_ENABLE_SAFETY, Settings->SafetyMute ? 0 : 1))
 									{
 										if(BHL_Call(NodeID, MUX_ACT_SET_RELAY_GROUP))
