@@ -6,6 +6,7 @@
 #include "DataTable.h"
 #include "DeviceObjectDictionary.h"
 #include "Global.h"
+#include "Utils.h"
 #include "Multiplexer.h"
 #include "CurrentBoard.h"
 #include "DCVoltageBoard.h"
@@ -52,6 +53,7 @@ void LOGIC_Wrapper_IsOutputReadyX(DeviceSubState NextState, DeviceSubState StopS
 void LOGIC_Wrapper_ReadResultX(DeviceSubState NextState, uint16_t *Problem, uint16_t ProblemCode,
 		xIsProblemFunction IsInProblemFunc, xReadResultFunction ResultFunc, pVIPair Result, xHandleFaultFunction FaultFunc);
 
+uint32_t LOGIC_ReadDTAbsolute(uint16_t RegL, uint16_t RegH);
 LogicConfigError LOGIC_CacheMuxSettings(bool Calibration, pDL_AuxPowerSupply PowerSupply);
 void LOGIC_CacheCurrentBoardSettings();
 void LOGIC_CacheControlSettings(DCV_OutputMode Mode);
@@ -372,8 +374,8 @@ LogicConfigError LOGIC_PrepareMeasurement(bool Calibration)
 void LOGIC_CacheCalibrationSettings()
 {
 	VIPair Setpoint;
-	Setpoint.Voltage = DT_Read32(REG_CALIBRATION_VSET, REG_CALIBRATION_VSET_32);
-	Setpoint.Current = DT_Read32(REG_CALIBRATION_ISET, REG_CALIBRATION_ISET_32);
+	Setpoint.Voltage = LOGIC_ReadDTAbsolute(REG_CALIBRATION_VSET, REG_CALIBRATION_VSET_32);
+	Setpoint.Current = LOGIC_ReadDTAbsolute(REG_CALIBRATION_ISET, REG_CALIBRATION_ISET_32);
 
 	switch(CachedNode)
 	{
@@ -575,10 +577,16 @@ LogicConfigError LOGIC_CacheMuxSettings(bool Calibration, pDL_AuxPowerSupply Pow
 }
 //-----------------------------
 
+uint32_t LOGIC_ReadDTAbsolute(uint16_t RegL, uint16_t RegH)
+{
+	return ABS((int32_t)DT_Read32(RegL, RegH));
+}
+//-----------------------------
+
 void LOGIC_CacheCurrentBoardSettings()
 {
-	CurrentBoard.Setpoint.Current = DT_Read32(REG_COMM_CURRENT, REG_COMM_CURRENT_32);
-	CurrentBoard.Setpoint.Voltage = DT_Read32(REG_COMM_VOLTAGE, REG_COMM_VOLTAGE_32);
+	CurrentBoard.Setpoint.Current = LOGIC_ReadDTAbsolute(REG_COMM_CURRENT, REG_COMM_CURRENT_32);
+	CurrentBoard.Setpoint.Voltage = LOGIC_ReadDTAbsolute(REG_COMM_VOLTAGE, REG_COMM_VOLTAGE_32);
 	CurrentBoard.ResistanceMode = DataTable[REG_MODE_OUTPUT_RES];
 }
 //-----------------------------
@@ -586,8 +594,8 @@ void LOGIC_CacheCurrentBoardSettings()
 void LOGIC_CacheControlSettings(DCV_OutputMode Mode)
 {
 	VIPair Setpoint;
-	Setpoint.Voltage = DT_Read32(REG_CONTROL_VOLTAGE, REG_CONTROL_VOLTAGE_32);
-	Setpoint.Current = DT_Read32(REG_CONTROL_CURRENT, REG_CONTROL_CURRENT_32);
+	Setpoint.Voltage = LOGIC_ReadDTAbsolute(REG_CONTROL_VOLTAGE, REG_CONTROL_VOLTAGE_32);
+	Setpoint.Current = LOGIC_ReadDTAbsolute(REG_CONTROL_CURRENT, REG_CONTROL_CURRENT_32);
 
 	if(LOGIC_IsDCControl())
 	{
@@ -608,8 +616,8 @@ void LOGIC_CacheControlSettings(DCV_OutputMode Mode)
 void LOGIC_CacheLeakageSettings()
 {
 	VIPair Setpoint;
-	Setpoint.Voltage = DT_Read32(REG_COMM_VOLTAGE, REG_COMM_VOLTAGE_32);
-	Setpoint.Current = DT_Read32(REG_COMM_CURRENT, REG_COMM_CURRENT_32);
+	Setpoint.Voltage = LOGIC_ReadDTAbsolute(REG_COMM_VOLTAGE, REG_COMM_VOLTAGE_32);
+	Setpoint.Current = LOGIC_ReadDTAbsolute(REG_COMM_CURRENT, REG_COMM_CURRENT_32);
 
 	if(LOGIC_IsDCLeakage())
 	{
@@ -628,8 +636,8 @@ void LOGIC_CachePowerSupplySettings(DL_AuxPowerSupply Mode)
 	if(Mode == SingleDCSupply || Mode == DoubleDCSupply)
 	{
 		VIPair SetpointPS1;
-		SetpointPS1.Voltage = DT_Read32(REG_AUX_PS1_VOLTAGE, REG_AUX_PS1_VOLTAGE_32);
-		SetpointPS1.Current = DT_Read32(REG_AUX_PS1_CURRENT, REG_AUX_PS1_CURRENT_32);
+		SetpointPS1.Voltage = LOGIC_ReadDTAbsolute(REG_AUX_PS1_VOLTAGE, REG_AUX_PS1_VOLTAGE_32);
+		SetpointPS1.Current = LOGIC_ReadDTAbsolute(REG_AUX_PS1_CURRENT, REG_AUX_PS1_CURRENT_32);
 
 		DCVoltageBoard2.Setpoint = SetpointPS1;
 		DCVoltageBoard2.OutputLine = DCV_PS1;
@@ -640,8 +648,8 @@ void LOGIC_CachePowerSupplySettings(DL_AuxPowerSupply Mode)
 		if(Mode == DoubleDCSupply)
 		{
 			VIPair SetpointPS2;
-			SetpointPS2.Voltage = DT_Read32(REG_AUX_PS2_VOLTAGE, REG_AUX_PS2_VOLTAGE_32);
-			SetpointPS2.Current = DT_Read32(REG_AUX_PS2_CURRENT, REG_AUX_PS2_CURRENT_32);
+			SetpointPS2.Voltage = LOGIC_ReadDTAbsolute(REG_AUX_PS2_VOLTAGE, REG_AUX_PS2_VOLTAGE_32);
+			SetpointPS2.Current = LOGIC_ReadDTAbsolute(REG_AUX_PS2_CURRENT, REG_AUX_PS2_CURRENT_32);
 
 			DCVoltageBoard3.Setpoint = SetpointPS2;
 			DCVoltageBoard3.OutputLine = DCV_PS2;
