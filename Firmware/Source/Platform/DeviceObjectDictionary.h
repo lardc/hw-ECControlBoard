@@ -56,8 +56,8 @@
 #define REG_EMULATE_AC_VOLTAGE1			16	// Режим эмуляции для ECACVoltageBoard №1
 #define REG_EMULATE_AC_VOLTAGE2			17	// Режим эмуляции для ECACVoltageBoard №2
 // 18 - 19
-#define REG_POWER_ENABLE_CHARGE_TIMEOUT	20	// Таймаут ожидания включения питания и заряда (в сек.)
-#define REG_GENERAL_LOGIC_TIMEOUT		21	// Таймаут основных быстрых логических операций (в сек.)
+#define REG_POWER_ENABLE_CHARGE_TIMEOUT	20	// Таймаут ожидания включения питания и заряда (в мс)
+#define REG_GENERAL_LOGIC_TIMEOUT		21	// Таймаут основных быстрых логических операций (в мс)
 #define REG_FAN_OPERATE_PERIOD			22	// Период активации вентилятора по простою (в сек.)
 #define REG_FAN_OPERATE_MIN_TIME		23	// Минимальное время работы вентилятора (в сек.)
 #define REG_ALTER_SCAN_STATE_DELAY		24	// Длительность альтернативной задержки опроса состояний (в мс)
