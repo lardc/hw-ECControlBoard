@@ -25,8 +25,8 @@
 
 // в мс
 #define CTRL_DELAY_MIN				0
-#define CTRL_DELAY_MAX				5000
-#define CTRL_DELAY_DEF				500
+#define CTRL_DELAY_MAX				2000
+#define CTRL_DELAY_DEF				300
 
 // в мс
 #define CALIBRATION_DELAY_MIN		0
