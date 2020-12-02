@@ -15,7 +15,7 @@ ExecutionResult DCHV_Execute()
 	{
 		if(!NodeData->Emulation)
 		{
-			uint32_t Current = Settings->Setpoint.Current * 10;
+			uint32_t Current = Settings->Setpoint.Current * 100;
 			uint32_t Voltage = Settings->Setpoint.Voltage / 1e5;
 
 			uint16_t VoltageLow = (uint16_t)Voltage;
@@ -62,7 +62,7 @@ ExecutionResult DCHV_ReadResult()
 						Current = CurrentLow;
 						Current |= (uint32_t)CurrentHigh << 16;
 
-						Settings->Result.Current = Current / 10;
+						Settings->Result.Current = Current / 100;
 						Settings->Result.Voltage = (uint32_t)VoltageLow * 1e5;
 						return ER_NoError;
 					}
