@@ -3,10 +3,11 @@
 
 // Variables
 //
-static const DL_DUTConfiguration DUTConfigStorage[] = {
+static const DL_DUTConfiguration DUTConfigStorage[] =
+{
 		{A1,	OneInput, OneOutput, NoSupply},
 		{I1,	OneInput, OneOutput, NoSupply},
-		// I6
+		{I6,	OneInput, OneOutput, SingleDCSupply},
 		{B1,	OneInput, OneOutput, NoSupply},
 		{B2,	OneInput, OneOutput, NoSupply},
 		{B5,	OneInput, OneOutput, SingleDCSupply},
