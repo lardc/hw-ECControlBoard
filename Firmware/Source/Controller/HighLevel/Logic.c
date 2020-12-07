@@ -82,6 +82,8 @@ ExecutionResult LOGIC_StartPowerSupply();
 ExecutionResult LOGIC_IsPowerSupplyReady(bool *IsReady);
 ExecutionResult LOGIC_StopPowerSupply();
 
+ExecutionResult LOGIC_IsCurrentAfterPulseReady(bool *IsReady);
+
 ExecutionResult LOGIC_StartCalibration();
 ExecutionResult LOGIC_StopCalibration();
 
@@ -870,6 +872,22 @@ bool LOGIC_IsLeakageNodeReady()
 }
 //-----------------------------
 
+ExecutionResult LOGIC_IsCurrentAfterPulseReady(bool *IsReady)
+{
+	GetSlaveStateResult StateResult = COMM_IsSlaveInStateX(NAME_DCCurrent, CDS_Ready);
+	if(StateResult == GSSR_Emulation)
+	{
+		*IsReady = true;
+		return ER_NoError;
+	}
+	else
+	{
+		ExecutionResult res = CURR_AfterPulseReady(IsReady);
+		return res;
+	}
+}
+//-----------------------------
+
 ExecutionResult LOGIC_StartCalibration()
 {
 	switch(CachedNode)
@@ -1600,7 +1618,7 @@ void LOGIC_Wrapper_CurrentAfterPulseSetTimeout(DeviceSubState NextState, uint64_
 
 void LOGIC_Wrapper_WaitCurrentAfterPulse(DeviceSubState NextState, DeviceSubState StopState, uint64_t Timeout, uint16_t *Problem)
 {
-	LOGIC_Wrapper_IsOutputReadyX(NextState, StopState, Timeout, Problem, &CURR_AfterPulseReady, NULL, NULL,
+	LOGIC_Wrapper_IsOutputReadyX(NextState, StopState, Timeout, Problem, &LOGIC_IsCurrentAfterPulseReady, NULL, NULL,
 			0, PROBLEM_CURR_AFTER_PULSE_TIME, 0, &LOGIC_HandleCurrentExecResult);
 }
 //-----------------------------
