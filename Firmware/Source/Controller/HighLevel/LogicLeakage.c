@@ -57,7 +57,7 @@ void LEAK_HandleMeasurement()
 
 			case DSS_Leakage_WaitControlReady:
 				LOGIC_Wrapper_IsControlOutputReady(DSS_Leakage_SetControlDelay, DSS_Leakage_StopControl,
-						Timeout, &Problem);
+						Timeout, &Problem, false);
 				break;
 
 			case DSS_Leakage_SetControlDelay:
@@ -70,7 +70,7 @@ void LEAK_HandleMeasurement()
 
 			case DSS_Leakage_CheckReadyAfterDelay:
 				LOGIC_Wrapper_IsControlOutputReady(DSS_Leakage_StartOutVoltage, DSS_Leakage_StopControl,
-						0, &Problem);
+						0, &Problem, false);
 				break;
 
 			case DSS_Leakage_StartOutVoltage:

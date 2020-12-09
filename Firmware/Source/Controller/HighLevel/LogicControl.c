@@ -57,7 +57,7 @@ void CTRL_HandleMeasurement()
 
 			case DSS_Control_WaitControlReady:
 				LOGIC_Wrapper_IsControlOutputReady(DSS_Control_SetControlDelay, DSS_Control_StopControl,
-						Timeout, &Problem);
+						Timeout, &Problem, true);
 				break;
 
 			case DSS_Control_SetControlDelay:
@@ -70,7 +70,7 @@ void CTRL_HandleMeasurement()
 
 			case DSS_Control_CheckReadyAfterDelay:
 				LOGIC_Wrapper_IsControlOutputReady(DSS_Control_StopControl, DSS_Control_StopControl,
-						0, &Problem);
+						0, &Problem, true);
 				break;
 
 			case DSS_Control_StopControl:

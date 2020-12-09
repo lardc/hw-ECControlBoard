@@ -1568,11 +1568,11 @@ void LOGIC_Wrapper_IsOutputReadyX(DeviceSubState NextState, DeviceSubState StopS
 //-----------------------------
 
 void LOGIC_Wrapper_IsControlOutputReady(DeviceSubState NextState, DeviceSubState StopState,
-		uint64_t Timeout, uint16_t *Problem)
+		uint64_t Timeout, uint16_t *Problem, bool ControlMeasurement)
 {
 	LOGIC_Wrapper_IsOutputReadyX(NextState, StopState, Timeout, Problem, &LOGIC_IsControlVoltageReady, &LOGIC_IsControlInProblem,
-			&LOGIC_IsControlSelfTerminated, PROBLEM_CONTROL_IN_PROBLEM, PROBLEM_CONTROL_READY_TIMEOUT, PROBLEM_CONTROL,
-			&LOGIC_HandleControlExecResult);
+			&LOGIC_IsControlSelfTerminated, PROBLEM_CONTROL_IN_PROBLEM, PROBLEM_CONTROL_READY_TIMEOUT,
+			ControlMeasurement ? PROBLEM_NONE : PROBLEM_CONTROL, &LOGIC_HandleControlExecResult);
 }
 //-----------------------------
 
