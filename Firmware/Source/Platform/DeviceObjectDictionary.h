@@ -170,6 +170,8 @@
 #define REG_RESULT_AUX_VOLTAGE2			246	// Напряжение вспомогательного источника 2 (в мкВ)
 #define REG_RESULT_AUX_VOLTAGE2_32		247
 
+#define REG_START_BUTTON				250	// Сигнал нажатия кнопки запуска измерений
+
 #define REG_DBG_INT_SYNC1				251	// Регистр состояния внутреннейи линии SYNC1
 #define REG_DBG_INT_SYNC2				252	// Регистр состояния внутреннейи линии SYNC2
 #define REG_FAN_STATE					253	// Регистр управления вентилятором

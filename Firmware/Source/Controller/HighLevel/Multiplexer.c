@@ -83,3 +83,19 @@ ExecutionResult MUX_Disconnect()
 		return ER_SettingsError;
 }
 //-----------------------------
+
+ExecutionResult MUX_ReadStartButton(bool *Start)
+{
+	GetSlaveStateResult SlaveState = COMM_IsSlaveInStateX(NAME_Multiplexer, CDS_Ready);
+
+	switch(SlaveState)
+	{
+		case GSSR_Equal:
+			return COMM_NodeOutputReady(NAME_Multiplexer, MUX_REG_BUTTON_START, Start);
+
+		default:
+			*Start = false;
+			return ER_NoError;
+	}
+}
+//-----------------------------

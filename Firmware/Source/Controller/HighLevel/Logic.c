@@ -29,7 +29,7 @@ static volatile DCHVoltageBoardObject DCHighVoltageBoard;
 static uint16_t GeneralLogicTimeout, ControlWaitDelay, CalibrationWaitDelay;
 static CalibrateNodeIndex CachedNode;
 static DL_AuxPowerSupply CachedPowerSupply;
-static Int64U StatesUpdateTimeCounter = 0;
+static Int64U StatesUpdateTimeCounter = 0, StartUpdateTimeCounter = 0;
 
 static const NodeName ControlDCNode = NAME_DCVoltage1;
 static const NodeName ControlACNode = NAME_ACVoltage1;
@@ -62,6 +62,7 @@ void LOGIC_CachePowerSupplySettings(DL_AuxPowerSupply Mode);
 void LOGIC_CacheCalibrationSettings();
 void LOGIC_AlterStateUpdateDelay();
 void LOGIC_CurrentCalibrationOverrideReadyTimeout(uint64_t *Timeout);
+bool LOGIC_UpdateStartButtonState();
 
 bool LOGIC_IsDCControl();
 bool LOGIC_IsDCLeakage();
@@ -139,6 +140,14 @@ void LOGIC_HandleStateUpdate()
 	{
 		StatesUpdateTimeCounter = CONTROL_TimeCounter + TIME_SLAVE_STATE_UPDATE;
 		if(!COMM_SlavesReadState())
+			CONTROL_SwitchToFault(ER_InterfaceError, FAULT_EXT_GR_COMMON);
+	}
+
+	if((CONTROL_State == DS_InProcess || CONTROL_State == DS_Ready) &&
+			CONTROL_TimeCounter > StartUpdateTimeCounter)
+	{
+		StartUpdateTimeCounter = CONTROL_TimeCounter + TIME_SLAVE_STATE_UPDATE;
+		if(!LOGIC_UpdateStartButtonState())
 			CONTROL_SwitchToFault(ER_InterfaceError, FAULT_EXT_GR_COMMON);
 	}
 }
@@ -1368,6 +1377,16 @@ bool LOGIC_IsPowerSupplySelfTerminated()
 	}
 
 	return true;
+}
+//-----------------------------
+
+bool LOGIC_UpdateStartButtonState()
+{
+	bool ButtonState;
+	ExecutionResult res = MUX_ReadStartButton(&ButtonState);
+	DataTable[REG_START_BUTTON] = ButtonState ? 1 : 0;
+
+	return (res == ER_NoError);
 }
 //-----------------------------
 

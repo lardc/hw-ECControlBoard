@@ -15,6 +15,8 @@
 #define MUX_REG_TYPE_POLARITY				135	// Полярность подключения
 #define MUX_REG_ENABLE_SAFETY				136	// Разрешение контура безопасности при включённой коммутации
 
+#define MUX_REG_BUTTON_START				210	// Регистр состояния кнопки старт
+
 // Дополнительные состояния
 #define MUX_STATE_SAFETY_TRIG				5
 
