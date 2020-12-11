@@ -30,6 +30,7 @@ static uint16_t GeneralLogicTimeout, ControlWaitDelay, CalibrationWaitDelay;
 static CalibrateNodeIndex CachedNode;
 static DL_AuxPowerSupply CachedPowerSupply;
 static Int64U StatesUpdateTimeCounter = 0, StartUpdateTimeCounter = 0;
+static bool ControlPseudoEmulation = false;
 
 static const NodeName ControlDCNode = NAME_DCVoltage1;
 static const NodeName ControlACNode = NAME_ACVoltage1;
@@ -608,6 +609,8 @@ void LOGIC_CacheControlSettings(DCV_OutputMode Mode)
 	Setpoint.Voltage = LOGIC_ReadDTAbsolute(REG_CONTROL_VOLTAGE, REG_CONTROL_VOLTAGE_32);
 	Setpoint.Current = LOGIC_ReadDTAbsolute(REG_CONTROL_CURRENT, REG_CONTROL_CURRENT_32);
 
+	ControlPseudoEmulation = (Setpoint.Current == 0 && Setpoint.Voltage == 0);
+
 	if(LOGIC_IsDCControl())
 	{
 		DCVoltageBoard1.Setpoint = Setpoint;
@@ -711,52 +714,72 @@ void LOGIC_HandlePowerSupplyExecResult(ExecutionResult Result)
 
 ExecutionResult LOGIC_StartControl()
 {
-	return LOGIC_IsDCControl() ? DCV_Execute(ControlDCNode) : ACV_Execute(ControlACNode);
+	if(ControlPseudoEmulation)
+		return ER_NoError;
+	else
+		return LOGIC_IsDCControl() ? DCV_Execute(ControlDCNode) : ACV_Execute(ControlACNode);
 }
 //-----------------------------
 
 ExecutionResult LOGIC_StopControl()
 {
-	return LOGIC_IsDCControl() ? DCV_Stop(ControlDCNode) : ACV_Stop(ControlACNode);
+	if(ControlPseudoEmulation)
+		return ER_NoError;
+	else
+		return LOGIC_IsDCControl() ? DCV_Stop(ControlDCNode) : ACV_Stop(ControlACNode);
 }
 //-----------------------------
 
 ExecutionResult LOGIC_IsControlVoltageReady(bool *IsReady)
 {
-	return LOGIC_IsDCControl() ? DCV_IsVoltageReady(ControlDCNode, IsReady) :
-		ACV_IsVoltageReady(ControlACNode, IsReady);
+	if(ControlPseudoEmulation)
+	{
+		*IsReady = true;
+		return ER_NoError;
+	}
+	else
+	{
+		return LOGIC_IsDCControl() ? DCV_IsVoltageReady(ControlDCNode, IsReady) :
+				ACV_IsVoltageReady(ControlACNode, IsReady);
+	}
 }
 //-----------------------------
 
 ExecutionResult LOGIC_ControlReadResult(uint16_t *OpResult, pVIPair Result)
 {
-	ExecutionResult res;
-	pSlaveNode NodeData;
-	bool ForceOpResultOk = false;
-
-	if(LOGIC_IsDCControl())
+	if(ControlPseudoEmulation)
 	{
-		NodeData = COMM_GetSlaveDevicePointer(ControlDCNode);
-		pDCVoltageBoardObject Settings = (pDCVoltageBoardObject)NodeData->Settings;
+		Result->Voltage = 0;
+		Result->Current = 0;
+		*OpResult = COMM_OPRESULT_OK;
 
-		res = DCV_ReadResult(ControlDCNode);
-		*Result = Settings->Result;
-
-		ForceOpResultOk = (Settings->Setpoint.Voltage == 0 && Settings->Setpoint.Current == 0);
+		return ER_NoError;
 	}
 	else
 	{
-		NodeData = COMM_GetSlaveDevicePointer(ControlACNode);
-		pACVoltageBoardObject Settings = (pACVoltageBoardObject)NodeData->Settings;
+		ExecutionResult res;
+		pSlaveNode NodeData;
 
-		res = ACV_ReadResult(ControlACNode);
-		*Result = Settings->Result;
+		if(LOGIC_IsDCControl())
+		{
+			NodeData = COMM_GetSlaveDevicePointer(ControlDCNode);
+			pDCVoltageBoardObject Settings = (pDCVoltageBoardObject)NodeData->Settings;
 
-		ForceOpResultOk = (Settings->Setpoint.Voltage == 0 && Settings->Setpoint.Current == 0);
+			res = DCV_ReadResult(ControlDCNode);
+			*Result = Settings->Result;
+		}
+		else
+		{
+			NodeData = COMM_GetSlaveDevicePointer(ControlACNode);
+			pACVoltageBoardObject Settings = (pACVoltageBoardObject)NodeData->Settings;
+
+			res = ACV_ReadResult(ControlACNode);
+			*Result = Settings->Result;
+		}
+
+		*OpResult = NodeData->OpResult;
+		return res;
 	}
-
-	*OpResult = ForceOpResultOk ? true : NodeData->OpResult;
-	return res;
 }
 //-----------------------------
 
@@ -1283,7 +1306,10 @@ bool LOGIC_IsNodeInProblem(NodeName Name)
 
 bool LOGIC_IsControlInProblem()
 {
-	return LOGIC_IsNodeInProblem(LOGIC_IsDCControl() ? ControlDCNode : ControlACNode);
+	if(ControlPseudoEmulation)
+		return false;
+	else
+		return LOGIC_IsNodeInProblem(LOGIC_IsDCControl() ? ControlDCNode : ControlACNode);
 }
 //-----------------------------
 
