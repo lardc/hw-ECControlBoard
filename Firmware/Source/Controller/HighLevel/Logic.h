@@ -21,9 +21,9 @@ typedef enum __CalibrateNodeIndex
 	CN_DC1 = 1,
 	CN_DC2 = 2,
 	CN_DC3 = 3,
-	CN_HVDC = 4,
-	CN_AC1 = 5,
-	CN_AC2 = 6,
+	CN_AC1 = 4,
+	CN_AC2 = 5,
+	CN_HVDC = 6,
 	CN_CB = 7
 } CalibrateNodeIndex;
 
@@ -60,7 +60,7 @@ void LOGIC_Wrapper_UnCommutate(DeviceSubState NextState);
 void LOGIC_Wrapper_StartControl(DeviceSubState NextState, DeviceSubState StopState,
 		uint64_t *Timeout, uint16_t *Problem);
 void LOGIC_Wrapper_IsControlOutputReady(DeviceSubState NextState, DeviceSubState StopState,
-		uint64_t Timeout, uint16_t *Problem);
+		uint64_t Timeout, uint16_t *Problem, bool ControlMeasurement);
 void LOGIC_Wrapper_StopControl(DeviceSubState NextState);
 void LOGIC_Wrapper_ControlSetDelay(DeviceSubState NextState, DeviceSubState NextStateNoDelay, uint64_t *Timeout);
 void LOGIC_Wrapper_IsControlNodeReady(DeviceSubState NextState);

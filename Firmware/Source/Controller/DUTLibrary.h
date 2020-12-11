@@ -11,16 +11,17 @@ typedef enum __DL_Case
 	I6 = 3,
 	B1 = 4,
 	B2 = 5,
-	B5 = 6,
-	V1 = 7,
-	V2 = 8,
-	V104 = 9,
+	B3 = 6,
+	B5 = 7,
+	V1 = 8,
+	V2 = 9,
 	V108 = 10,
 	L1 = 11,
 	L2 = 12,
 	D1 = 13,
 	D2 = 14,
-	D192 = 15
+	D192 = 15,
+	V104 = 16
 } DL_Case;
 
 typedef enum __DL_InputPositions

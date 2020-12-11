@@ -67,7 +67,7 @@ void ONSTATE_HandleMeasurement()
 
 			case DSS_OnVoltage_WaitControlReady:
 				LOGIC_Wrapper_IsControlOutputReady(DSS_OnVoltage_SetControlDelay, DSS_OnVoltage_StopControl,
-						Timeout, &Problem);
+						Timeout, &Problem, false);
 				break;
 
 			case DSS_OnVoltage_SetControlDelay:
@@ -80,7 +80,7 @@ void ONSTATE_HandleMeasurement()
 
 			case DSS_OnVoltage_CheckReadyAfterDelay:
 				LOGIC_Wrapper_IsControlOutputReady(DSS_OnVoltage_PulseCurrent, DSS_OnVoltage_StopControl,
-						0, &Problem);
+						0, &Problem, false);
 				break;
 
 			case DSS_OnVoltage_PulseCurrent:
