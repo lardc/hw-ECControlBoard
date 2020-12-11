@@ -88,14 +88,12 @@ ExecutionResult MUX_ReadStartButton(bool *Start)
 {
 	GetSlaveStateResult SlaveState = COMM_IsSlaveInStateX(NAME_Multiplexer, CDS_Ready);
 
-	switch(SlaveState)
+	if(SlaveState != GSSR_Emulation)
+		return COMM_NodeOutputReady(NAME_Multiplexer, MUX_REG_BUTTON_START, Start);
+	else
 	{
-		case GSSR_Equal:
-			return COMM_NodeOutputReady(NAME_Multiplexer, MUX_REG_BUTTON_START, Start);
-
-		default:
-			*Start = false;
-			return ER_NoError;
+		*Start = false;
+		return ER_NoError;
 	}
 }
 //-----------------------------

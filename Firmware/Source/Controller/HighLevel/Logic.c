@@ -143,7 +143,7 @@ void LOGIC_HandleStateUpdate()
 			CONTROL_SwitchToFault(ER_InterfaceError, FAULT_EXT_GR_COMMON);
 	}
 
-	if((CONTROL_State == DS_InProcess || CONTROL_State == DS_Ready) &&
+	if((CONTROL_State == DS_InProcess || CONTROL_State == DS_Ready || CONTROL_State == DS_SafetyTrig) &&
 			CONTROL_TimeCounter > StartUpdateTimeCounter)
 	{
 		StartUpdateTimeCounter = CONTROL_TimeCounter + TIME_SLAVE_STATE_UPDATE;
