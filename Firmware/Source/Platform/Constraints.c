@@ -147,7 +147,7 @@ const TableItemConstraint NVConstraint[DATA_TABLE_NV_SIZE] = {
 
 const TableItemConstraint VConstraint[DATA_TABLE_WP_START - DATA_TABLE_WR_START] = {
 		{MT_LeakageCurrent, MT_InhibitVoltage, MT_OnVoltage},						// 128
-		{A1, D192, A1},																// 129
+		{A1, V104, A1},																// 129
 		{MXP_Position1, MXP_Position3, MXP_Position1},								// 130
 		{IT_ControlIDC, IT_ControlVAC, IT_ControlIDC},								// 131
 		{0, INT16U_MAX, 0},															// 132
