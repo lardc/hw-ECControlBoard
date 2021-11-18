@@ -20,7 +20,12 @@ static const DL_DUTConfiguration DUTConfigStorage[] =
 		{D1,	OneInput, ThreeOutputs, NoSupply},
 		{D2,	OneInput, ThreeOutputs, NoSupply},
 		{D192,	OneInput, ThreeOutputs, NoSupply},
-		{V104,	OneInput, OneOutput, NoSupply}
+		{V104,	OneInput, OneOutput, NoSupply},
+		{I12,	OneInput, TwoOutputs, NoSupply},
+		{T1,	OneInput, OneOutput, NoSupply},
+		{E2k,	TwoInputs, TwoOutputs, NoSupply},
+		{A6,	OneInput, TwoOutputs, NoSupply},
+		{B1a,	OneInput, OneOutput, NoSupply}
 };
 
 // Forward functions
